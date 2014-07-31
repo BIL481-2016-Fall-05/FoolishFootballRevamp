@@ -191,6 +191,10 @@ public class ClassicView extends JPanel {
 		// draw the players that are in view
 		List<Player> players = northOrder.sortedCopy(game.getPlayers());
 		for (Player pm : players) {
+			
+			if(pm.getPosition().x+0.8 < pBottomLeft.x && (pm.getPosition().x-0.8 > pTopRight.x) && (pm.getPosition().y+0.5 < pBottomLeft.y) && (pm.getPosition().y-0.7 > pTopRight.y) ) {
+				continue;
+			}
 			if (pm instanceof Goalkeeper) {
 				drawGoalkeeper(g, (Goalkeeper) pm);
 			} else {
