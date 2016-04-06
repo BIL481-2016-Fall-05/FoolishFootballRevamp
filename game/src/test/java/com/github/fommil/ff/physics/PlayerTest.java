@@ -18,9 +18,17 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import java.util.Collection;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
 import org.junit.Test;
+import org.ode4j.math.DVector3;
+
+import com.github.fommil.ff.Direction;
 import com.github.fommil.ff.Pitch;
+import com.github.fommil.ff.PlayerStats;
+import com.github.fommil.ff.Team;
+import com.github.fommil.ff.physics.Player.PlayerState;
+
 import static org.junit.Assert.*;
 
 /**
@@ -33,7 +41,6 @@ public class PlayerTest {
 	private static final double dt = 0.01;
 
 	interface Tester {
-
 		void test(Position s, Velocity v);
 	}
 
@@ -51,34 +58,77 @@ public class PlayerTest {
 
 	@Test
 	public void testKick() throws Exception {
-		fail("test not written");
+		Player p = new DummyPhysics().createPlayer(5, new PlayerStats());
+		Ball ball = new DummyPhysics().createBall();
+		ball.setVelocity(new Velocity(0, 0, 0));
+		p.kick(ball);
+		assertEquals(ball.getVelocity(), new Velocity(0.0, 10.0, 5.0));
 	}
 
 	@Test
-	public void testRun() throws Exception {
-		Position centre = pitch.getCentre();
-		List<Collection<Action>> actions = Lists.newArrayList();
-		actions.add(Sets.immutableEnumSet(Action.RIGHT)); // 0
-		actions.add(Sets.immutableEnumSet(Action.DOWN));  // 1
-		actions.add(Sets.immutableEnumSet(Action.LEFT));  // 2
-		actions.add(Sets.immutableEnumSet(Action.UP));    // 3
-		actions.add(Sets.immutableEnumSet(Action.DOWN, Action.RIGHT)); // 4
-		actions.add(Sets.immutableEnumSet(Action.UP, Action.LEFT));    // 5
-		actions.add(Sets.immutableEnumSet(Action.UP, Action.RIGHT));   // 6
-		actions.add(Sets.immutableEnumSet(Action.DOWN, Action.LEFT));  // 7
-		actions.add(EnumSet.noneOf(Action.class));  // 7
+	public void playerState_OUT_OF_CONTROL() {
+		Player p = new DummyPhysics().createPlayer(5, new PlayerStats());
 
-		fail("test not written");
+		p.body.setAngularVel(5, 5, 5);
+		p.body.setPosition(0.5, 0.5, 0.5);
+		p.body.setLinearVel(5, 5, 5);
 
+		assertEquals(p.getState(), Player.PlayerState.OUT_OF_CONTROL);
 	}
 
 	@Test
-	public void testHead() throws Exception {
-		fail("test not written");
+	public void playerState_HEAD_START() {
+		Player p = new DummyPhysics().createPlayer(5, new PlayerStats());
+
+		p.body.setAngularVel(0, 0, 0);
+		p.body.setPosition(0.5, 0.5, 0.5);
+		p.body.setLinearVel(5, 5, 5);
+
+		assertEquals(p.getState(), Player.PlayerState.HEAD_START);
 	}
 
 	@Test
-	public void testTackle() throws Exception {
-		fail("test not written");
+	public void playerState_HEAD_MID() {
+		Player p = new DummyPhysics().createPlayer(5, new PlayerStats());
+
+		p.body.setAngularVel(0, 0, 0);
+		p.body.setPosition(1.7, 1.7, 1.2);
+		p.body.setLinearVel(5, 5, 5);
+
+		assertEquals(p.getState(), Player.PlayerState.HEAD_MID);
+	}
+
+	@Test
+	public void playerState_HEAD_END() {
+		Player p = new DummyPhysics().createPlayer(5, new PlayerStats());
+
+		p.body.setAngularVel(0, 0, 0);
+		p.body.setPosition(2, 2, 2);
+		p.body.setLinearVel(5, 5, -1);
+
+		assertEquals(p.getState(), Player.PlayerState.HEAD_END);
+
+		p.body.setPosition(2, 2, 2);
+		p.body.setLinearVel(5, 5, 5);
+
+		assertEquals(p.getState(), Player.PlayerState.HEAD_END);
+	}
+
+	@Test
+	public void playerState_RUN() {
+		Player p = new DummyPhysics().createPlayer(5, new PlayerStats());
+
+		p.body.setAngularVel(0, 0, 0);
+		p.body.setPosition(2, 2, 0.5);
+		p.body.setLinearVel(5, 5, -1);
+
+		assertEquals(p.getState(), Player.PlayerState.RUN);
+	}
+
+	@Test
+	public void createPlayer() {
+		Player p = new DummyPhysics().createPlayer(5, new PlayerStats());
+		assertEquals(p.getShirt(), 5);
+		assertNull(p.getTeam());
 	}
 }

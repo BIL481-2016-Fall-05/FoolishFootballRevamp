@@ -47,6 +47,11 @@ public class DummyPhysics extends Physics {
 		return player;
 	}
 
+	public Goalkeeper createGoalkeeper(int shirt, PlayerStats stats) {
+		Goalkeeper goalkeeper = new Goalkeeper(shirt, null, stats, world, space);
+		return goalkeeper;
+	}
+
 	public Goalpost createGoalpost(Direction direction) {
 		Goalpost goal = new Goalpost(world, space, pitch, direction);
 		return goal;
