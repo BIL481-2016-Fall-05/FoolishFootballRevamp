@@ -1,0 +1,708 @@
+;____________________________________________________________________________
+;____
+;__  Miles Design Audio Interface Library__
+;____
+;__  Sound driver installation message file__
+;____
+;__  Default selection criteria/examples:__
+;____
+;__    .E BLASTER ........ Environment var 'BLASTER' must be present__
+;__    .C MVSOUND ........ CONFIG.SYS must contain 'MVSOUND'string__
+;__    .A AWEUTIL ........ AUTOEXEC.BAT must contain'AWEUTIL' string__
+;____
+;__    .NE BLASTER ....... Environment var 'BLASTER' must NOT be present__
+;__    .NC MVSOUND ....... CONFIG.SYS must NOT contain 'MVSOUND' string__
+;__    .NA AWEUTIL ....... AUTOEXEC.BAT must NOT contain 'AWEUTIL' string__
+;__    .ND  .............. Entry cannot be selected as default__
+;____
+;__    .T1  .............. Optional BLASTER Tn, if present,must be 1|3 __
+;__    .T2  .............. Mandatory BLASTER Tn must be 2|4|5__
+;__    .T3  .............. Mandatory BLASTER Tn must be >=6 __
+;__ __
+;__  I/O default derivation:__
+;__ __
+;__    .IOB .............. Derive I/O defaults from BLASTER variable__
+;__    .IOD .............. I/O defaults = first driver default entry __
+;__    .ION .............. Do not allow manual I/O configuration at all __
+;____
+;__    .IOA .............. Use I/O address only (must appearat end)__
+;__    .IOL .............. Suppress high-DMA prompt (mustappear at end)__
+;__                                                                      __
+;___________________________________________________________             _________________
+
+[sblaster.dig]
+
+;
+;Selected by default if BLASTER variable is of type T1 or T3 (or no T
+;specifier), and no other "clone" variable exists (ULTRASND, MVSOUND,etc.) ;
+;Default I/O parms from BLASTER
+;
+
+.E BLASTER
+.T1
+.NE ULTRASND
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.IOB
+.IOL
+
+
+
+.SPECIAL_TEXT
+Selezionate questo driver per il Sound Blaster, Sound Galaxy,
+Thunderboard o per l'adattatore Pro Audio Spectrum. Le altre schede
+sonore non direttamente supportate possono funzionare egualmente in
+questo driver, premesso che la loro compatibilit… sulla base
+dell'hardware del Sound Blaster non dipenda da drivers di
+emulazione o TSR.
+.END_SPECIAL_TEXT
+
+;___________________________________________________________
+;_________________
+
+[sbpro.dig]
+
+;
+;Selected by default if BLASTER variable is of type T2, T4, or T5
+;and no other "clone" variable exists
+;
+;Default I/O parms from BLASTER
+;
+
+.E BLASTER
+.T2
+.NE ULTRASND
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.IOB
+.IOL
+
+.SPECIAL_TEXT
+Questo driver supporta tutte le versioni del Sound Blaster Pro e
+adattatori compatibili al 100%. Si sconsiglia di usarlo con il
+Sound Blaster 16 o AWE32.
+.END_SPECIAL_TEXT
+
+;___________________________________________________________________________ _
+
+[sb16.dig]
+
+;
+;Selected by default if BLASTER variable is of type T6
+;
+;Default I/O parms from BLASTER (I/O address only)
+;
+
+.E BLASTER
+.T3
+.NE ULTRASND
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.IOB
+.IOA
+
+.SPECIAL_TEXT
+Selezionate questo driver per avere un audio digitale di alta qualit… dal
+vostro Sound Blaster 16 o AWE32.
+.END_SPECIAL_TEXT
+;___________________________________________________________________________ _
+
+[rap10.dig]
+
+;
+;Never selected by default
+;
+;Default I/O parms from driver
+;
+
+.ND
+.IOD
+
+.HIGH_DMA_PAIRS
+.SPECIAL_TEXT
+ATTENZIONE: Nell'auto identif della scheda Roland RAP-10, il driver
+verifica che ci sia il RAP-10 con un indirizzo di ingresso/uscita (I/O)
+pari a 320H o 330H. Il driver NON verifica il canale DMA (accesso dir.
+memoria) della scheda o i valori di IRQ. Se la scheda RAP-10 non Š
+configurata per l'IRQ 9 , o i canali 5 e 6 del DMA sono usati da
+un'altra scheda, al pross. menu SELEZIONATE l'op."Skip auto-detection 
+and configure driver manually,  ed immettetei corretti valori di I/O per 
+la vostra scheda. In caso contrario il sistema si blocca, o il sonoro 
+subisce un effetto"accelerato". 
+.END_SPECIAL_TEXT
+
+
+
+;___________________________________________________________________________ _ [proaudio.dig]
+
+;
+;Selected by default if CONFIG.SYS contains MVSOUND string
+;
+;No configuration allowed
+;
+
+.C MVSOUND.SYS
+.ION
+
+.SPECIAL_TEXT
+Usando questo driver avrete a disposizione un audio digitale stereo con
+tutte le versioni del Media Vision Pro Audio Spectrum.
+Se incontrate dei problemi, dovreste invece selezionare il driver
+compatibile con Sound Blaster. Il programma di utilit… MVSOUND.SYS di
+Media Vision deve essere caricato in memoria altrimenti la vostra scheda
+non pu_ essere identificata.
+.END_SPECIAL_TEXT
+
+
+;____________________________________________________________________________
+
+[ultra.dig]
+
+;
+;Selected by default if environment contains ULTRASND variable
+;
+;Default I/O parms from driver
+;
+
+.E ULTRASND
+.IOD
+
+.SPECIAL_TEXT
+Quando usate questo driver, assicuratevi che tutti i programmi di
+utilit… Gravis tipo SBOS, UltraMID o Mega-Em, siano inattivi. Il
+software del vostro sistema UltraSound dovrebbe essere versione 2.0
+o superiore.
+.END_SPECIAL_TEXT
+
+
+;____________________________________________________________________________
+
+[jammer.dig]
+
+;
+;Never selected by default
+;
+;Default I/O parms from driver
+;
+
+.ND
+.IOD
+
+.NAME
+New Media Corporation WaveJammer(TM) Digital Audio
+
+.SPECIAL_TEXT
+La scheda WaveJammer prodotta dalla New Media Corporation d… un
+audio portatile di alta qualit… per computers a base PCMCLA. Per
+ascoltare musica FM con il WaveJammer, selezionate il driver di Ad
+Lib(R) Music Synthesizer Card.
+.END_SPECIAL_TEXT
+
+
+
+;___________________________________________________________________________ _ 
+[sndscape.dig]
+
+;
+;Selected by default if environment contains SNDSCAPE variable
+;
+;Default I/O parms from driver
+;
+
+.E SNDSCAPE
+.IOD
+
+.NAME
+Ensoniq SoundScape(TM) Digital Audio
+
+.SPECIAL_TEXT
+Selezionate questo driver se avete un Ensoniq SoundScape(TM) o una
+scheda audio compatibile
+.END_SPECIAL_TEXT
+
+
+;___________________________________________________________________________ _
+
+[sndsys.dig]
+
+;
+;Never selected by default
+;
+;Default I/O parms from driver
+;
+
+.ND
+.IOD
+
+.NAME
+Microsoft(R) Windows(TM) Sound System or 100% compatible
+
+
+
+
+
+
+.SPECIAL_TEXT
+Se la vostra scheda Š compatibile con il Microsoft Windows Sound System,
+selezionate questo driver.
+Se il Windows Sound System non pu• usare il canale 1 del DMA, SelezionaTe
+un altro canale usando "Skip auto-detection and configure driver 
+manually"  Con Windows 95 o un altro sistema che consente l'utilizzo 
+immediato del gioco (Plug-n-Play), potreste controllare con il Device 
+Manager quale indirizzo di I/O viene attualmente usato dalla vostra 
+scheda del Windows Sound System.
+.END_SPECIAL_TEXT
+
+;____________________________________________________________________________
+
+[adrv688.dig]
+
+;
+;Never selected by default
+;
+;Default I/O parms from driver
+;
+
+.ND
+.IOD
+
+.NAME
+ESS Technology ES688 Digital Audio
+
+.SPECIAL_TEXT
+Questo driver supporta i sistemi dotati di un insieme di chip ES688 per 
+ESS (sistema di commutazione elettronica).
+.END_SPECIAL_TEXT
+
+
+;____________________________________________________________________________
+
+[mpu401.mdi]
+
+;
+;Never selected by default
+;
+;Default I/O parms from driver
+;
+
+.ND
+.IOD
+
+.SPECIAL_TEXT
+Molti sintetizzatori General MIDI supportano l'hardware standard di
+interfaccia ROLAND MPU-401 MIDI. Comprendono il Roland Sound
+Canvas, RAP-10 e comp., e le carte-figlia complemen per I Sound
+Blaster 16.I dispositivi MPU-40 offrono un gran livello di riprod. e 
+qualit… del suono, ma chi usa le unit… di contr. Adaptec SCSI puo' 
+servirsi di "Skip auto-detection and configure driver manually" del 
+pross. menu per ridurre problemi di identificazione del MPU-40. Con la
+Creative Labs AWE-32, selez. "Creative Labs AWE-32(TM) General MIDI". 
+.END_SPECIAL_TEXT
+
+
+;____________________________________________________________________________
+
+[sndscape.mdi]
+
+;
+;Selected by default if environment contains SNDSCAPE variable
+;
+;Default I/O parms from driver
+;
+
+.E SNDSCAPE
+.IOD
+
+.NAME
+Ensoniq SoundScape(TM) General MIDI
+
+.SPECIAL_TEXT
+Se avete una Ensoniq SoundScape(TM) o scheda audio compatibile,
+selezionate questo driver.
+.END_SPECIAL_TEXT
+
+;____________________________________________________________________________
+
+[ultra.mdi]
+
+;
+;Selected by default if environment contains ULTRASND variable
+;
+;Default I/O parms from driver
+;
+
+.E ULTRASND
+.IOD
+
+.SPECIAL_TEXT
+Quando usate questo driver, assicuratevi che tutti i programmi di
+utilit… Gravis tipo SBOS, UltraMID o Mega-Em, siano inattivi. Il
+software del vostro sistema UltraSound dovrebbe essere versione 2.0 o
+superiore. 
+.END_SPECIAL_TEXT
+
+;____________________________________________________________________________
+
+[sbawe32.mdi]
+
+;
+;Selected by default if AUTOEXEC contains AWEUTIL string
+;
+;Default I/O parms from driver
+;
+
+.A AWEUTIL
+.IOD
+
+.NAME
+Creative Labs AWE-32(TM) General MIDI
+
+.SPECIAL_TEXT
+Se usato con la scheda Creative Labs AWE-32, questo driver offre una
+sintesi musicale General MIDI di qualit… d'onda. Per l'audio digitale si 
+dovr… selezionare il driver "Creative Labs Sound Blaster 16 o AWE-32".
+
+.END_SPECIAL_TEXT
+
+;____________________________________________________________________________
+
+[sblaster.mdi]
+
+;
+;Selected by default if BLASTER variable is of type T1 or T3 (or no T
+;specifier), and no other "clone" variable exists (ULTRASND, MVSOUND,etc.) ;
+;Default I/O parms from BLASTER (A only)
+;
+
+.E BLASTER
+.T1
+.NE ULTRASND
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.IOB
+.IOA
+
+
+
+.SPECIAL_TEXT
+Questo driver pu• essere usato con qualsiasi scheda di sintetizzazione 
+musicale FM compatibile con Sound Blaster che non si appoggi ad un
+software TSR per la compatibilit… FM del Sound Blaster. Gli utenti di
+schede pi— sofisticate su base General MIDI, dovrebbero selezionare il
+driver di Sound Blaster solo se incontrano problemi con il driver General 
+MIDI della scheda, in quanto il meno aggiornato insieme di chip Sound 
+Blaster OPL-2 non offre la qualit… superiore del sonoro messa a 
+disposizione da dispositivi pi— moderni.
+.END_SPECIAL_TEXT
+
+
+;____________________________________________________________________________
+
+[sbpro2.mdi]
+
+;
+;Selected by default if BLASTER variable is of type T6 or >, andAUTOEXEC does ;not contain AWEUTIL string
+;
+;Default I/O parms from BLASTER (A only)
+;
+
+.E BLASTER
+.T3
+.NE ULTRASND
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.NA AWEUTIL
+.IOB
+.IOA
+
+.NAME
+Creative Labs Sound Blaster(TM) 16
+
+.SPECIAL_TEXT
+Questo driver Š stato progettato per l'uso con gli adattatori Sound
+Blaster 16 che non sono dotati delle carte-figlia General MIDI del
+tipo Wave Blaster.
+
+Nonostante il driver del Sound Blaster 16 sia in grado supportare AWE
+32, per ottenere la qualit… ottimale del sonoro gli utenti dovrebbero
+selezionare il driver "Creative Labs AWE-32(TM) General MIDI".
+.END_SPECIAL_TEXT
+
+;____________________________________________________________________________
+
+[sbpro2.mdi]
+
+;
+;Selected by default if BLASTER variable is of type T2, T4, or T5,
+;no other "clone" variable exists, and inp(388) == 0x00
+;
+;Default I/O parms from BLASTER (A only)
+;
+
+.E BLASTER
+.T2
+.NE ULTRASND
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.IOB
+.IOA
+
+.SPECIAL_TEXT
+Se il vostro Sound Blaster Pro Š un modello "aggiornato" dotato del
+sintetizzatore Yamaha OPL-3, o se la vostra musica non suona bene con
+l'altro driver di Sound Blaster Pro, dovrete selezionare questa
+opzione. 
+.END_SPECIAL_TEXT
+
+
+
+
+;____________________________________________________________________________
+
+[sbpro1.mdi]
+
+;
+;Selected by default if BLASTER variable is of type T2, T4, or T5,
+;no other "clone" variable exists, and inp(388) == 0x06
+;
+;Default I/O parms from BLASTER (A only)
+;
+
+.E BLASTER
+.T2
+.NE ULTRASND
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.IOB
+.IOA
+
+.SPECIAL_TEXT
+Selezionando questo driver, gli utenti delle prime versioni della
+scheda Sound Balster Pro potranno ascoltare musica stereo FM 18-voci 2
+operatori. Comunque la maggior parte delle schede Sound Blaster Pro e
+loro compatibili compreso il Sound Blaster 16 usano OPL-3, un insieme
+di chip di maggior potenza. Con queste schede pi— recenti, dovreste
+invece selezionare il driver "Creative Labs Sound Blaster Pro(TM)".
+.END_SPECIAL_TEXT
+
+;____________________________________________________________________________
+
+[pas.mdi]
+
+;
+;Selected by default if MVSOUND exists in CONFIG.SYS, and inp(388) ==0x06 ;
+;No configuration allowed
+;
+
+.C MVSOUND.SYS
+.ION
+
+.SPECIAL_TEXT
+La selezione di questo driver Š limitata agli utenti delle schede Pro
+Audio Spectrum meno recenti prodotte dalla Media Vision. Per consentire 
+l'identificazione della scheda, Š necessario caricare in memoria il 
+programma di utilit…_ MVSOUND.SYS della Media Vision.
+.END_SPECIAL_TEXT
+
+
+;____________________________________________________________________________
+
+[pasplus.mdi]
+
+;
+;Selected by default if MVSOUND exists in CONFIG.SYS, and inp(388) ==0x00 ;
+;No configuration allowed
+;
+
+.C MVSOUND.SYS
+.ION
+
+.SPECIAL_TEXT
+Gli utenti delle schede Pro Audio Spectrum Plus e Pro Audio Spectrum 16 
+della Media Vision dovrebbero selezionare questo driver. Per consentire 
+l'identificazione della scheda, Š necessario caricare in memoria il 
+programma di utilit… MVSOUND.SYS della Media Vision.
+.END_SPECIAL_TEXT
+
+
+;____________________________________________________________________________
+
+[adlibg.mdi]
+
+;
+;Selected by default if GOLD variable exists in AUTOEXEC.BAT
+;
+;Default I/O parms from driver
+;
+
+.E GOLD
+.IOD
+
+.SPECIAL_TEXT
+Questo driver supporta la scheda Ad Lib Gold Music Synthesizer in modo 
+FM a 4-operatori.
+.END_SPECIAL_TEXT
+
+
+
+;____________________________________________________________________________
+
+[adlib.mdi]
+
+;
+;Never selected by default
+;
+;No configuration -- always at $388
+;
+
+.ND
+.ION
+
+.SPECIAL_TEXT
+Questo driver pu• essere usato con qualsiasi scheda di sintetizzazione
+di musica FM compatibile con Ad Lib che non si appoggia al software di
+TSR per la compatibilit… tra Ad Lib e FM. Gli utenti di schede piu
+sofisticate su base General MIDI, dovrebbero selezionare il driver di
+Ad Lib solo se incontrano problemi con il driver General MIDI della
+scheda, in quanto il meno recente insieme di chip Ad Lib OPL-2 non
+offre la qualit… superiore del sonoro messa a disposizione da
+dispositivi pi— moderni.
+.END_SPECIAL_TEXT
+
+
+
+;___________________________________________________________________________ _ 
+[opl3.mdi]
+
+;
+;Never selected by default
+;
+;No configuration -- always at $388
+;
+
+.ND
+.ION
+
+.NAME
+ESS Technology ES688 FM Audio
+
+
+.SPECIAL_TEXT
+Questo driver supporta i sistemi dotati di un insieme di chip ES688 per
+ESS (sistema di commutazione elettronica).
+.END_SPECIAL_TEXT
+
+
+
+;___________________________________________________________________________ _ 
+[esfm.mdi]
+
+;
+;Never selected by default
+;
+;Configuration from driver
+;
+
+.ND
+.IOD
+
+.NAME
+ESS Technology ES1688, ES1788, ES1888 Enhanced FM Audio
+
+.SPECIAL_TEXT
+Questo driver supporta i sistemi dotati di chip ES1688, ES1788 o ES 1888
+per ESS (sistema di commutazione elettronica). Questo driver offre una
+riproduzione migliore della musica FM. Se si verificano problemi,
+selezionate invece il driver "ESS Technology ES688 FM Audio'.
+.END_SPECIAL_TEXT
+
+
+;___________________________________________________________________________ _
+
+[opl3.mdi]
+
+;
+;Never selected by default
+;
+;No configuration -- always at $388
+;
+
+.ND
+.ION
+
+.SPECIAL_TEXT
+Questo driver pu• essere usato con tutti i sintetizzatori di musica FM
+che si basano sul Yamaha OPL-3, compresi quelli non supportati da
+qualsiasi altro driver elencato.
+.END_SPECIAL_TEXT
+
+
+;____________________________________________________________________________
+
+[mt32mpu.mdi]
+
+;
+;Never selected by default
+;
+;Default I/O parms from driver
+;
+
+.ND
+.IOD
+
+.SPECIAL_TEXT
+Sebbene il Roland MT-32 non sia compatibile con il General MIDI, usa
+l'hardware standard di interfaccia MPU-401 per comunicare con le
+applicazioni. I proprietari di MT-32 che usano unit… di controllo
+Adaptec SCSI potranno selezionare l'opzione "Skip auto-detection and
+configure driver manually (Ometti l'auto-identificazione e configura
+il driver manualmente)" del menu successivo per ridurre la possibilit… 
+di problemi di identificazione del MPU-40.
+.END_SPECIAL_TEXT
+
+;____________________________________________________________________________
+
+[tandy.mdi]
+
+;
+;Never selected by default
+;
+;No configuration allowed
+;
+
+.ND
+.ION
+
+.SPECIAL_TEXT
+Questo driver supporta la musica a 3 voci compatibile con Tandy
+1000. 
+.END_SPECIAL_TEXT
+
+
+;____________________________________________________________________________
+
+[pcspkr.mdi]
+
+;
+;Never selected by default
+;
+;No configuration allowed
+;
+
+.ND
+.ION
+.SPECIAL_TEXT
+Questo driver offre supporto musicale all'altoparlante interno (1
+voce) dei PC IBM, con una sintesi musicale di scarsa qualita.
+.END_SPECIAL_TEXT
+
+
+
+
+
+
+
+
+
+
+

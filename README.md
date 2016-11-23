@@ -3,46 +3,33 @@ Foolish Football
 
 Java clone of [Sensible Soccer](https://en.wikipedia.org/wiki/Sensible_Soccer), with aspirations to clone SWOS.
 
+Project Status
+================
 
-[![Foolish Football Screenshot](http://i40.tinypic.com/fk0h1g.jpg)](http://youtu.be/mnLGjXrfbUs)
-
-*(click image for a video of an old version of the application)*
-
+Master [![Build Status](https://travis-ci.org/BIL481-2016-Fall-05/FoolishFootballRevamp.svg?branch=master)](https://travis-ci.org/BIL481-2016-Fall-05/FoolishFootballRevamp)
 
 Installing
 ==========
 
-Foolish Football is in *alpha* status and users will likely have to be technically savvy enough to compile and run the application. Ideally we'd like to see patches accompanying bug reports in the issue tracker.
-
-A prerequisite is a copy of the file named `Sensible World of Soccer 96-97 (1996)(Sensible Software).zip` (md5 `87f967b9f04a03ff6cfbc1a1ff97cbef`) or similar, which should be extracted into the folder referenced in the `Main` class.
-
-We are using Maven for the build system
+Maven is used for the build system. To compile & run the main game:
 
 ```
 mvn -pl game compile
 mvn -pl game exec:exec
 ```
 
-And to run the 3D Analysis module:
+To run the 3D Analysis module:
 
 ```
 mvn -pl analysis compile
 mvn -pl analysis exec:exec
 ```
 
+To run unit tests:
 
-
-
-**If you don't understand these instructions, it is highly likely that you are *not* a suitable *alpha* tester – please come back when the application is in *beta*.**
-
-
-Donations
-=========
-
-Please consider supporting the maintenance of this open source project with a donation:
-
-[![Donate via Paypal](https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=B2HW5ATB8C3QW&lc=GB&item_name=foolishfootball&currency_code=GBP&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted)
-
+```
+mvn clean verify
+```
 
 Licence
 =======
@@ -61,12 +48,3 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program. If not, see http://www.gnu.org/licenses/
-
-
-Contributing
-============
-
-Contributors are encouraged to fork this repository and issue pull
-requests. Contributors implicitly agree to assign an unrestricted licence
-to Sam Halliday, but retain the copyright of their code (this means
-we both have the freedom to update the licence for those contributions).

@@ -1,0 +1,668 @@
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+;UU                                                                        UU 
+;UU  Miles Design Audio Interface Library                                  UU 
+;UU                                                                        UU 
+;UU  Sound driver installation message file                                UU 
+;UU                                                                        UU 
+;UU  Default selection criteria/examples:                                  UU 
+;UU                                                                        UU 
+;UU    .E BLASTER ........ Environment var 'BLASTER' must be present       UU 
+;UU    .C MVSOUND ........ CONFIG.SYS must contain 'MVSOUND' string        UU 
+;UU    .A AWEUTIL ........ AUTOEXEC.BAT must contain 'AWEUTIL' string      UU 
+;UU                                                                        UU 
+;UU    .NE BLASTER ....... Environment var 'BLASTER' must NOT be present   UU 
+;UU    .NC MVSOUND ....... CONFIG.SYS must NOT contain 'MVSOUND' string    UU 
+;UU    .NA AWEUTIL ....... AUTOEXEC.BAT must NOT contain 'AWEUTIL' string  UU 
+;UU    .ND  .............. Entry cannot be selected as default             UU 
+;UU                                                                        UU 
+;UU    .T1  .............. Optional BLASTER Tn, if present, must be 1|3    UU 
+;UU    .T2  .............. Mandatory BLASTER Tn must be 2|4|5              UU 
+;UU    .T3  .............. Mandatory BLASTER Tn must be >=6                UU 
+;UU                                                                        UU 
+;UU  I/O default derivation:                                               UU 
+;UU                                                                        UU 
+;UU    .IOB .............. Derive I/O defaults from BLASTER variable       UU 
+;UU    .IOD .............. I/O defaults = first driver default entry       UU 
+;UU    .ION .............. Do not allow manual I/O configuration at all    UU 
+;UU                                                                        UU 
+;UU    .IOA .............. Use I/O address only (must appear at end)       UU 
+;UU    .IOL .............. Suppress high-DMA prompt (must appear at end)   UU 
+;UU                                                                        UU 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[sblaster.dig] 
+ 
+; 
+;Selected by default if BLASTER variable is of type T1 or T3 (or no T  
+;specifier), and no other "clone" variable exists (ULTRASND, MVSOUND, etc.) 
+; 
+;Default I/O parms from BLASTER 
+; 
+ 
+.E BLASTER 
+.T1 
+.NE ULTRASND 
+.NE SNDSCAPE 
+.NC MVSOUND.SYS 
+.IOB 
+.IOL 
+ 
+.SPECIAL_TEXT 
+WÑhlen Sie diesen Treiber fÅr Sound Blaster-, Sound Galaxy-, Thunderboard 
+oder Pro Audio Spectrum Soundkarten. Andere Karten, die nicht direkt von 
+dem Treiber unterstÅtzt werden, mÅssen Åber eine hardwareseitige Sound 
+Blaster KompatibilitÑt, ohne Software-Emulation Åber Treiber oder TSRs, 
+verfÅgen. 
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[sbpro.dig] 
+ 
+; 
+;Selected by default if BLASTER variable is of type T2, T4, or T5 
+;and no other "clone" variable exists 
+; 
+;Default I/O parms from BLASTER 
+; 
+ 
+.E BLASTER 
+.T2 
+.NE ULTRASND 
+.NE SNDSCAPE 
+.NC MVSOUND.SYS 
+.IOB 
+.IOL 
+ 
+.SPECIAL_TEXT 
+Dieser Treiber unterstÅtzt alle Versionen der Sound Blaster Pro Karten, 
+sowie alle 100%-tig kompatiblen. Der Treiber wird nicht fÅr die 
+Verwendung mit Soundblaster 16 oder AWE-32 Karten empfohlen. 
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[sb16.dig] 
+ 
+; 
+;Selected by default if BLASTER variable is of type T6 
+; 
+;Default I/O parms from BLASTER (I/O address only) 
+; 
+ 
+.E BLASTER 
+.T3 
+.NE ULTRASND 
+.NE SNDSCAPE 
+.NC MVSOUND.SYS 
+.IOB 
+.IOA 
+ 
+.SPECIAL_TEXT 
+Wenn Sie eine Soundblaster 16 oder AWE-32 besitzen, wÑhlen Sie diesen 
+Treiber fÅr qualitativ hochwertige digitale Effekte.  
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[rap10.dig] 
+ 
+; 
+;Never selected by default 
+; 
+;Default I/O parms from driver 
+; 
+ 
+.ND 
+.IOD 
+ 
+.HIGH_DMA_PAIRS 
+ 
+.SPECIAL_TEXT 
+WARNUNG: WÑhrend der automatischen Erkennung fÅr die Roland RAP-10 Karten 
+ÅberprÅft der Treiber die Einstellung der Karte auf I/O-Adresse 320H oder 
+330H. Er ÅberprÅft NICHT die Einstellungen der Karte fÅr den DMA-Kanal 
+und IRQ. Wenn Ihre Karte nicht fÅr IRQ 9 konfiguriert ist oder DMA 5 und 
+6 bereits in Benutzung durch Ihr System sind, MöSSEN Sie die automatische 
+Erkennung im nÑchsten MenÅ Åberspringen und den Treiber manuell 
+konfigurieren. Bei Nichtbeachtung kann Ihr System abstÅrzen, oder es 
+kînnen massive Fehler bei der Wiedergabe der Effekte auftreten. 
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[proaudio.dig] 
+ 
+; 
+;Selected by default if CONFIG.SYS contains MVSOUND string 
+; 
+;No configuration allowed 
+; 
+ 
+.C MVSOUND.SYS 
+.ION 
+ 
+.SPECIAL_TEXT 
+Dieser Treiber ermîglicht digitale Effekte in Stereo mit allen Versionen 
+der Pro Audio Spectrum Soundkarten. Sollten dennoch Probleme auftreten, 
+sollte statt diesem Treiber der Treiber fÅr Sound Blaster kompatible 
+Karten gewÑhlt werden. Der Media Vision Treiber MVSOUND.SYS mu· geladen 
+sein, da sonst die Karte nicht erkannt wird. 
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[ultra.dig] 
+ 
+; 
+;Selected by default if environment contains ULTRASND variable 
+; 
+;Default I/O parms from driver 
+; 
+ 
+.E ULTRASND 
+.IOD 
+ 
+.SPECIAL_TEXT 
+Wenn Sie diesen Treiber benutzen, dÅrfen keine Gravis Treiber wie SBOS,
+UltraMID oder Mega-EM aktiv sein. Die mit Ihrer Karte verwendete Software 
+Version mu· mindestens Version 2.0 sein. 
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[jammer.dig] 
+ 
+; 
+;Never selected by default 
+; 
+;Default I/O parms from driver 
+; 
+ 
+.ND 
+.IOD 
+ 
+.NAME 
+New Media Corporation WaveJammer(TM) Digital Audio 
+ 
+.SPECIAL_TEXT 
+Die Wave Jammer Karten von New Media Corporation stellen eine hohe 
+QualitÑt fÅr die Wiedergabe digitaler Effekte auf portablen Computern zur 
+VerfÅgung. WÑhlen Sie den Ad Lib(R) Treiber fÅr die Wiedergabe von Musik. 
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[sndscape.dig] 
+ 
+; 
+;Selected by default if environment contains SNDSCAPE variable 
+; 
+;Default I/O parms from driver 
+; 
+ 
+.E SNDSCAPE 
+.IOD 
+ 
+.NAME 
+Ensoniq SoundScape(TM) Digital Audio 
+ 
+.SPECIAL_TEXT 
+Wenn Sie eine Ensoniq Soundscape(TM) oder kompatible Karte haben, wÑhlen 
+Sie diesen Treiber. 
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[sndsys.dig] 
+ 
+; 
+;Never selected by default 
+; 
+;Default I/O parms from driver 
+; 
+ 
+.ND 
+.IOD 
+ 
+.NAME 
+Microsoft(R) Windows(TM) Sound System or 100% compatible 
+ 
+.SPECIAL_TEXT 
+Dieser Treiber kann verwendet werden, wenn Ihre Soundkarte Microsoft 
+Sound System kompatibel ist. 
+ 
+Wenn der DMA-Kanal 1 nicht fÅr die Benutzung durch das Microsoft Sound 
+System zur VerfÅgung steht, mÅssen Sie die automatische Erkennung 
+Åberspringen und einen anderen DMA-Kanal wÑhlen. Wenn Sie Windows '95 
+oder ein anderes Plug-n-Play System verwenden, kînnen Sie im 
+GerÑtemanager kontrollieren, welche I/O-Adresse ihre Karte belegt. 
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[adrv688.dig] 
+ 
+; 
+;Never selected by default 
+; 
+;Default I/O parms from driver 
+; 
+ 
+.ND 
+.IOD 
+ 
+.NAME 
+ESS Technology ES688 Digital Audio 
+ 
+.SPECIAL_TEXT 
+Dieser Treiber unterstÅtzt alle Systeme, die mit dem ESS Technology ES688 
+Chipsatz ausgestattet sind. 
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[mpu401.mdi] 
+ 
+; 
+;Never selected by default 
+; 
+;Default I/O parms from driver 
+; 
+ 
+.ND 
+.IOD 
+ 
+.SPECIAL_TEXT 
+Die meisten General MIDI Synthesizer unterstÅtzen den Roland MPU-401 
+Standard. Dieses schlie·t Roland Sound Canvas, RAP-10, und kompatible 
+GerÑte, sowie Wavetable AufsÑtze der Soundblaster 16 Familie mit ein. Die 
+MPU-401 Schnittstelle erlaubt MIDI-GerÑten den generell hîchsten Standard 
+der Musikwiedergabe. Benutzer von SCSI-Systemen mÅssen eventuell die 
+automatische Erkennung Åberspringen, sofern die MPU-401 Schnittstelle 
+nicht I/O-Adresse 330H benutzt. Benutzer der Soundblaster AWE32 Karten 
+mÅssen statt diesem Treiber den "Creative Labs AWE-32(TM) General MIDI" 
+Treiber verwenden. 
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[sndscape.mdi] 
+ 
+; 
+;Selected by default if environment contains SNDSCAPE variable 
+; 
+;Default I/O parms from driver 
+; 
+ 
+.E SNDSCAPE 
+.IOD 
+ 
+.NAME 
+Ensoniq SoundScape(TM) General MIDI 
+ 
+.SPECIAL_TEXT 
+Wenn Sie eine Ensoniq SoundScape(TM) oder kompatible Karte verwenden, 
+wÑhlen Sie diesen Treiber. 
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[ultra.mdi] 
+ 
+; 
+;Selected by default if environment contains ULTRASND variable 
+; 
+;Default I/O parms from driver 
+; 
+ 
+.E ULTRASND 
+.IOD 
+ 
+.SPECIAL_TEXT 
+Wenn Sie diesen Treiber benutzen dÅrfen keine Gravis Treiber wie SBOS, 
+UltraMID oder Mega-EM aktiv sein. Die mit Ihrer Karte verwendete Software 
+Version mu· mindestens Version 2.0 sein. 
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[sbawe32.mdi] 
+ 
+; 
+;Selected by default if AUTOEXEC contains AWEUTIL string 
+; 
+;Default I/O parms from driver 
+; 
+ 
+.A AWEUTIL 
+.IOD 
+ 
+.NAME 
+Creative Labs AWE-32(TM) General MIDI 
+ 
+.SPECIAL_TEXT 
+Dieser Treiber bietet General MIDI Musik mit Wavetable QualitÑt unter 
+Verwendung von Creative Labs Soundblaster AWE-32 Karten. Der "Creative 
+Labs Soundblaster 16 oder AWE-32" Treiber sollte fÅr die Wiedergabe der 
+digitalen Effekte gewÑhlt werden. 
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[sblaster.mdi] 
+ 
+; 
+;Selected by default if BLASTER variable is of type T1 or T3 (or no T  
+;specifier), and no other "clone" variable exists (ULTRASND, MVSOUND, etc.) 
+; 
+;Default I/O parms from BLASTER (A only) 
+; 
+ 
+.E BLASTER 
+.T1 
+.NE ULTRASND 
+.NE SNDSCAPE 
+.NC MVSOUND.SYS 
+.IOB 
+.IOA 
+ 
+.SPECIAL_TEXT 
+Dieser Treiber kann mit jeder Sound Blaster FM kompatiblen Karte 
+verwendet werden, die keine Software-Emulation fÅr die Sound Blaster FM 
+KompatibilitÑt verwendet. Benutzer von technisch hîherwertigen General 
+MIDI basierten Karten sollten diesen Treiber nur dann wÑhlen, wenn 
+Probleme mit dem General MIDI Treiber auftreten, da der OPL-2 Standard 
+nicht die technischen Mîglichkeiten modernerer Karten ausnutzt. 
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[sbpro2.mdi] 
+ 
+; 
+;Selected by default if BLASTER variable is of type T6 or >, and AUTOEXEC does 
+;not contain AWEUTIL string 
+; 
+;Default I/O parms from BLASTER (A only) 
+; 
+ 
+.E BLASTER 
+.T3 
+.NE ULTRASND 
+.NE SNDSCAPE 
+.NC MVSOUND.SYS 
+.NA AWEUTIL 
+.IOB 
+.IOA 
+ 
+.NAME 
+Creative Labs Sound Blaster(TM) 16 
+ 
+.SPECIAL_TEXT 
+Dieser Treiber ist fÅr die Benutzung mit Sound Blaster 16 Karten 
+ausgelegt, die nicht mit einem Wavetable Aufsatz wie dem Wave Blaster 
+ausgerÅstet sind. 
+ 
+Obwohl die AWE-32 von diesem Treiber auch unterstÅtzt wird, sollte fÅr 
+optimale Wiedergabe der Musik der "Creative Labs AWE-32(TM) General MIDI"  
+Treiber verwendet werden. 
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[sbpro2.mdi] 
+ 
+; 
+;Selected by default if BLASTER variable is of type T2, T4, or T5, 
+;no other "clone" variable exists, and inp(388) == 0x00 
+; 
+;Default I/O parms from BLASTER (A only) 
+; 
+ 
+.E BLASTER 
+.T2 
+.NE ULTRASND 
+.NE SNDSCAPE 
+.NC MVSOUND.SYS 
+.IOB 
+.IOA 
+ 
+.SPECIAL_TEXT 
+Wenn Ihr Sound Blaster Pro als neueres Modell mit dem OPL-3 Chipsatz 
+ausgestattet ist, oder sich die Musik mit anderen Sound Blaster Pro 
+Treibern nicht richtig anhîrt, sollte dieser Treiber gewÑhlt werden. 
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[sbpro1.mdi] 
+ 
+; 
+;Selected by default if BLASTER variable is of type T2, T4, or T5, 
+;no other "clone" variable exists, and inp(388) == 0x06 
+; 
+;Default I/O parms from BLASTER (A only) 
+; 
+ 
+.E BLASTER 
+.T2 
+.NE ULTRASND 
+.NE SNDSCAPE 
+.NC MVSOUND.SYS 
+.IOB 
+.IOA 
+ 
+.SPECIAL_TEXT 
+Benutzer von frÅheren Versionen der Sound Blaster Pro Karten kînnen durch 
+die Verwendung dieses Treibers in den Genu· von Stereo Musik mit 18 
+Stimmen kommen. Allerdings verwenden die meisten Sound Blaster Pro und 
+kompatiblen Karten, wie auch die Sound Blaster 16, den technisch 
+hîherwertigen OPL-3 Chipsatz. Mit diesen neueren Karten sollte der 
+"Creative Labs Sound Blaster Pro(TM) (neuere Version)" gewÑhlt werden.  
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[pas.mdi] 
+ 
+; 
+;Selected by default if MVSOUND exists in CONFIG.SYS, and inp(388) == 0x06 
+; 
+;No configuration allowed 
+; 
+ 
+.C MVSOUND.SYS 
+.ION 
+ 
+.SPECIAL_TEXT 
+Sie sollten diesen Treiber nur verwenden, wenn Sie Besitzer einer der 
+ersten Pro Audio Spectrum Karten von Media Vision sind. Der Media Vision 
+Treiber MVSOUND.SYS mu· geladen sein, da die Karte sonst nicht erkannt 
+wird. 
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[pasplus.mdi] 
+ 
+; 
+;Selected by default if MVSOUND exists in CONFIG.SYS, and inp(388) == 0x00 
+; 
+;No configuration allowed 
+; 
+ 
+.C MVSOUND.SYS 
+.ION 
+ 
+.SPECIAL_TEXT 
+WÑhlen Sie diesen Treiber, wenn Sie eine Media Vision Pro Audio Spectrum 
+Plus oder Media Vision Pro Audio Spectrum 16 Karte benutzen. Der Media 
+Vision Treiber MVSOUND.SYS mu· geladen sein, da die Karte sonst nicht 
+erkannt wird. 
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[adlibg.mdi] 
+ 
+; 
+;Selected by default if GOLD variable exists in AUTOEXEC.BAT 
+; 
+;Default I/O parms from driver   
+; 
+ 
+.E GOLD 
+.IOD 
+ 
+.SPECIAL_TEXT 
+Dieser Treiber unterstÅtzt Ad Lib Gold Karten unter Verwendung des 
+4-Kanal FM Modus. 
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[adlib.mdi] 
+ 
+; 
+;Never selected by default 
+; 
+;No configuration -- always at $388 
+; 
+ 
+.ND 
+.ION 
+ 
+.SPECIAL_TEXT 
+Dieser Treiber kann mit allen Ad Lib kompatiblen FM-Karten verwendet 
+werden, die diese KompatibilitÑt nicht durch Software-Emulation 
+erreichen. Dieser Treiber sollte mit General MIDI fÑhigen Karten nur 
+verwendet werden, wenn der entsprechende General MIDI Treiber zu 
+Problemen fÅhrt, da er die technischen Mîglichkeiten modernerer Karten 
+nicht ausnutzt. 
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[opl3.mdi] 
+ 
+; 
+;Never selected by default 
+; 
+;No configuration -- always at $388 
+; 
+ 
+.ND 
+.ION 
+ 
+.NAME 
+ESS Technology ES688 FM Audio 
+ 
+.SPECIAL_TEXT 
+Dieser Treiber unterstÅtzt alle Systeme die mit dem ESS Technology ES688 
+Chipsatz ausgestattet sind. 
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[esfm.mdi] 
+ 
+; 
+;Never selected by default 
+; 
+;Configuration from driver 
+; 
+ 
+.ND 
+.IOD 
+ 
+.NAME 
+ESS Technology ES1688, ES1788, ES1888 Enhanced FM Audio 
+ 
+.SPECIAL_TEXT 
+Dieser Treiber unterstÅtzt alle Systeme die mit dem ESS Technology 
+ES1688, ES1788 oder ES1888 Chipsatz ausgestattet sind. Er erlaubt eine 
+technisch hochwertige FM Musik-wiedergabe. Sollte diese Einstellung zu 
+Problemen fÅhren, wÑhlen Sie bitte die "ESS Technology ES688 FM Audio" 
+Einstellung. 
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[opl3.mdi] 
+ 
+; 
+;Never selected by default 
+; 
+;No configuration -- always at $388 
+; 
+ 
+.ND 
+.ION 
+ 
+.SPECIAL_TEXT 
+Dieser Treiber unterstÅtzt alle OPL-3 basierten Karten, einschlie·lich 
+der Karten die von keinem anderen Treiber in der Liste unterstÅtzt 
+werden. 
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[mt32mpu.mdi] 
+ 
+; 
+;Never selected by default 
+; 
+;Default I/O parms from driver 
+; 
+ 
+.ND 
+.IOD 
+ 
+.SPECIAL_TEXT 
+Obwohl der Roland MT-32 Standard nicht General MIDI kompatibel ist, 
+benutzt er die MPU-401, Schnittstelle um mit Applikationen zu 
+kommunizieren. Benutzer von SCSI-Systemen mÅssen eventuell die 
+automatische Erkennung Åberspringen, sofern die MPU-401 Schnittstelle 
+nicht I/O-Adresse 330H benutzt. 
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[tandy.mdi] 
+ 
+; 
+;Never selected by default 
+; 
+;No configuration allowed 
+; 
+ 
+.ND 
+.ION 
+ 
+.SPECIAL_TEXT 
+Dieser Treiber unterstÅtzt Tandy 1000 und kompatible Karten, die Musik 
+wird mit 3 Stimmen wiedergegeben. 
+.END_SPECIAL_TEXT 
+ 
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 
+ 
+[pcspkr.mdi] 
+ 
+; 
+;Never selected by default 
+; 
+;No configuration allowed 
+; 
+ 
+.ND 
+.ION 
+ 
+.SPECIAL_TEXT 
+Die UnterstÅtzung von einstimmiger Musik Åber den internen PC 
+Lautsprecher wird durch diesen Treiber gewÑhrleistet. Die QualitÑt 
+der wiedergegebenen Musik ist extrem gering. 
+.END_SPECIAL_TEXT 
+ 
+ 
+

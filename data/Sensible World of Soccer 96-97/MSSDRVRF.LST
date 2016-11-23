@@ -1,0 +1,812 @@
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+;ÝÝ                                                                        ÝÝ
+;ÝÝ  Miles Sound System from RAD Software                                  ÝÝ
+;ÝÝ                                                                        ÝÝ
+;ÝÝ  Sound driver installation message file                                ÝÝ
+;ÝÝ                                                                        ÝÝ
+;ÝÝ  Default selection criteria/examples:                                  ÝÝ
+;ÝÝ                                                                        ÝÝ
+;ÝÝ    .E BLASTER ........ Environment var 'BLASTER' must be present       ÝÝ
+;ÝÝ    .C MVSOUND ........ CONFIG.SYS must contain 'MVSOUND' string        ÝÝ
+;ÝÝ    .A AWEUTIL ........ AUTOEXEC.BAT must contain 'AWEUTIL' string      ÝÝ
+;ÝÝ                                                                        ÝÝ
+;ÝÝ    .NE BLASTER ....... Environment var 'BLASTER' must NOT be present   ÝÝ
+;ÝÝ    .NC MVSOUND ....... CONFIG.SYS must NOT contain 'MVSOUND' string    ÝÝ
+;ÝÝ    .NA AWEUTIL ....... AUTOEXEC.BAT must NOT contain 'AWEUTIL' string  ÝÝ
+;ÝÝ    .ND  .............. Entry cannot be selected as default             ÝÝ
+;ÝÝ                                                                        ÝÝ
+;ÝÝ    .T1  .............. Optional BLASTER Tn, if present, must be 1|3    ÝÝ
+;ÝÝ    .T2  .............. Mandatory BLASTER Tn must be 2|4|5              ÝÝ
+;ÝÝ    .T3  .............. Mandatory BLASTER Tn must be >=6                ÝÝ
+;ÝÝ                                                                        ÝÝ
+;ÝÝ  I/O default derivation:                                               ÝÝ
+;ÝÝ                                                                        ÝÝ
+;ÝÝ    .IOB .............. Derive I/O defaults from BLASTER variable       ÝÝ
+;ÝÝ    .IOD .............. I/O defaults = first driver default entry       ÝÝ
+;ÝÝ    .ION .............. Do not allow manual I/O configuration at all    ÝÝ
+;ÝÝ                                                                        ÝÝ
+;ÝÝ    .IOA .............. Use I/O address only (must appear at end)       ÝÝ
+;ÝÝ    .IOL .............. Suppress high-DMA prompt (must appear at end)   ÝÝ
+;ÝÝ                                                                        ÝÝ
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[iwav.dig]
+
+;
+;Selected by default if autoexec contains IWINIT
+;
+;Default I/O parms from driver
+;
+
+.E INTERWAVE
+
+.IOD
+
+.NAME
+InterWave (TM) Digital Audio 
+
+.SPECIAL_TEXT
+S‚lectionnez ce pilote pour n'importe quelle carte son ‚quip‚e d'un
+processeur audio InterWave (TM). Il peut notamment s'agir des cartes 
+Core Dynamix Dynasonix, Reveal Wave Extreme 32 et STB SoundRage 32. 
+Certains modŠles d'ordinateurs Compaq et Gateway 2000 exploitent 
+‚galement le processeur audio InterWave. Adressez-vous … votre 
+constructeur pour plus d'informations. 
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[nvdig.dig]
+
+;
+;Selected by default if config.sys contains nvidia
+;
+;Default I/O parms from driver
+;
+
+.C NVINIT
+.ION
+
+.SPECIAL_TEXT
+S‚lectionnez ce pilote si votre systŠme est ‚quip‚ d'un acc‚l‚rateur
+multim‚dia compatible Nvidia. Si le pilote ne d‚tecte pas correctement
+votre carte, contactez le revendeur de votre carte ou de votre systŠme
+pour obtenir une mise … jour des pilotes.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[rap10.dig]
+
+;
+;Never selected by default
+;
+;Default I/O parms from driver
+;
+
+.ND
+.IOD
+
+.HIGH_DMA_PAIRS
+
+.SPECIAL_TEXT
+AVERTISSEMENT : au cours de la d‚tection auto de la carte
+Roland RAP-10, le pilote v‚rifie que la RAP-10 est pr‚sente … l'adresse
+d'E/S 320H ou 330H. Il ne v‚rifie PAS le canal DMA, NI les paramŠtres
+d'IRQ. Si votre carte RAP-10 n'est pas configur‚e sur l'IRQ 9 ou si les
+canaux DMA 5 et 6 sont d‚j… utilis‚s par une autre carte, vous DEVEZ
+s‚lectionner l'option " Ignorer d‚tection auto et configurer 
+manuellement pilote" dans le menu suivant, puis entrer les paramŠtres 
+d'E/S corrects. Autrement, le systŠme risque de se bloquer ou un d‚faut
+de son peut survenir au cours de la lecture.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[proaudio.dig]
+
+;
+;Selected by default if CONFIG.SYS contains MVSOUND string
+;
+;No configuration allowed
+;
+
+.C MVSOUND.SYS
+.ION
+
+.SPECIAL_TEXT
+Ce pilote permet d'obtenir des effets audio num‚riques st‚r‚o avec 
+toutes les versions de la Media Vision Pro Audio Spectrum. En cas de 
+problŠme, s‚lectionnez le pilote compatible Sound Blaster. 
+L'utilitaire Media Vision MVSOUND.SYS doit ˆtre charg‚ en m‚moire, 
+car autrement, votre carte ne sera pas d‚tect‚e.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[ultra.dig]
+
+;
+;Selected by default if environment contains ULTRASND variable
+;
+;Default I/O parms from driver
+;
+
+.E ULTRASND
+.IOD
+
+.SPECIAL_TEXT
+Avec ce pilote, assurez vous qu'aucun utilitaire Gravis, tel que SBOS,
+UltraMID ou Mega-EM n'est actif. Votre logiciel UltraSound doit avoir
+la version 2.0 ou ult‚rieure.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[jammer.dig]
+
+;
+;Never selected by default
+;
+;Default I/O parms from driver
+;
+
+.ND
+.IOD
+
+.NAME
+New Media Corporation WaveJammer(TM) Digital Audio
+
+.SPECIAL_TEXT
+La carte WaveJammer de New Media apportent des fonctions audio 
+portables de haute qualit‚ aux ordinateurs dot‚s d'emplacements PCMCIA. 
+S‚lectionnez le pilote Ad Lib(R) Music Sythesizer pour obtenir des 
+fonctions musique FM avec la WaveJammer.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[sndscape.dig]
+
+;
+;Selected by default if environment contains SNDSCAPE variable
+;
+;Default I/O parms from driver
+;
+
+.E SNDSCAPE
+.IOD
+
+.NAME
+Ensoniq SoundScape(TM) Digital Audio
+
+.SPECIAL_TEXT
+S‚lectionnez ce pilote si vous avez une carte audio Ensoniq
+SoundScape(TM) ou compatible.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[sndsys.dig]
+
+;
+;Never selected by default
+;
+;Default I/O parms from driver
+;
+
+.ND
+.IOD
+
+.NAME
+Microsoft(R) Windows(TM) Sound System or 100% compatible
+
+.SPECIAL_TEXT
+S‚lectionnez ce pilote si votre carte est compatible Microsoft Windows
+Sound System.
+
+Si le canal DMA 1 n'est pas disponible pour la carte Windows Sound
+System choisissez alors l'option "Ignorer d‚tection auto et configurer
+manuellement pilote pour s‚lectionner un autre canal DMA. Si vous 
+utilisez Windows 95, vous devrez peut-ˆtre utiliser l'option 
+"Afficher config. Windows 95" dans le menu principal pour d‚terminer 
+l'adresse d'E/S utilis‚e par votre carte Windows Sound System.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[adrv688.dig]
+
+;
+;Never selected by default
+;
+;Default I/O parms from driver
+;
+
+.ND
+.IOD
+
+.NAME
+ESS Technology ES688 Digital Audio
+
+.SPECIAL_TEXT
+Ce pilote prend en charge les systŠmes ‚quip‚s du chipset 
+ESS Technology
+ES688.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[sblaster.dig]
+
+;
+;Selected by default if BLASTER variable is of type T1 or T3 (or no T 
+;specifier), and no other "clone" variable exists (ULTRASND, MVSOUND, etc.)
+;
+;Default I/O parms from BLASTER
+;
+
+.E BLASTER
+.T1
+.NE INTERWAVE
+.NE ULTRASND
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.NC NVINIT
+.IOB
+.IOL
+
+.SPECIAL_TEXT
+S‚lectionnez ce pilote pour votre adaptateur Sound Blaster, Sound Galaxy,
+Thunderboard ou Pro Audio Spectrum. Les autres cartes son qui ne sont pas
+directement prises en charge peuvent ‚galement fonctionner avec ce pilote
+tant qu'elles offrent une compatibilit‚ Sound Blaster mat‚rielle, sans 
+pilotes d'‚mulation ni TSR.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[sbpro.dig]
+
+;
+;Selected by default if BLASTER variable is of type T2, T4, or T5
+;and no other "clone" variable exists
+;
+;Default I/O parms from BLASTER
+;
+
+.E BLASTER
+.T2
+.NE INTERWAVE
+.NE ULTRASND
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.NC NVINIT
+.IOB
+.IOL
+
+.SPECIAL_TEXT
+Ce pilote prend en charge toutes les versions des adaptateurs 
+Sound Blaster Pro et 100% compatibles. N'est pas recommand‚ avec les 
+Sound Blaster 16 ou AWE32.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[sb16.dig]
+
+;
+;Selected by default if BLASTER variable is of type T6
+;
+;Default I/O parms from BLASTER (I/O address only)
+;
+
+.E BLASTER
+.T3
+.NE INTERWAVE
+.NE ULTRASND
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.NC NVINIT
+.IOB
+.IOA
+
+.SPECIAL_TEXT
+S‚lectionnez ce pilote pour obtenir un son audio num‚rique de
+haute qualit‚ avec votre adaptateur Sound Blaster 16 ou AWE32.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[mpu401.mdi]
+
+;
+;Never selected by default
+;
+;Default I/O parms from driver
+;
+
+.ND
+.IOD
+
+.SPECIAL_TEXT
+La plupart des synth‚tiseurs General MIDI prennent en charge la norme
+d'interface mat‚rielle MIDI Roland MPU-401, notamment les Roland 
+Sound Canvas, RAP-10 et compatibles, ainsi que les cartes filles
+enfichables pour la famille Sound Blaster 16. Les p‚riph‚riques 
+MPU-401 offrent g‚n‚ralement les meilleures performances et la 
+meilleure qualit‚ sonore, mais les utilisateurs de contr“leurs SCSI 
+Adaptec peuvent s‚lectionner l'option " Ignorer d‚tection auto et 
+configurer manuellement pilote" dans le menu suivant pour r‚duire les 
+probabilit‚s de problŠmes de d‚tection de la MPU-401.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[iwav.mdi]
+
+;
+;Selected by default if autoexec contains IWINIT
+;
+;Default I/O parms from driver
+;
+
+.E INTERWAVE
+
+.IOD
+
+.NAME
+InterWave (TM) General MIDI
+
+.SPECIAL_TEXT
+S‚lectionnez ce pilote pour toutes les cartes son dot‚es d'un processeur 
+audio InterWave (TM). Il peut notamment s'agit des cartes Core Dynamic 
+Dynasonix, Reveal WaveExtreme 32 et STB SoundRage 32. Certains modŠles 
+d'ordinateurs Compaq et Gateway 2000 exploitent ‚galement le processeur 
+audio InterWave. Renseignez-vous auprŠs de votre constructeur.
+
+En cas de difficult‚s de configuration, s‚lectionnez le pilote 
+Roland MPU-401.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[nvmpu.mdi]
+
+;
+;Selected by default if config.sys contains nvidia
+;
+;Default I/O parms from driver
+;
+
+.C NVINIT
+.ION
+
+.SPECIAL_TEXT
+S‚lectionnez ce pilote si votre systŠme est ‚quip‚ d'un acc‚l‚rateur
+multim‚dia compatible NVidia. S'il ne d‚tecte pas correctement votre
+carte, contactez le revendeur de votre systŠme ou de votre carte pour
+obtenir des pilotes mis … jour.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[mpu401.mdi]
+
+;
+;Never selected by default
+;
+;Default I/O parms from driver
+;
+
+.NAME
+Yamaha WaveForce(TM) DB50-XG General MIDI
+
+.ND
+.IOD
+
+.SPECIAL_TEXT
+S‚lectionnez ce pilote si votre carte de la s‚rie Creative Labs
+Sound Blaster(TM) est ‚quip‚e d'une extension carte fille
+Yamaha General MIDI/XG.
+
+Les utilisateurs de contr“leurs SCSI Adaptec peuvent s‚lectionner 
+l'option "Ignorer d‚tection auto et configurer manuellement pilote" 
+dans le menu suivant pour r‚duire la probabilit‚ de problŠmes de
+ d‚tection de la MPU-401.
+.END_SPECIAL_TEXT
+
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[sndscape.mdi]
+
+;
+;Selected by default if environment contains SNDSCAPE variable
+;
+;Default I/O parms from driver
+;
+
+.E SNDSCAPE
+.IOD
+
+.NAME
+Ensoniq SoundScape(TM) General MIDI
+
+.SPECIAL_TEXT
+S‚lectionnez ce pilote si vous avez une carte son Ensoniq SoundScape(TM)
+ou compatible.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[ultra.mdi]
+
+;
+;Selected by default if environment contains ULTRASND variable
+;
+;Default I/O parms from driver
+;
+
+.E ULTRASND
+.IOD
+
+.SPECIAL_TEXT
+Avec ce pilote, assurez-vous qu'aucun utilitaire Gravis, tel que SBOS, 
+UltraMID ou Mega-Em n'est actif. Votre logiciel UltraSound doit avoir
+la version 2.0 ou ult‚rieure.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[sbawe32.mdi]
+
+;
+;Selected by default if AUTOEXEC contains AWEUTIL string
+;
+;Default I/O parms from driver
+;
+
+.A AWEUTIL
+.IOD
+
+.NAME
+Creative Labs AWE-32(TM) General MIDI
+
+.SPECIAL_TEXT
+Ce pilote offre une synthŠse musicale General MIDI de qualit‚ table
+d'‚chantillonnage avec la carte Creative Labs AWE-32. S‚lectionnez 
+le pilote "Creative Labs Sound Blaster 16 or AWE32" pour l'audio 
+num‚rique.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[pas.mdi]
+
+;
+;Selected by default if MVSOUND exists in CONFIG.SYS, and inp(388) == 0x06
+;
+;No configuration allowed
+;
+
+.C MVSOUND.SYS
+.ION
+
+.SPECIAL_TEXT
+Seuls les utilisateurs des premiŠres cartes Pro Audio Spectrum de 
+Media Vision doivent s‚lectionner ce pilote. L'utilitaire 
+Media Vision MVSOUND.SYS doit ˆtre charg‚ en m‚moire, car 
+autrement, la carte de sera pas d‚tect‚e.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[pasplus.mdi]
+
+;
+;Selected by default if MVSOUND exists in CONFIG.SYS, and inp(388) == 0x00
+;
+;No configuration allowed
+;
+
+.C MVSOUND.SYS
+.ION
+
+.SPECIAL_TEXT
+Les utilisateurs des cartes Media Vision Pro Audio Spectrum Plus et 
+Pro Audio Spectrum 16 doivent s‚lectionner ce pilote. L'utilitaire 
+Media Vision MVSOUND.SYS doit ˆtre charg‚ en m‚moire, car autrement, 
+votre carte ne sera pas d‚tect‚e.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[adlibg.mdi]
+
+;
+;Selected by default if GOLD variable exists in AUTOEXEC.BAT
+;
+;Default I/O parms from driver  
+;
+
+.E GOLD
+.IOD
+
+.SPECIAL_TEXT
+Ce pilote prend en charge la carte Ad Lib Gold Music Synthesizer en
+mode FM 4 op‚rateurs.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[adlib.mdi]
+
+;
+;Never selected by default
+;
+;No configuration -- always at $388
+;
+
+.ND
+.ION
+
+.SPECIAL_TEXT
+Ce pilote peut ˆtre utilis‚ avec n'importe quelle carte synth‚tiseur
+musique FM compatible Ad Lib ne n‚cessitant aucun TSR logiciel
+pour la compatibilit‚ Ad Lib. Les utilisateurs de cartes General MIDI
+plus sophistiqu‚es doivent seulement s‚lectionner le pilote Ad Lib si
+des problŠmes surviennent avec le pilote General MIDI de la carte,
+l'ancien chipset Ad Lib OPL-2 n'offrant pas la haute qualit‚ sonore
+disponible sur les p‚riph‚riques plus r‚cents.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[opl3.mdi]
+
+;
+;Never selected by default
+;
+;No configuration -- always at $388
+;
+
+.ND
+.ION
+
+.NAME
+ESS Technology ES688 FM Audio
+
+.SPECIAL_TEXT
+Ce pilote supporte les systŠmes ‚quip‚s d'un jeu de puce ES688 de ESS 
+Technology.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[esfm.mdi]
+
+;
+;Never selected by default
+;
+;Configuration from driver
+;
+
+.ND
+.IOD
+
+.NAME
+ESS Technology ES1688, ES1788, ES1888 Enhanced FM Audio
+
+.SPECIAL_TEXT
+Ce pilote prend en charge les systŠmes ‚quip‚s de chips ESS Technology
+ES1688, ES1788 ou ES1888. Il offre des performances musicales enrichies.
+En cas de problŠme, s‚lectionnez plut“t le pilote 'ESS Technology ES688
+FM Audio'.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[opl3.mdi]
+
+;
+;Never selected by default
+;
+;No configuration -- always at $388
+;
+
+.ND
+.ION
+
+.SPECIAL_TEXT
+Ce pilote est destin‚ … tous les synth‚tiseurs musicaux FM 
+Yamaha OPL-3, y compris ceux qui ne sont pris en charge par aucun 
+autre pilote de la liste.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[mt32mpu.mdi]
+
+;
+;Never selected by default
+;
+;Default I/O parms from driver
+;
+
+.ND
+.IOD
+
+.SPECIAL_TEXT
+Bien que la Roland MT-32 ne soit pas compatible General MIDI, elle
+exploite la norme d'interface mat‚rielle MPU-401 pour communiquer
+avec les applications. Les possesseurs de MT-32 qui utilisent des 
+contr“leurs SCSI Adaptec peuvent s‚lectionner l'option 
+"Ignorer d‚tection auto et configurer manuellement pilote" 
+dans le menu suivant pour r‚duire la probabilit‚ de problŠmes de 
+d‚tection MPU-401.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[sblaster.mdi]
+
+;
+;Selected by default if BLASTER variable is of type T1 or T3 (or no T 
+;specifier), and no other "clone" variable exists (ULTRASND, MVSOUND, etc.)
+;
+;Default I/O parms from BLASTER (A only)
+;
+
+.E BLASTER
+.T1
+.NE INTERWAVE
+.NE ULTRASND
+.NE INTERWAVE
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.NC NVINIT
+.IOB
+.IOA
+
+.SPECIAL_TEXT
+Ce pilote peut ˆtre utilis‚ avec n'importe quelle carte synth‚tiseur 
+musique FM compatible Sound Blaster ne n‚cessitant aucun TSR logiciel 
+pour la compatibilit‚ FM Sound Blaster. Les utilisateurs de cartes 
+General MIDI plus sophistiqu‚es doivent seulement s‚lectionner le 
+pilote Sound Blaster en cas de problŠmes avec le pilote General MIDI 
+de la carte, l'ancien chipset Sound Blaster OPL-2 n'offrant pas la 
+qualit‚ de son disponible avec les p‚riph‚riques plus r‚cents.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[sbpro2.mdi]
+
+;
+;Selected by default if BLASTER variable is of type T6 or >, and AUTOEXEC does
+;not contain AWEUTIL string
+;
+;Default I/O parms from BLASTER (A only)
+;
+
+.E BLASTER
+.T3
+.NE INTERWAVE
+.NE ULTRASND
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.NA AWEUTIL
+.NC NVINIT
+.IOB
+.IOA
+
+.NAME
+Creative Labs Sound Blaster(TM) 16
+
+.SPECIAL_TEXT
+Ce pilote est destin‚ … ˆtre utilis‚ avec les adaptateurs Sound Blaster
+16 non ‚quip‚es de cartes filles General MIDI telles que la Wave Blaster.
+
+Bien que la AWE-32 puisse ‚galement ˆtre prise en charge par le pilote
+Sound Blaster 16, les utilisateurs de cartes AWE-32 doivent s‚lectionner
+le pilote "Creative Labs AWE-32(TM) General MIDI" pour une qualit‚
+sonore optimale.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[sbpro2.mdi]
+
+;
+;Selected by default if BLASTER variable is of type T2, T4, or T5,
+;no other "clone" variable exists, and inp(388) == 0x00
+;
+;Default I/O parms from BLASTER (A only)
+;
+
+.E BLASTER
+.T2
+.NE INTERWAVE
+.NE ULTRASND
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.NC NVINIT
+.IOB
+.IOA
+
+.SPECIAL_TEXT
+Si votre Sound Blaster Pro est d'un modŠle "courant", ‚quip‚e du
+synth‚tiseur Yamaha OPL-3 ou si la musique ne semble pas 
+correcte avec l'autre pilote Sound Blaster Pro, s‚lectionnez cette 
+option.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[sbpro1.mdi]
+
+;
+;Selected by default if BLASTER variable is of type T2, T4, or T5,
+;no other "clone" variable exists, and inp(388) == 0x06
+;
+;Default I/O parms from BLASTER (A only)
+;
+
+.E BLASTER
+.T2
+.NE INTERWAVE
+.NE ULTRASND
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.NC NVINIT
+.IOB
+.IOA
+
+.SPECIAL_TEXT
+En s‚lectionnant ce pilote, les utilisateurs des premiŠres versions de
+la carte Sound Blaster Pro peuvent disposer de musique st‚r‚o FM … 
+18 voix et deux op‚rateurs. Toutefois, la plupart des cartes Sound
+Blaster Pro et compatibles, notamment la Sound Blaster 16,
+utilisent le chipset OPL-3, plus puissant. Avec ces cartes plus 
+r‚centes, s‚lectionnez plut“t le pilote 
+"Creative Labs Sound Blaster Pro(TM) (new version)".
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[tandy.mdi]
+
+;
+;Never selected by default
+;
+;No configuration allowed
+;
+
+.ND
+.ION
+
+.SPECIAL_TEXT
+Ce pilote offre des fonctions musicales 3 voix compatibles Tandy 1000.
+.END_SPECIAL_TEXT
+
+;ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝ
+
+[pcspkr.mdi]
+
+;
+;Never selected by default
+;
+;No configuration allowed
+;
+
+.ND
+.ION
+
+.SPECIAL_TEXT
+Ce pilote prend en charge la musique sur le haut-parleur interne
+IBM PC (1 voix), qui offre une synthŠse musicale de qualit‚ m‚diocre.
+.END_SPECIAL_TEXT
+
+
+

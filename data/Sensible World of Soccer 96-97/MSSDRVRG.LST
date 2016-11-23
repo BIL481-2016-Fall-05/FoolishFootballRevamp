@@ -1,0 +1,813 @@
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+;ЭЭ                                                                        ЭЭ
+;ЭЭ  Miles Sound System from RAD Software                                  ЭЭ
+;ЭЭ                                                                        ЭЭ
+;ЭЭ  Sound driver installation message file                                ЭЭ
+;ЭЭ                                                                        ЭЭ
+;ЭЭ  Default selection criteria/examples:                                  ЭЭ
+;ЭЭ                                                                        ЭЭ
+;ЭЭ    .E BLASTER ........ Environment var 'BLASTER' must be present       ЭЭ
+;ЭЭ    .C MVSOUND ........ CONFIG.SYS must contain 'MVSOUND' string        ЭЭ
+;ЭЭ    .A AWEUTIL ........ AUTOEXEC.BAT must contain 'AWEUTIL' string      ЭЭ
+;ЭЭ                                                                        ЭЭ
+;ЭЭ    .NE BLASTER ....... Environment var 'BLASTER' must NOT be present   ЭЭ
+;ЭЭ    .NC MVSOUND ....... CONFIG.SYS must NOT contain 'MVSOUND' string    ЭЭ
+;ЭЭ    .NA AWEUTIL ....... AUTOEXEC.BAT must NOT contain 'AWEUTIL' string  ЭЭ
+;ЭЭ    .ND  .............. Entry cannot be selected as default             ЭЭ
+;ЭЭ                                                                        ЭЭ
+;ЭЭ    .T1  .............. Optional BLASTER Tn, if present, must be 1|3    ЭЭ
+;ЭЭ    .T2  .............. Mandatory BLASTER Tn must be 2|4|5              ЭЭ
+;ЭЭ    .T3  .............. Mandatory BLASTER Tn must be >=6                ЭЭ
+;ЭЭ                                                                        ЭЭ
+;ЭЭ  I/O default derivation:                                               ЭЭ
+;ЭЭ                                                                        ЭЭ
+;ЭЭ    .IOB .............. Derive I/O defaults from BLASTER variable       ЭЭ
+;ЭЭ    .IOD .............. I/O defaults = first driver default entry       ЭЭ
+;ЭЭ    .ION .............. Do not allow manual I/O configuration at all    ЭЭ
+;ЭЭ                                                                        ЭЭ
+;ЭЭ    .IOA .............. Use I/O address only (must appear at end)       ЭЭ
+;ЭЭ    .IOL .............. Suppress high-DMA prompt (must appear at end)   ЭЭ
+;ЭЭ                                                                        ЭЭ
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[iwav.dig]
+
+;
+;Selected by default if autoexec contains IWINIT
+;
+;Default I/O parms from driver
+;
+
+.E INTERWAVE
+
+.IOD
+
+.NAME
+InterWave (TM) Digital Audio 
+
+.SPECIAL_TEXT
+W„hlen Sie diesen Treiber fЃr die Verwendung mit jeder InterWave (TM) 
+Audio Prozessor basierten Soundkarte. Beispiele fЃr diese Art von Karten 
+sind Core Dynamic Dynasonix, die Reveal WaveExtreme 32, und die STB 
+SoundRage 32 Soundkarten. Einige Computermodelle von Compaq und 
+Gateway 2000 verwenden auch den InterWave Audio Prozessor, wenden Sie 
+sich bitte an den Hersteller fЃr weitere Informationen.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[nvdig.dig]
+
+;
+;Selected by default if config.sys contains nvidia
+;
+;Default I/O parms from driver
+;
+
+.C NVINIT
+.ION
+
+.SPECIAL_TEXT
+W„hlen Sie diesen Treiber, wenn Ihr System mit einem NVidia-kompatiblen
+Multimedia Beschleuniger ausgestattet ist. Falls der Treiber Ihre Karte 
+nicht korrekt erkennt, wenden Sie sich bitte an Ihren Fachh„ndler wegen 
+einer neuen Treiberversion.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[rap10.dig]
+
+;
+;Never selected by default
+;
+;Default I/O parms from driver
+;
+
+.ND
+.IOD
+
+.HIGH_DMA_PAIRS
+
+.SPECIAL_TEXT
+WARNUNG: W„hrend der automatischen Erkennung der Roland RAP-10 ЃberprЃft
+der Treiber das Vorhandensein der RAP-10 an I/O Adresse 320H oder 330H.  
+Er ЃberprЃft NICHT die DMA- oder IRQ-Einstellungen der Karte. Wenn Ihre 
+RAP-10 Karte nicht auf IRQ 9 eingestellt ist, oder wenn DMA Kanal 5 und 
+6 bereits von einer anderen Karte in Ihrem System verwendet werden, 
+MљSSEN Sie im n„chsten MenЃ die Option "Automatische Erkennung 
+Ѓberspringen und Treiber manuell konfigurieren" w„hlen, und die korrekten 
+Einstellungen Ihrer Karte eintragen. Ihr System k”nnte sonst abstЃrzen,
+oder es k”nnte zu erheblichem "Stottern" w„hrend der Audiowiedergabe kommen.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[proaudio.dig]
+
+;
+;Selected by default if CONFIG.SYS contains MVSOUND string
+;
+;No configuration allowed
+;
+
+.C MVSOUND.SYS
+.ION
+
+.SPECIAL_TEXT
+Durch diesen Treiber wird fЃr alle Versionen der Media Vision Pro Audio 
+Spectrum Karten die Wiedergabe digitaler Effekte in Stereo gew„hrleistet. 
+Falls Sie irgendwelche Probleme feststellen sollten, w„hlen Sie statt 
+dessen den Sound Blaster-kompatiblen Treiber.
+Der Media Vision Treiber MVSOUND.SYS muб in den Speicher geladen 
+werden, sonst wird Ihre Karte nicht erkannt.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[ultra.dig]
+
+;
+;Selected by default if environment contains ULTRASND variable
+;
+;Default I/O parms from driver
+;
+
+.E ULTRASND
+.IOD
+
+.SPECIAL_TEXT
+Stellen Sie bei der Verwendung dieses Treibers sicher, daб keine Gravis
+Treiber wie SBOS, UltraMID, oder Mega-Em aktiv sind.  Ihre UltraSound 
+System Software sollte Version 2.0 oder sp„ter sein.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[jammer.dig]
+
+;
+;Never selected by default
+;
+;Default I/O parms from driver
+;
+
+.ND
+.IOD
+
+.NAME
+New Media Corporation WaveJammer(TM) Digital Audio
+
+.SPECIAL_TEXT
+Die WaveJammer Karte von New Media Corporation verfЃgt Ѓber eine hoch-
+qualitative Audiowiedergabe fЃr PCMCIA-basierte Computer. Um FM Musik 
+Wiedergabe mit der Wave Jammer zu erhalten, w„hlen Sie den Ad Lib(R)
+Musik Synthesizer Karten Treiber.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[sndscape.dig]
+
+;
+;Selected by default if environment contains SNDSCAPE variable
+;
+;Default I/O parms from driver
+;
+
+.E SNDSCAPE
+.IOD
+
+.NAME
+Ensoniq SoundScape(TM) Digital Audio
+
+.SPECIAL_TEXT
+W„hlen Sie diesen Treiber, wenn Sie eine Ensoniq SoundScape(TM) 
+oder kompatible Soundkarte besitzen.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[sndsys.dig]
+
+;
+;Never selected by default
+;
+;Default I/O parms from driver
+;
+
+.ND
+.IOD
+
+.NAME
+Microsoft(R) Windows(TM) Sound System oder 100% kompatible
+
+.SPECIAL_TEXT
+W„hlen Sie diesen Treiber, wenn Ihre Karte Microsoft Windows Sound System 
+kompatibel ist.
+Falls DMA Kanal 1 nicht fЃr die Verwendung Ihrer Windows Sound System 
+Karte verfЃgbar ist, mЃssen Sie die Option "Automatische Erkennung 
+Ѓberspringen und Treiber manuell konfigurieren" w„hlen, und einen 
+anderen DMA Kanal w„hlen. Wenn Sie Windows 95 verwenden, sollten Sie 
+eventuell die Option "Windows 95 Konfiguration ansehen" im HaupmenЃ 
+verwenden um festzustellen, welche I/O Adresse Ihre Windows Sound 
+System Karte verwendet.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[adrv688.dig]
+
+;
+;Never selected by default
+;
+;Default I/O parms from driver
+;
+
+.ND
+.IOD
+
+.NAME
+ESS Technology ES688 Digital Audio
+
+.SPECIAL_TEXT
+Dieser Treiber unterstЃtzt alle Systeme, die mit dem ESS Technology
+ES688 Chipsatz ausgestattet sind.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[sblaster.dig]
+
+;
+;Selected by default if BLASTER variable is of type T1 or T3 (or no T 
+;specifier), and no other "clone" variable exists (ULTRASND, MVSOUND, etc.)
+;
+;Default I/O parms from BLASTER
+;
+
+.E BLASTER
+.T1
+.NE INTERWAVE
+.NE ULTRASND
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.NC NVINIT
+.IOB
+.IOL
+
+.SPECIAL_TEXT
+W„hlen Sie diesen Treiber, wenn Sie eine Sound Blaster, Sound Galaxy,
+Thunderboard, oder Pro Audio Spectrum Karte verwenden. Andere Karten,
+die nicht direkt unterstЃtzt werden, k”nnen auch mit diesem Treiber
+funktionieren, sofern Sie Ѓber eine hardware-basierte Sound Blaster
+Kompatibilit„t, ohne emulierenden Treiber oder TSRs, verfЃgen.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[sbpro.dig]
+
+;
+;Selected by default if BLASTER variable is of type T2, T4, or T5
+;and no other "clone" variable exists
+;
+;Default I/O parms from BLASTER
+;
+
+.E BLASTER
+.T2
+.NE INTERWAVE
+.NE ULTRASND
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.NC NVINIT
+.IOB
+.IOL
+
+.SPECIAL_TEXT
+Dieser Treiber unterstЃtzt alle Versionen der Sound Blaster Pro und 
+100%-kompatiblen Karten. Er wird fЃr die Verwendung mit Sound Blaster 
+16 or AWE32 Karten nicht
+empfohlen.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[sb16.dig]
+
+;
+;Selected by default if BLASTER variable is of type T6
+;
+;Default I/O parms from BLASTER (I/O address only)
+;
+
+.E BLASTER
+.T3
+.NE INTERWAVE
+.NE ULTRASND
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.NC NVINIT
+.IOB
+.IOA
+
+.SPECIAL_TEXT
+FЃr eine hochqualitative Wiedergabe digitaler Effekte mit Ihrer
+ Sound Blaster 16 oder AWE32 Karte, w„hlen Sie diesen Treiber.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[mpu401.mdi]
+
+;
+;Never selected by default
+;
+;Default I/O parms from driver
+;
+
+.ND
+.IOD
+
+.SPECIAL_TEXT
+Die meisten General MIDI Synthesizer unterstЃtzen den Roland MPU-401 MIDI
+Hardware Schnittstellen Standard. Das schlieбt den Roland Sound Canvas, die 
+RAP-10, und kompatible Karten ein, wie auch Wavetableaufs„tze fЃr die Sound 
+Blaster 16 Familie. MPU-401 Ger„te bieten generell die h”chste verfЃgbare 
+Leistung und Soundqualit„t,Besitzer von Adaptec SCSI Controllern sollten 
+aber eventuell die Option "Automatische Erkennung Ѓberspringen und Treiber 
+manuell konfigurieren" im n„chsten MenЃ benutzen, und so die 
+Wahrscheinlichkeit von Problemen bei der Erkennung des MPU-401 reduzieren.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[iwav.mdi]
+
+;
+;Selected by default if autoexec contains IWINIT
+;
+;Default I/O parms from driver
+;
+
+.E INTERWAVE
+
+.IOD
+
+.NAME
+InterWave (TM) General MIDI
+
+.SPECIAL_TEXT
+Dieser Treiber ist fЃr die Verwendung mit jeder InterWave (TM) Audio
+Prozessor basierten Soundkarte geeignet. Beispiele fЃr diese Art von
+Karten sind Core Dynamic Dynasonix, die Reveal WaveExtreme 32, und 
+die STB SoundRage 32 Soundkarten. Einige Computermodelle von Compaq
+und Gateway 2000 verwenden auch den InterWave Audio Prozessor, wenden
+Sie sich bitte an den Hersteller fЃr weitere Informationen.
+
+Wenn Sie Schwierigkeiten bei der Konfiguration haben, w„hlen Sie den
+Roland MPU-401 Treiber.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[nvmpu.mdi]
+
+;
+;Selected by default if config.sys contains nvidia
+;
+;Default I/O parms from driver
+;
+
+.C NVINIT
+.ION
+
+.SPECIAL_TEXT
+W„hlen Sie diesen Treiber, wenn Ihr System mit einem NVidia-kompatiblen
+Multimedia Beschleuniger ausgestattet ist. Falls der Treiber Ihre Karte 
+nicht korrekt erkennt, wenden Sie sich bitte an Ihren Fachh„ndler wegen 
+einer neuen Treiberversion.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[mpu401.mdi]
+
+;
+;Never selected by default
+;
+;Default I/O parms from driver
+;
+
+.NAME
+Yamaha WaveForce(TM) DB50-XG General MIDI
+
+.ND
+.IOD
+
+.SPECIAL_TEXT
+W„hlen Sie diesen Treiber, wenn Ihre Creative Labs Sound Blaster(TM) 
+Karte mit einem Yamaha General MIDI/XG Wavetable ausgetattet ist.
+
+Besitzer von Adaptec SCSI Controllern sollten aber eventuell die 
+Option "Automatische Erkennung Ѓberspringen und Treiber manuell 
+konfigurieren" im n„chsten MenЃ benutzen, und so die Wahrscheinlichkeit
+von Problemen bei der Erkennung des MPU-401 reduzieren.
+.END_SPECIAL_TEXT
+
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[sndscape.mdi]
+
+;
+;Selected by default if environment contains SNDSCAPE variable
+;
+;Default I/O parms from driver
+;
+
+.E SNDSCAPE
+.IOD
+
+.NAME
+Ensoniq SoundScape(TM) General MIDI
+
+.SPECIAL_TEXT
+W„hlen Sie diesen Treiber, wenn Sie eine Ensoniq SoundScape(TM)
+oder kompatible Soundkarte haben.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[ultra.mdi]
+
+;
+;Selected by default if environment contains ULTRASND variable
+;
+;Default I/O parms from driver
+;
+
+.E ULTRASND
+.IOD
+
+.SPECIAL_TEXT
+Stellen Sie bei der Verwendung dieses Treibers sicher, daб keine Gravis
+Treiber wie SBOS, UltraMID, oder Mega-Em aktiv sind.  Ihre UltraSound 
+System Software sollte Version 2.0 oder sp„ter sein.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[sbawe32.mdi]
+
+;
+;Selected by default if AUTOEXEC contains AWEUTIL string
+;
+;Default I/O parms from driver
+;
+
+.A AWEUTIL
+.IOD
+
+.NAME
+Creative Labs AWE-32(TM) General MIDI
+
+.SPECIAL_TEXT
+Dieser Treiber bietet General MIDI Musik in Wavetable-Qualit„t mit
+Creative Labs AWE32 Karten. Der Treiber "Creative Labs Sound Blaster 
+16 oder AWE32" sollte fЃr die Wiedergabe digitaler Effekte gew„hlt 
+werden.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[pas.mdi]
+
+;
+;Selected by default if MVSOUND exists in CONFIG.SYS, and inp(388) == 0x06
+;
+;No configuration allowed
+;
+
+.C MVSOUND.SYS
+.ION
+
+.SPECIAL_TEXT
+Besitzer der frЃhesten Pro Audio Spectrum Karten von Media Vision sollten 
+diesen Treiber verwenden. Der Media Vision Treiber MVSOUND.SYS muб in den 
+Speicher geladen sein, sonst wird Ihre Karte nicht erkannt.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[pasplus.mdi]
+
+;
+;Selected by default if MVSOUND exists in CONFIG.SYS, and inp(388) == 0x00
+;
+;No configuration allowed
+;
+
+.C MVSOUND.SYS
+.ION
+
+.SPECIAL_TEXT
+Besitzer von Media Vision Pro Audio Spectrum Plus und Pro Audio Spectrum
+16 Karten sollten diesen Treiber w„hlen. Der Media Vision Treiber 
+MVSOUND.SYS muб in den Speicher geladen sein, sonst wird Ihre Karte 
+nicht erkannt.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[adlibg.mdi]
+
+;
+;Selected by default if GOLD variable exists in AUTOEXEC.BAT
+;
+;Default I/O parms from driver  
+;
+
+.E GOLD
+.IOD
+
+.SPECIAL_TEXT
+Dieser Treiber unterstЃtzt alle Ad Lib Gold Musik Synthesizer 
+Karten im 4-Operatoren FM Modus.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[adlib.mdi]
+
+;
+;Never selected by default
+;
+;No configuration -- always at $388
+;
+
+.ND
+.ION
+
+.SPECIAL_TEXT
+Dieser Treiber kann mit allen Ad Lib-kompatiblen FM Musik Synthesizer
+Karten verwendet werden, die fЃr ihre Ad Lib FM Kompatibilit„t keine 
+Treiber oder TSRs ben”tigen. Besitzer weiterentwickelter General 
+MIDI-basierter Karten sollten den Ad Lib Treiber nur w„hlen, wenn 
+Probleme mit dem General MIDI Treiber auftreten, da der „ltere 
+Ad Lib OPL-2 Chipsatz nicht die Ѓberlegene Soundqualit„t bietet, 
+die mit modernen Karten verfЃgbar ist.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[opl3.mdi]
+
+;
+;Never selected by default
+;
+;No configuration -- always at $388
+;
+
+.ND
+.ION
+
+.NAME
+ESS Technology ES688 FM Audio
+
+.SPECIAL_TEXT
+Dieser Treiber unterstЃtzt Systeme, die mit dem ESS Technology ES688 
+Chipsatz ausgestattet sind.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[esfm.mdi]
+
+;
+;Never selected by default
+;
+;Configuration from driver
+;
+
+.ND
+.IOD
+
+.NAME
+ESS Technology ES1688, ES1788, ES1888 Erweitertes FM Audio
+
+.SPECIAL_TEXT
+Dieser Treiber unterstЃtzt Systeme, die mit den ESS Technology ES1688, 
+ES1788, oder ES1888 Chips„tzen ausgestattet sind. Durch die Verwendung 
+dieses Treibers erhalten Sie eine verbesserte FM Musik Wiedergabe. 
+Sollten Probleme auftreten, w„hlen Sie statt dessen den Treiber 
+'ESS Technology ES688 FM Audio'.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[opl3.mdi]
+
+;
+;Never selected by default
+;
+;No configuration -- always at $388
+;
+
+.ND
+.ION
+
+.SPECIAL_TEXT
+Dieser Treiber ist fЃr die Verwendung mit allen Yamaha OPL-3 basierten 
+FM Musik Synthesizern geeignet, wie auch fЃr jene Karten, die von 
+keinem anderen Treiber in der Liste unterstЃtzt werden.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[mt32mpu.mdi]
+
+;
+;Never selected by default
+;
+;Default I/O parms from driver
+;
+
+.ND
+.IOD
+
+.SPECIAL_TEXT
+Obwohl die Roland MT-32 nicht General MIDI-kompatibel ist, verwendet
+sie den MPU-401 Hardware Schnittstellen Standard um mit anderen 
+Applicationen zu kommunizieren. Besitzer von Adaptec SCSI 
+Controllern sollten aber eventuell die Option "Automatische
+Erkennung Ѓberspringen und Treiber manuell konfigurieren" im n„chsten
+MenЃ benutzen, und so die Wahrscheinlichkeit von Problemen bei der 
+Erkennung des MPU-401 reduzieren.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[sblaster.mdi]
+
+;
+;Selected by default if BLASTER variable is of type T1 or T3 (or no T 
+;specifier), and no other "clone" variable exists (ULTRASND, MVSOUND, etc.)
+;
+;Default I/O parms from BLASTER (A only)
+;
+
+.E BLASTER
+.T1
+.NE INTERWAVE
+.NE ULTRASND
+.NE INTERWAVE
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.NC NVINIT
+.IOB
+.IOA
+
+.SPECIAL_TEXT
+Dieser Treiber kann mit allen SoundBlaster-kompatiblen FM Musik 
+Synthesizer Karten verwendet werden, die fЃr ihre SoundBlaster FM 
+Kompatibilit„t keine Treiber oder TSRs ben”tigen. Besitzer 
+weiterentwickelter General MIDI-basierter Karten sollten den
+SoundBlaster Treiber nur w„hlen, wenn Probleme mit dem General MIDI 
+Treiber auftreten, da der „ltere SoundBlaster OPL-2 Chipsatz nicht
+die Ѓberlegene Soundqualit„t bietet, die mit modernen Karten 
+verfЃgbar ist.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[sbpro2.mdi]
+
+;
+;Selected by default if BLASTER variable is of type T6 or >, and AUTOEXEC does
+;not contain AWEUTIL string
+;
+;Default I/O parms from BLASTER (A only)
+;
+
+.E BLASTER
+.T3
+.NE INTERWAVE
+.NE ULTRASND
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.NA AWEUTIL
+.NC NVINIT
+.IOB
+.IOA
+
+.NAME
+Creative Labs Sound Blaster(TM) 16
+
+.SPECIAL_TEXT
+Dieser Treiber ist fЃr die Verwendung mit Sound Blaster 16 Karten 
+geeignet, die nicht mit einem General MIDI Aufsatz, wie dem Wave 
+Blaster, ausgestattet sind. Obwohl die AWE32 Karten auch von diesem
+Treiber unterstЃtzt werden, sollten Besitzer dieser Karten den Treiber 
+"Creative Labs AWE32(TM) General MIDI" w„hlen um optimale Klangqualit„t
+zu erzielen.    
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[sbpro2.mdi]
+
+;
+;Selected by default if BLASTER variable is of type T2, T4, or T5,
+;no other "clone" variable exists, and inp(388) == 0x00
+;
+;Default I/O parms from BLASTER (A only)
+;
+
+.E BLASTER
+.T2
+.NE INTERWAVE
+.NE ULTRASND
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.NC NVINIT
+.IOB
+.IOA
+
+.SPECIAL_TEXT
+Wenn Ihre Sound Blaster Pro Karte eine aktuelles Modell mit 
+OPL-3 Chipsatz ist, oder die Musikwiedergabe bei der Verwendung 
+des anderen Sound Blaster Pro Treibers nicht richtig klingt, 
+sollten Sie diesen Treiber w„hlen.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[sbpro1.mdi]
+
+;
+;Selected by default if BLASTER variable is of type T2, T4, or T5,
+;no other "clone" variable exists, and inp(388) == 0x06
+;
+;Default I/O parms from BLASTER (A only)
+;
+
+.E BLASTER
+.T2
+.NE INTERWAVE
+.NE ULTRASND
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.NC NVINIT
+.IOB
+.IOA
+
+.SPECIAL_TEXT
+Besitzer frЃherer Versionen der Sound Blaster Pro Karten k”nnen 
+sich durch die Wahl dieses Treibers an 18-stimmiger, 2-Operatoren
+FM Stereo Musik erfreuen. Die meisten Sound Blaster Pro Karten und
+ihre kompatiblen, so auch die Sound Blaster 16, verwenden
+den leistungsf„higeren OPL-3 Chipsatz. Mit diesen jЃngeren Karten
+sollten Sie statt dessen den Treiber "Creative Labs Sound Blaster
+Pro(TM) (neue Version)" w„hlen.
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[tandy.mdi]
+
+;
+;Never selected by default
+;
+;No configuration allowed
+;
+
+.ND
+.ION
+
+.SPECIAL_TEXT
+Durch diesen Treiber erhalten Sie Tandy 1000-kompatible, 
+3-stimmige MusikunterstЃtzung..
+.END_SPECIAL_TEXT
+
+;ЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭЭ
+
+[pcspkr.mdi]
+
+;
+;Never selected by default
+;
+;No configuration allowed
+;
+
+.ND
+.ION
+
+.SPECIAL_TEXT
+Dieser Treiber unterstЃtzt den IBM PC internen Lautsprecher (1-stimmig), 
+die Qualit„t der Musik ist allerdings sehr gering.
+.END_SPECIAL_TEXT
+
+
+

@@ -1,0 +1,663 @@
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+;UU                                                                        UU
+;UU  Miles Design Audio Interface Library                                  UU
+;UU                                                                        UU
+;UU  Sound driver installation message file                                UU
+;UU                                                                        UU
+;UU  Default selection criteria/examples:                                  UU
+;UU                                                                        UU
+;UU    .E BLASTER ........ Environment var 'BLASTER' must be present       UU
+;UU    .C MVSOUND ........ CONFIG.SYS must contain 'MVSOUND' string        UU
+;UU    .A AWEUTIL ........ AUTOEXEC.BAT must contain 'AWEUTIL' string      UU
+;UU                                                                        UU
+;UU    .NE BLASTER ....... Environment var 'BLASTER' must NOT be present   UU
+;UU    .NC MVSOUND ....... CONFIG.SYS must NOT contain 'MVSOUND' string    UU
+;UU    .NA AWEUTIL ....... AUTOEXEC.BAT must NOT contain 'AWEUTIL' string  UU
+;UU    .ND  .............. Entry cannot be selected as default             UU
+;UU                                                                        UU
+;UU    .T1  .............. Optional BLASTER Tn, if present, must be 1|3    UU
+;UU    .T2  .............. Mandatory BLASTER Tn must be 2|4|5              UU
+;UU    .T3  .............. Mandatory BLASTER Tn must be >=6                UU
+;UU                                                                        UU
+;UU  I/O default derivation:                                               UU
+;UU                                                                        UU
+;UU    .IOB .............. Derive I/O defaults from BLASTER variable       UU
+;UU    .IOD .............. I/O defaults = first driver default entry       UU
+;UU    .ION .............. Do not allow manual I/O configuration at all    UU
+;UU                                                                        UU
+;UU    .IOA .............. Use I/O address only (must appear at end)       UU
+;UU    .IOL .............. Suppress high-DMA prompt (must appear at end)   UU
+;UU                                                                        UU
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[sblaster.dig]
+
+;
+;Selected by default if BLASTER variable is of type T1 or T3 (or no T 
+;specifier), and no other "clone" variable exists (ULTRASND, MVSOUND, etc.)
+;
+;Default I/O parms from BLASTER
+;
+
+.E BLASTER
+.T1
+.NE ULTRASND
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.IOB
+.IOL
+
+.SPECIAL_TEXT
+Si vous utilisez un adaptateur Sound Blaster, Sound Galaxy, Thunderboard 
+ou Pro Audio Spectrum, choisissez ce pilote. D'autres cartes son qui ne 
+sont pas directement support‚es peuvent fonctionner avec ce pilote, si 
+elles assurent une compatibilit‚ mat‚rielle avec Sound Blaster sans 
+pilote d'‚mulation ni programme r‚sident (TSR).
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[sbpro.dig]
+
+;
+;Selected by default if BLASTER variable is of type T2, T4, or T5
+;and no other "clone" variable exists
+;
+;Default I/O parms from BLASTER
+;
+
+.E BLASTER
+.T2
+.NE ULTRASND
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.IOB
+.IOL
+
+.SPECIAL_TEXT
+Ce pilote supporte toutes les versions de Sound Blaster Pro et les 
+adaptateurs compatibles. L'utilisation avec Sound Blaster 16 ou AWE32 
+est d‚conseill‚e. 
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[sb16.dig]
+
+;
+;Selected by default if BLASTER variable is of type T6
+;
+;Default I/O parms from BLASTER (I/O address only)
+;
+
+.E BLASTER
+.T3
+.NE ULTRASND
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.IOB
+.IOA
+
+.SPECIAL_TEXT
+Pour obtenir un son num‚rique de haute qualit‚ avec un adaptateur Sound 
+Blaster 16 ou AWE32, choisissez ce pilote.
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[rap10.dig]
+
+;
+;Never selected by default
+;
+;Default I/O parms from driver
+;
+
+.ND
+.IOD
+
+.HIGH_DMA_PAIRS
+
+.SPECIAL_TEXT
+AVERTISSEMENT : Pendant l'auto-d‚tection de la carte Roland RAP-10, le 
+pilote v‚rifie que la RAP-10 est pr‚sente … l'adresse E/S 320H ou 330H. 
+Le pilote NE VERIFIE ni le canal DMA ni les paramŠtres IRQ de la carte. 
+Si votre carte RAP-10 n'est pas configur‚e en IRQ 9, ou si les canaux DMA 
+5 et 6 sont d‚j… utilis‚s par une autre carte, choisissez l'option 
+"Passer l'auto-d‚tection et configurer le pilote manuellement" du men 
+suivant, et entrez les paramŠtres E/S correspondant … votre carte. Sinon, 
+votre systŠme peut ne pas fonctionner ou des gr‚sillements se produire 
+lors de la diffusion des sons.
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[proaudio.dig]
+
+;
+;Selected by default if CONFIG.SYS contains MVSOUND string
+;
+;No configuration allowed
+;
+
+.C MVSOUND.SYS
+.ION
+
+.SPECIAL_TEXT
+Ce pilote assure un son num‚rique st‚r‚o avec toutes les versions de 
+Media Vision Pro Audio Spectrum. Si vous rencontrez des difficult‚s, 
+choisissez plut“t le pilote compatible Sound Blaster. L'utilitaire 
+MVSOUND.SYS de Media Vision doit ˆtre charg‚ en m‚moire, faute de quoi 
+votre carte ne sera pas d‚tect‚e.
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[ultra.dig]
+
+;
+;Selected by default if environment contains ULTRASND variable
+;
+;Default I/O parms from driver
+;
+
+.E ULTRASND
+.IOD
+
+.SPECIAL_TEXT
+Lors de l'utilisation de ce pilote, assurez-vous qu'aucun utilitaire 
+GRAVIS n'est activ‚ (par exemple, SBOS, UltraMIDI, Mega-Em...). Vous 
+devez poss‚der au moins la version 2.0 du logiciel systŠme UltraSound.
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[jammer.dig]
+
+;
+;Never selected by default
+;
+;Default I/O parms from driver
+;
+
+.ND
+.IOD
+
+.NAME
+New Media Corporation WaveJammer(TM) Digital Audio
+
+.SPECIAL_TEXT
+La carte WaveJammer de New Media Corporation assure un son de haute 
+qualit‚ pour portables ‚quip‚s de cartes PCMCIA. Choisissez le pilote Ad 
+Lib (R) Music Synthesizer Card pour restituer les s‚quences musicales FM 
+avec la carte WaveJammer.
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[sndscape.dig]
+
+;
+;Selected by default if environment contains SNDSCAPE variable
+;
+;Default I/O parms from driver
+;
+
+.E SNDSCAPE
+.IOD
+
+.NAME
+Ensoniq SoundScape(TM) Digital Audio
+
+.SPECIAL_TEXT
+Choisissez ce pilote si vous avez une carte son Ensoniq SoundScape (TM) 
+ou compatible
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[sndsys.dig]
+
+;
+;Never selected by default
+;
+;Default I/O parms from driver
+;
+
+.ND
+.IOD
+
+.NAME
+Microsoft(R) Windows(TM) Sound System or 100% compatible
+
+.SPECIAL_TEXT
+Choisissez ce pilote si votre carte est compatible Microsoft Windows 
+Sound System.
+Si le canal DMA 1 est d‚j… utilis‚ par une autre carte, choisissez un 
+autre canal DMA en s‚lectionnant l'option "Passer l'auto-d‚tection et 
+configurer le pilote manuellement". Si vous fonctionnez sous Windows 95 
+ou utilisez un autre systŠme Plug & Play, consultez le gestionnaire de 
+p‚riph‚riques pour connaŒtre l'adresse E/S utilis‚e.
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[adrv688.dig]
+
+;
+;Never selected by default
+;
+;Default I/O parms from driver
+;
+
+.ND
+.IOD
+
+.NAME
+ESS Technology ES688 Digital Audio
+
+.SPECIAL_TEXT
+Ce pilote supporte les systŠmes ‚quip‚s d'un jeu de puce ES688 de ESS 
+Technology.
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[mpu401.mdi]
+
+;
+;Never selected by default
+;
+;Default I/O parms from driver
+;
+
+.ND
+.IOD
+
+.SPECIAL_TEXT
+La plupart des synth‚tiseurs General MIDI supportent la norme d'interface 
+mat‚rielle Roland MPU-401 MIDI parmi lesquels Roland Sound Canvas Rap-10 
+et compatibles ainsi que les cartes-fille additionnelles des Sound 
+Blaster 16.Les p‚riph‚riques MPU-401 offrent en g‚n‚ral les meilleurs 
+performances et rendus sonores  les utilisateurs de contr“leurs Adaptec 
+SCSI peuvent choisir l'option "Passer l'auto-d‚tection et configurer le 
+pilote manuellement" du menu suivant pour r‚duire les probabilit‚s de 
+problŠmes de d‚tection de la MPU-401.Si vous avez une Creative Labs 
+AWE-32 choisissez plut“t "Creative Labs AWE-32 (TM) General MIDI".
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[sndscape.mdi]
+
+;
+;Selected by default if environment contains SNDSCAPE variable
+;
+;Default I/O parms from driver
+;
+
+.E SNDSCAPE
+.IOD
+
+.NAME
+Ensoniq SoundScape(TM) General MIDI
+
+.SPECIAL_TEXT
+Choisissez ce pilote si vous avez une carte son Ensoniq SoundScape (TM) 
+ou compatible.
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[ultra.mdi]
+
+;
+;Selected by default if environment contains ULTRASND variable
+;
+;Default I/O parms from driver
+;
+
+.E ULTRASND
+.IOD
+
+.SPECIAL_TEXT
+Lors de l'utilisation de ce pilote, assurez-vous qu'aucun utilitaire 
+GRAVIS n'est activ‚ (par exemple, SBOS, UltraMIDI, Mega-Em...). Vous 
+devez poss‚der au moins la version 2.0 du logiciel systŠme UltraSound.
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[sbawe32.mdi]
+
+;
+;Selected by default if AUTOEXEC contains AWEUTIL string
+;
+;Default I/O parms from driver
+;
+.A AWEUTIL
+.IOD
+
+.NAME
+Creative Labs AWE-32(TM) General MIDI
+
+.SPECIAL_TEXT
+Utilis‚ avec la carte Creative Labs AWE-32, ce pilote offre une synthŠse 
+musicale General MIDI … plusieurs ondes. Pour obtenir un son num‚rique, 
+choisissez le pilote "Creative Labs Sound Blaster 16 ou AWE32".
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[sblaster.mdi]
+
+;
+;Selected by default if BLASTER variable is of type T1 or T3 (or no T 
+;specifier), and no other "clone" variable exists (ULTRASND, MVSOUND, etc.)
+;
+;Default I/O parms from BLASTER (A only)
+;
+
+.E BLASTER
+.T1
+.NE ULTRASND
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.IOB
+.IOA
+
+.SPECIAL_TEXT
+Ce pilote peut ˆtre utilis‚ avec n'importe quelle carte de synth‚tiseur 
+musical dont la compatibilit‚ FM Sound Blaster ne d‚pend pas de 
+programmes r‚sidents. Les utilisateurs de cartes General MIDI plus 
+perfectionn‚es ne doivent choisir le pilote Sound Blaster que si des 
+difficult‚s se produisent lors de l'utilisation du pilote de la carte 
+General MIDI, l'ancien jeu de puce Sound Blaster OPL-2 n'assurant pas la 
+qualit‚ sonore offerte par de plus r‚cents p‚riph‚riques
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[sbpro2.mdi]
+
+;
+;Selected by default if BLASTER variable is of type T6 or >, and AUTOEXEC does
+;not contain AWEUTIL string
+;
+;Default I/O parms from BLASTER (A only)
+;
+
+.E BLASTER
+.T3
+.NE ULTRASND
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.NA AWEUTIL
+.IOB
+.IOA
+
+.NAME
+Creative Labs Sound Blaster(TM) 16
+
+.SPECIAL_TEXT
+Ce pilote est con‡u pour fonctionner avec les adaptateurs Sound Blaster 
+16 qui ne sont pas ‚quip‚s de cartes-fille General MIDI comme la Wave 
+Blaster.
+Bien que l'AWE-32 puisse ‚galement ˆtre support‚e par le pilote Sound 
+Blaster 16, ses utilisateurs doivent choisir le pilote "Creative Labs 
+AWE-32 (TM) General MIDI" pour un rendu sonore optimal.
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[sbpro2.mdi]
+
+;
+;Selected by default if BLASTER variable is of type T2, T4, or T5,
+;no other "clone" variable exists, and inp(388) == 0x00
+;
+;Default I/O parms from BLASTER (A only)
+;
+
+.E BLASTER
+.T2
+.NE ULTRASND
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.IOB
+.IOA
+
+.SPECIAL_TEXT
+Si votre Sound Blaster Pro est un modŠle "courant" ‚quip‚ du synth‚tiseur 
+Yamaha OPL-3, ou si la qualit‚ de la musique diffus‚e n'est pas 
+satisfaisante lors de l'utilisation d'un autre pilote Sound Blaster Pro, 
+choisissez cette option.
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[sbpro1.mdi]
+
+;
+;Selected by default if BLASTER variable is of type T2, T4, or T5,
+;no other "clone" variable exists, and inp(388) == 0x06
+;
+;Default I/O parms from BLASTER (A only)
+;
+
+.E BLASTER
+.T2
+.NE ULTRASND
+.NE SNDSCAPE
+.NC MVSOUND.SYS
+.IOB
+.IOA
+
+.SPECIAL_TEXT
+Ce pilote permet aux utilisateurs des versions pr‚c‚dentes de Sound 
+Blaster Pro de b‚n‚ficier d'une musique st‚r‚o FM avec 18 formes d'onde 
+et deux op‚rateurs. Cependant, la plupart des cartes son Sound Blaster 
+et compatibles, y compris la Sound Blaster 16, ont recours … un jeu de 
+puce plus puissant : le OPL-3. Avec ces derniŠres cartes, choisissez 
+plut“t le pilote "Creative Labs Sound Blaster Pro (TM) (nouvelle 
+version).
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[pas.mdi]
+
+;
+;Selected by default if MVSOUND exists in CONFIG.SYS, and inp(388) == 0x06
+;
+;No configuration allowed
+;
+
+.C MVSOUND.SYS
+.ION
+
+.SPECIAL_TEXT
+Seuls les utilisateurs des premiŠres cartes Pro Audio Spectrum de Media 
+Vision doivent choisir ce pilote. L'utilitaire MVSOUND.SYS de Media 
+Vision doit ˆtre charg‚ en m‚moire, faute de quoi la carte ne sera pas 
+d‚tect‚e.
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[pasplus.mdi]
+
+;
+;Selected by default if MVSOUND exists in CONFIG.SYS, and inp(388) == 0x00
+;
+;No configuration allowed
+;
+
+.C MVSOUND.SYS
+.ION
+
+.SPECIAL_TEXT
+Les utilisateurs des cartes Pro Audio Spectrum Plus et Pro Audio Spectrum 
+16 de Media Vision doivent choisir ce pilote. L'utilitaire MVSOUND.SYS de 
+Media Vision doit ˆtre charg‚ en m‚moire, faute de quoi la carte ne sera 
+pas d‚tect‚e.
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[adlibg.mdi]
+
+;
+;Selected by default if GOLD variable exists in AUTOEXEC.BAT
+;
+;Default I/O parms from driver  
+;
+
+.E GOLD
+.IOD
+
+.SPECIAL_TEXT
+Ce pilote supporte la carte Ad Lib Gold Music Synthesizer en mode FM 
+quatre op‚rateurs
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[adlib.mdi]
+
+.ND
+.ION
+
+.SPECIAL_TEXT
+Ce pilote peut ˆtre utilis‚ avec n'importe quelle carte de synth‚tiseur 
+musical FM compatible Ad Lib qui ne d‚pende pas de programmes r‚sidents 
+pour la compatibilit‚ FM Ad Lib. Les utilisateurs de cartes General MIDI 
+plus perfectionn‚es ne doivent choisir le pilote Ad Lib que si des 
+difficult‚s se produisent lors de l'utilisation du pilote de la carte 
+General MIDI, l'ancien jeu de puce Ad Lib OPL-2 n'assurant pas la qualit‚ 
+sonore offerte par de plus r‚cents p‚riph‚riques.
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+
+[opl3.mdi]
+
+;
+;Never selected by default
+;
+;No configuration -- always at $388
+;
+
+.ND
+.ION
+
+.NAME
+ESS Technology ES688 FM Audio
+
+.SPECIAL_TEXT
+Ce pilote supporte les systŠmes ‚quip‚s d'un jeu de puce ES688 de ESS 
+Technology.
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[esfm.mdi]
+
+;
+;Never selected by default
+;
+;Configuration from driver
+;
+
+.ND
+.IOD
+
+.NAME
+ESS Technology ES1688, ES1788, ES1888 Enhanced FM Audio
+
+.SPECIAL_TEXT
+Ce pilote supporte les systŠmes ‚quip‚s d'un jeu de puce ES1688, ES1788 
+ou ES1888 de ESS Technology. Ce pilote permet d'obtenir des performances 
+FM musicales accrues. Si vous rencontrez des problŠmes, choisissez plut“t 
+le pilote "ESS Technology ES688 FM Audio".
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[opl3.mdi]
+
+;
+;Never selected by default
+;
+;No configuration -- always at $388
+;
+
+.ND
+.ION
+
+.SPECIAL_TEXT
+Ce pilote est destin‚ … tous les synth‚tiseurs musicaux FM Yamaha OPL-3, 
+y compris ceux qui ne sont support‚s par aucun pilote de cette liste.
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[mt32mpu.mdi]
+
+;
+;Never selected by default
+;
+;Default I/O parms from driver
+;
+
+.ND
+.IOD
+
+.SPECIAL_TEXT
+Bien que la Roland MT-32 ne soit pas compatible General MIDI, elle 
+utilise la norme d'interface mat‚rielle MPU-401 pour communiquer avec les 
+applications. Les d‚tenteurs d'une carte MT-32 utilisant les contr“leurs 
+Adaptec SCSI peuvent choisir l'option "Passer l'auto-d‚tection et 
+configurer le pilote manuellement" du menu suivant pour r‚duire les 
+probabilit‚s de problŠmes de d‚tection de la MPU-401.
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[tandy.mdi]
+
+;
+;Never selected by default
+;
+;No configuration allowed
+;
+
+.ND
+.ION
+
+.SPECIAL_TEXT
+Ce pilote fournit un support musical … trois formes d'ondes compatible 
+Tandy 1000.
+.END_SPECIAL_TEXT
+
+;UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+[pcspkr.mdi]
+
+;
+;Never selected by default
+;
+;No configuration allowed
+;
+
+.ND
+.ION
+
+.SPECIAL_TEXT
+Ce pilote, qui offre une synthŠse musicale de trŠs basse qualit‚, fournit 
+un support musical (1 forme d'onde) pour haut parleur interne de PC IBM. 
+.END_SPECIAL_TEXT
+
+ 
+
