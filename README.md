@@ -6,7 +6,7 @@ Java clone of [Sensible Soccer](https://en.wikipedia.org/wiki/Sensible_Soccer), 
 Project Status
 ================
 
-Master [![Build Status](https://travis-ci.org/BIL481-2016-Fall-05/FoolishFootballRevamp.svg?branch=master)](https://travis-ci.org/BIL481-2016-Fall-05/FoolishFootballRevamp) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/89d61947f97445a989012b17514fc9f5)](https://www.codacy.com/app/dyanikoglu/FoolishFootballRevamp?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=BIL481-2016-Fall-05/FoolishFootballRevamp&amp;utm_campaign=Badge_Grade)
+Module Opponent [![Build Status](https://travis-ci.org/BIL481-2016-Fall-05/FoolishFootballRevamp.svg?branch=Module_Opponent)](https://travis-ci.org/BIL481-2016-Fall-05/FoolishFootballRevamp)
 
 Installing
 ==========
