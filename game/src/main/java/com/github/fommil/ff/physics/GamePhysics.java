@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.logging.Logger;
+
 import org.ode4j.math.DVector3;
 import org.ode4j.ode.DGeom.DNearCallback;
 import com.github.fommil.ff.Direction;
@@ -110,6 +111,8 @@ public class GamePhysics extends Physics {
 
 	private final Collection<Goalpost> goals = Lists.newArrayList();
 
+	private volatile boolean selectedRunDirChanged = false;
+
 	/**
 	 * @param a
 	 * @param b
@@ -180,6 +183,85 @@ public class GamePhysics extends Physics {
 		Preconditions.checkNotNull(aftertouches);
 		this.actions = Sets.newHashSet(actions);
 		this.aftertouches = Sets.newHashSet(aftertouches);
+	}
+
+    /**
+     * Dribbling optimization. Ball will stay on selected player's foot.
+     *
+     * @param leftPressed
+     * @param rightPressed
+     * @param upPressed
+     * @param downPressed
+     */
+	public void dribbling(boolean leftPressed, boolean rightPressed, boolean upPressed, boolean downPressed) { // TODO Find more efficient way to control dribbling
+        if(!actions.contains(Action.KICK) && selected.setRunDirection(leftPressed, rightPressed, upPressed, downPressed) && Math.abs(selected.getPosition().distance(ball.getPosition())) < 1.25) {
+			if(selected.getPrevRunDirection().equals("NORTH")) {
+				if(selected.getCurrentRunDirection().equals("NORTHWEST")) {
+					ball.addForce(new DVector3(-500,-500,0));
+				}
+                else if(selected.getCurrentRunDirection().equals("NORTHEAST")) {
+                    ball.addForce(new DVector3(500,-500,0));
+                }
+			}
+            else if(selected.getPrevRunDirection().equals("SOUTH")) {
+                if(selected.getCurrentRunDirection().equals("SOUTHWEST")) {
+                    ball.addForce(new DVector3(-500,500,0));
+                }
+                else if(selected.getCurrentRunDirection().equals("SOUTHEAST")) {
+                    ball.addForce(new DVector3(500,500,0));
+                }
+            }
+            else if(selected.getPrevRunDirection().equals("WEST")) {
+                if(selected.getCurrentRunDirection().equals("NORTHWEST")) {
+                    ball.addForce(new DVector3(500,500,0));
+                }
+                else if(selected.getCurrentRunDirection().equals("SOUTHWEST")) {
+                    ball.addForce(new DVector3(500,-500,0));
+                }
+            }
+            else if(selected.getPrevRunDirection().equals("EAST")) {
+                if(selected.getCurrentRunDirection().equals("NORTHEAST")) {
+                    ball.addForce(new DVector3(-500,500,0));
+                }
+                else if(selected.getCurrentRunDirection().equals("SOUTHEAST")) {
+                    ball.addForce(new DVector3(-500,-500,0));
+                }
+            }
+            else if(selected.getPrevRunDirection().equals("NORTHEAST")) {
+                if(selected.getCurrentRunDirection().equals("NORTH")) {
+                    ball.addForce(new DVector3(-500,500,0));
+                }
+                else if(selected.getCurrentRunDirection().equals("EAST")) {
+                    ball.addForce(new DVector3(500,-500,0));
+                }
+            }
+			else if(selected.getPrevRunDirection().equals("NORTHWEST")) {
+				if(selected.getCurrentRunDirection().equals("NORTH")) {
+					ball.addForce(new DVector3(500,500,0));
+				}
+				else if(selected.getCurrentRunDirection().equals("WEST")) {
+					ball.addForce(new DVector3(-500,-500,0));
+				}
+			}
+			else if(selected.getPrevRunDirection().equals("SOUTHWEST")) {
+				if(selected.getCurrentRunDirection().equals("SOUTH")) {
+					ball.addForce(new DVector3(500,-500,0));
+				}
+				else if(selected.getCurrentRunDirection().equals("WEST")) {
+					ball.addForce(new DVector3(-500,500,0));
+				}
+			}
+			else if(selected.getPrevRunDirection().equals("SOUTHEAST")) {
+				if(selected.getCurrentRunDirection().equals("SOUTH")) {
+					ball.addForce(new DVector3(500,500,0));
+				}
+				else if(selected.getCurrentRunDirection().equals("EAST")) {
+					ball.addForce(new DVector3(-500,-500,0));
+				}
+			}
+            else
+                System.out.println("Prev:" + selected.getPrevRunDirection() + "\nCurrent:" + selected.getCurrentRunDirection());
+        }
 	}
 
 	@Override

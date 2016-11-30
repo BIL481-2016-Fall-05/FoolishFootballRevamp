@@ -73,6 +73,10 @@ public class Player {
 
 	private Direction opponent;
 
+	private String currentRunDirection;
+
+	private String prevRunDirection;
+
 	public enum PlayerState {
 		// TODO: perhaps the player states are too tied to the SWOS graphics states, it might
 		// make more sense to remove the state stages and provide visualisation implementations
@@ -107,14 +111,16 @@ public class Player {
 		box.setBody(body);
 
 		{
-			DBox foot = OdeHelper.createBox(space, 0.1, 0.5, HEIGHT / 3);
+			DBox foot = OdeHelper.createBox(space, 0.1, 0.75, HEIGHT / 3);
 			foot.setBody(body);
-			foot.setOffsetPosition(WIDTH / 2 - 0.05, DEPTH / 2, -HEIGHT / 6);
+			foot.setOffsetPosition(WIDTH / 2, DEPTH / 2, -HEIGHT / 6);
+			foot.setOffsetRotation(new DMatrix3(0.7071,0.7071,0,-0.7071,0.7071,0,0,0,1)); // 45
 		}
 		{
-			DBox foot = OdeHelper.createBox(space, 0.1, 0.5, HEIGHT / 3);
+			DBox foot = OdeHelper.createBox(space, 0.1, 0.75, HEIGHT / 3);
 			foot.setBody(body);
-			foot.setOffsetPosition(-WIDTH / 2 + 0.05, DEPTH / 2, -HEIGHT / 6);
+			foot.setOffsetPosition(-WIDTH / 2 , DEPTH / 2, -HEIGHT / 6);
+			foot.setOffsetRotation(new DMatrix3(0.7071,-0.7071,0,0.7071,0.7071,0,0,0,1)); // -45
 		}
 
 		DMass mass = OdeHelper.createMass();
@@ -215,12 +221,61 @@ public class Player {
 		body.setRotation(rotation);
 	}
 
+    /**
+     * Set run direction of player according to pressed key states.
+     *
+     * @param leftPressed
+     * @param rightPressed
+     * @param upPressed
+     * @param downPressed
+     */
+	boolean setRunDirection(boolean leftPressed, boolean rightPressed, boolean upPressed, boolean downPressed) {
+        StringBuilder buildDirection = new StringBuilder();
+
+        if((upPressed && downPressed && leftPressed && rightPressed) ||(upPressed && downPressed) || (leftPressed && rightPressed)) {
+            prevRunDirection = currentRunDirection;
+            currentRunDirection = "NONE";
+            return false;
+        }
+
+        if(upPressed) {
+            buildDirection.append("NORTH");
+        }
+        else if(downPressed) {
+            buildDirection.append("SOUTH");
+        }
+
+        if(leftPressed) {
+            buildDirection.append("WEST");
+        }
+        else if(rightPressed) {
+            buildDirection.append("EAST");
+        }
+
+        if(currentRunDirection.equals(buildDirection.toString())) {
+            return false;
+        }
+
+        prevRunDirection = currentRunDirection;
+        currentRunDirection = buildDirection.toString();
+        return true;
+	}
+
+	String getCurrentRunDirection() {
+	    return currentRunDirection;
+    }
+
+    String getPrevRunDirection() {
+        return prevRunDirection;
+    }
+
 	/**
 	 * Controller. Ignore user input and go to the zone indicated.
 	 *
 	 * @param attractor
 	 */
 	void autoPilot(Position attractor) {
+        currentRunDirection = "NONE";
 		Preconditions.checkNotNull(attractor);
 		List<Action> auto = Lists.newArrayList();
 		double dx = body.getPosition().get0() - attractor.x;
