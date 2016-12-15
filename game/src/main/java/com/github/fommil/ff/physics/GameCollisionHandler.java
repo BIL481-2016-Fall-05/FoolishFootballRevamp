@@ -26,14 +26,19 @@ import com.github.fommil.ff.swos.SoundParser;
  * Handles collisions using objects specific to this package.
  *
  * @author Samuel Halliday
+ * @author Doga Can Yanikoglu
  * @see CollisionCallback
  */
 class GameCollisionHandler implements CollisionHandler {
-
 	private static final Logger log = Logger.getLogger(GameCollisionHandler.class.getName());
 
 	@Override
 	public boolean collide(Ball ball, Player player, DSurfaceParameters surface) {
+		if(!(ball.getOwner() == player)) {
+		    ball.getOwner().body.getJoint(0).disable();
+			ball.setOwner(player);
+		}
+
 		enableSoftBounce(surface);
 		ball.setDamping(0.1); // ?? can be overridden
 		surface.bounce = player.getBounce();

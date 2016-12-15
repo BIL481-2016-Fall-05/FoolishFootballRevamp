@@ -40,28 +40,22 @@ public class KeyboardController extends KeyAdapter {
 
 	private final Collection<Aftertouch> aftertouches = Sets.newHashSet();
 
-	private boolean leftPressed, rightPressed, upPressed, downPressed;
-
 	@Override
 	public synchronized void keyPressed(KeyEvent e) {
 		switch (e.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
-                leftPressed = true;
 				actions.add(Action.LEFT);
 				aftertouches.add(Aftertouch.LEFT);
 				break;
 			case KeyEvent.VK_RIGHT:
-                rightPressed = true;
 				actions.add(Action.RIGHT);
 				aftertouches.add(Aftertouch.RIGHT);
 				break;
 			case KeyEvent.VK_UP:
-                upPressed = true;
 				actions.add(Action.UP);
 				aftertouches.add(Aftertouch.UP);
 				break;
 			case KeyEvent.VK_DOWN:
-                downPressed = true;
 				actions.add(Action.DOWN);
 				aftertouches.add(Aftertouch.DOWN);
 				break;
@@ -85,22 +79,18 @@ public class KeyboardController extends KeyAdapter {
 	public synchronized void keyReleased(KeyEvent e) {
 		switch (e.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
-                leftPressed = false;
                 actions.remove(Action.LEFT);
 				aftertouches.remove(Aftertouch.LEFT);
 				break;
 			case KeyEvent.VK_RIGHT:
-                rightPressed = false;
 				actions.remove(Action.RIGHT);
 				aftertouches.remove(Aftertouch.RIGHT);
 				break;
 			case KeyEvent.VK_UP:
-			    upPressed = false;
 				actions.remove(Action.UP);
 				aftertouches.remove(Aftertouch.UP);
 				break;
 			case KeyEvent.VK_DOWN:
-			    downPressed = false;
 				actions.remove(Action.DOWN);
 				aftertouches.remove(Aftertouch.DOWN);
 				break;
@@ -125,7 +115,6 @@ public class KeyboardController extends KeyAdapter {
 
 	private void updateActions() {
         game.setUserActions(actions, aftertouches);
-        game.dribbling(leftPressed, rightPressed, upPressed, downPressed);
 	}
 
 	private boolean directionSelected() {

@@ -40,6 +40,7 @@ import com.github.fommil.ff.swos.SoundParser;
  * The model (M) and controller (C) for a {@link Player} during game play.
  *
  * @author Samuel Halliday
+ * @author Doga Can Yanikoglu
  */
 public class Player {
 
@@ -132,6 +133,11 @@ public class Player {
 	}
 
 	void kick(Ball ball) {
+		if(ball.getOwner() == this) {
+		    this.body.getJoint(0).disable();
+            ball.dismissOwner();
+        }
+
 		//assert actions.contains(Action.KICK);
 		if (distanceTo(ball) > 1.1)
 			return;

@@ -19,13 +19,7 @@ import java.util.Collection;
 import java.util.logging.Logger;
 import org.ode4j.math.DVector3;
 import org.ode4j.math.DVector3C;
-import org.ode4j.ode.DBody;
-import org.ode4j.ode.DGeom;
-import org.ode4j.ode.DMass;
-import org.ode4j.ode.DSpace;
-import org.ode4j.ode.DSphere;
-import org.ode4j.ode.DWorld;
-import org.ode4j.ode.OdeHelper;
+import org.ode4j.ode.*;
 import com.github.fommil.ff.Pitch;
 import com.github.fommil.ff.Tactics.BallZone;
 
@@ -33,6 +27,7 @@ import com.github.fommil.ff.Tactics.BallZone;
  * The model (M) and controller (C) for the ball during game play.
  * 
  * @author Samuel Halliday
+ * @author Doga Can Yanikoglu
  * @see <a href="http://en.wikipedia.org/wiki/Football_(ball)#Dimensions">Dimension information</a>
  */
 public class Ball {
@@ -53,6 +48,10 @@ public class Ball {
 
 	private final DSphere sphere;
 
+	private DWorld world;
+
+	private Player owner = null;
+
 	private volatile boolean aftertouch;
 
 	Ball(DWorld world, DSpace space) {
@@ -67,6 +66,8 @@ public class Ball {
 		body.setMass(mass);
 		space.add(sphere);
 		body.setData(this);
+
+		this.world = world;
 	}
 
 	/**
@@ -184,4 +185,22 @@ public class Ball {
 	DGeom getGeom() {
 		return sphere;
 	}
+
+	public void setOwner(Player p) {
+        this.owner = p;
+        addHingeJoint(p.body);
+    }
+
+    public void dismissOwner() {
+        this.owner = null;
+    }
+
+    public Player getOwner() {
+	    return owner;
+    }
+
+    private void addHingeJoint(DBody body) {
+        DHingeJoint joint = OdeHelper.createHingeJoint(world);
+        joint.attach(body, this.getGeom().getBody());
+    }
 }
