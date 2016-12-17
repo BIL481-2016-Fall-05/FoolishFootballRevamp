@@ -50,8 +50,6 @@ public class Ball {
 
 	private DWorld world;
 
-	private Player owner = null;
-
 	private volatile boolean aftertouch;
 
 	Ball(DWorld world, DSpace space) {
@@ -185,19 +183,6 @@ public class Ball {
 	DGeom getGeom() {
 		return sphere;
 	}
-
-	public void setOwner(Player p) {
-        this.owner = p;
-        addHingeJoint(p.body);
-    }
-
-    public void dismissOwner() {
-        this.owner = null;
-    }
-
-    public Player getOwner() {
-	    return owner;
-    }
 
     private void addHingeJoint(DBody body) {
         DHingeJoint joint = OdeHelper.createHingeJoint(world);

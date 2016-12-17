@@ -97,7 +97,7 @@ public class GamePhysics extends Physics {
 
 	private final List<Player> as = Lists.newArrayListWithCapacity(11);
 
-	private final List<Player> bs = Lists.newArrayListWithCapacity(11);
+	public final List<Player> bs = Lists.newArrayListWithCapacity(11);
 
 	private final Pitch pitch;
 
@@ -110,6 +110,8 @@ public class GamePhysics extends Physics {
 	private final Map<Player, Double> grounded = Maps.newHashMap();
 
 	private final Collection<Goalpost> goals = Lists.newArrayList();
+
+	GeneralAgent gameAgent;
 
 	/**
 	 * @param a
@@ -155,18 +157,16 @@ public class GamePhysics extends Physics {
 		//goalkeeper.setPosition(pitch.getGoalTop());
 		//goalkeeper.setOpponent(Direction.SOUTH);
 		//bs.add(goalkeeper);
-		Position p = tactics.getZone(bz, 2, Direction.SOUTH).getCentre(pitch);
-		Opponent pma = new Opponent(2, b, bPlayers.get(2 - 1), world, space, this);
-		pma.setPosition(p);
-		pma.setOpponent(Direction.SOUTH);
-		bs.add(pma);
-//		for (int i = 2; i <= 11; i++) {
-//			Position p = tactics.getZone(bz, i, Direction.SOUTH).getCentre(pitch);
-//			Player pma = new Player(i, b, bPlayers.get(i - 1), world, space);
-//			pma.setPosition(p);
-//		    pma.setOpponent(Direction.SOUTH);
-//			bs.add(pma);
-//		}
+
+		for (int i = 2; i <= 11; i++) {
+			Position p = tactics.getZone(bz, i, Direction.SOUTH).getCentre(pitch);
+			Opponent pma = new Opponent(i, b, bPlayers.get(i - 1), world, space, this);
+			pma.setPosition(p);
+		    pma.setOpponent(Direction.SOUTH);
+			bs.add(pma);
+		}
+
+		gameAgent = new GeneralAgent(this);
 	}
 
 	@Override
@@ -202,31 +202,27 @@ public class GamePhysics extends Physics {
 		if (actions.contains(Action.CHANGE))
 			updateSelected();
 
-		Position bp = ball.getPosition();
 		BallZone bz = ball.getZone(pitch);
 		for (Player p : getPlayers()) {
 			transition(p);
 			if (p == selected)
 				continue;
-			Position target = bp;
 
-			if (p instanceof Opponent) {
+			if (p instanceof Opponent && ((Opponent) p).isSelected) {
 				opponentController.autoPilot((Opponent) p);
 				continue;
 			}
 
-			double near = Math.min(10, bp.distance(selected.getPosition()));
-			if (bp.distance(p.getPosition()) > near) {
-				Team team = p.getTeam();
-				Tactics tactics = team.getCurrentTactics();
-				PlayerZone pz;
-				if (team == a) {
-					pz = tactics.getZone(bz, p.getShirt(), Direction.NORTH);
-				} else {
-					pz = tactics.getZone(bz, p.getShirt(), Direction.SOUTH);
-				}
-				target = pz.getCentre(pitch);
+			Team team = p.getTeam();
+			Tactics tactics = team.getCurrentTactics();
+			PlayerZone pz;
+			if (team == a) {
+				pz = tactics.getZone(bz, p.getShirt(), Direction.NORTH);
+			} else {
+				pz = tactics.getZone(bz, p.getShirt(), Direction.SOUTH);
 			}
+			Position target = pz.getCentre(pitch);
+
 			p.autoPilot(target);
 		}
 
@@ -320,6 +316,10 @@ public class GamePhysics extends Physics {
 
 	public Iterable<Player> getPlayers() {
 		return Iterables.concat(as, bs);
+	}
+
+	public List<Player> opponents() {
+		return bs;
 	}
 
 	public Player getSelected() {

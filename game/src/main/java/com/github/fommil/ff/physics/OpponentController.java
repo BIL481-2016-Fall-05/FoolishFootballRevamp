@@ -29,7 +29,8 @@ class OpponentController {
 	}
 
 	public void autoPilot(Opponent p) {
-		if(!p.assignments.isEmpty())
-			p.autoPilot(p.assignments.get(0));
+		if(p.isSelected && p.targetPosition != null) {
+			p.autoPilot(p.targetPosition);
+		}
 	}
 }

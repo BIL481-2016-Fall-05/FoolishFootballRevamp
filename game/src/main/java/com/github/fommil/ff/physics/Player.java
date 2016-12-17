@@ -56,7 +56,7 @@ public class Player {
 
 	private static final double MASS = 60;
 
-	private static final double AUTOPILOT_TOLERANCE = 1;
+	private static final double AUTOPILOT_TOLERANCE = 0.1;
 
 	private static final double HEADER_BOOST = 2;
 
@@ -97,6 +97,8 @@ public class Player {
 
 	private volatile PlayerState forcedState;
 
+	boolean isBallOwner = false;
+
 	Player(int i, Team team, PlayerStats stats, DWorld world, DSpace space) {
 		Preconditions.checkArgument(i >= 1 && i <= 11, i);
 		Preconditions.checkNotNull(stats);
@@ -116,10 +118,7 @@ public class Player {
 	}
 
 	void kick(Ball ball) {
-		if(ball.getOwner() == this) {
-		    this.body.getJoint(0).disable();
-            ball.dismissOwner();
-        }
+
 
 		//assert actions.contains(Action.KICK);
 		if (distanceTo(ball) > 1.1)
@@ -133,7 +132,7 @@ public class Player {
 		if (dot > getVelocity().speed() * DOUBLE_KICK_RATIO)
 			return;
 
-		hit(ball, 10, 5);
+		hit(ball, 20, 5);
 
 		try {
 			SoundParser.play(SoundParser.Fx.BALL_KICK);
