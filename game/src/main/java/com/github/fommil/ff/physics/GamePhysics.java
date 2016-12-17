@@ -53,7 +53,7 @@ public class GamePhysics extends Physics {
 
 	static final double MAX_SPEED = 50;
 
-	private final GoalkeeperController goalkeeperController;
+	private final OpponentController opponentController;
 
 	@Deprecated // DEBUGGING
 	private void debugNaNs() {
@@ -111,8 +111,6 @@ public class GamePhysics extends Physics {
 
 	private final Collection<Goalpost> goals = Lists.newArrayList();
 
-	private volatile boolean selectedRunDirChanged = false;
-
 	/**
 	 * @param a
 	 * @param b
@@ -124,7 +122,7 @@ public class GamePhysics extends Physics {
 		this.b = b;
 		this.pitch = pitch;
 
-		goalkeeperController = new GoalkeeperController(pitch);
+		opponentController = new OpponentController(pitch);
 
 		ball = new Ball(world, space);
 		Position centre = pitch.getCentre();
@@ -137,26 +135,31 @@ public class GamePhysics extends Physics {
 
 		List<PlayerStats> aPlayers = a.getPlayers();
 		Tactics tactics = a.getCurrentTactics();
-		Goalkeeper goalkeeper = new Goalkeeper(1, a, aPlayers.get(0), world, space);
-		goalkeeper.setPosition(pitch.getGoalBottom());
-		goalkeeper.setOpponent(Direction.NORTH);
-		as.add(goalkeeper);
-		for (int i = 2; i <= 11; i++) {
+		//Goalkeeper goalkeeper = new Goalkeeper(1, a, aPlayers.get(0), world, space);
+		//goalkeeper.setPosition(pitch.getGoalBottom());
+		//goalkeeper.setOpponent(Direction.NORTH);
+		//as.add(goalkeeper);
+		for (int i = 9; i <= 9; i++) {
 			Position p = tactics.getZone(bz, i, Direction.NORTH).getCentre(pitch);
 			Player pma = new Player(i, a, aPlayers.get(i - 1), world, space);
 			pma.setPosition(p);
 			pma.setOpponent(Direction.NORTH);
 			as.add(pma);
 		}
-		selected = as.get(9);
+		selected = as.get(0);
 
 		// TODO: remove duplication
 		List<PlayerStats> bPlayers = b.getPlayers();
 		tactics = b.getCurrentTactics();
-		goalkeeper = new Goalkeeper(1, b, bPlayers.get(0), world, space);
-		goalkeeper.setPosition(pitch.getGoalTop());
-		goalkeeper.setOpponent(Direction.SOUTH);
-		bs.add(goalkeeper);
+		//goalkeeper = new Goalkeeper(1, b, bPlayers.get(0), world, space);
+		//goalkeeper.setPosition(pitch.getGoalTop());
+		//goalkeeper.setOpponent(Direction.SOUTH);
+		//bs.add(goalkeeper);
+		Position p = tactics.getZone(bz, 2, Direction.SOUTH).getCentre(pitch);
+		Opponent pma = new Opponent(2, b, bPlayers.get(2 - 1), world, space, this);
+		pma.setPosition(p);
+		pma.setOpponent(Direction.SOUTH);
+		bs.add(pma);
 //		for (int i = 2; i <= 11; i++) {
 //			Position p = tactics.getZone(bz, i, Direction.SOUTH).getCentre(pitch);
 //			Player pma = new Player(i, b, bPlayers.get(i - 1), world, space);
@@ -185,85 +188,6 @@ public class GamePhysics extends Physics {
 		this.aftertouches = Sets.newHashSet(aftertouches);
 	}
 
-    /**
-     * Dribbling optimization. Ball will stay on selected player's foot.
-     *
-     * @param leftPressed
-     * @param rightPressed
-     * @param upPressed
-     * @param downPressed
-     */
-	public void dribbling(boolean leftPressed, boolean rightPressed, boolean upPressed, boolean downPressed) { // TODO Find more efficient way to control dribbling
-        if(!actions.contains(Action.KICK) && selected.setRunDirection(leftPressed, rightPressed, upPressed, downPressed) && Math.abs(selected.getPosition().distance(ball.getPosition())) < 1.25) {
-			if(selected.getPrevRunDirection().equals("NORTH")) {
-				if(selected.getCurrentRunDirection().equals("NORTHWEST")) {
-					ball.addForce(new DVector3(-500,-500,0));
-				}
-                else if(selected.getCurrentRunDirection().equals("NORTHEAST")) {
-                    ball.addForce(new DVector3(500,-500,0));
-                }
-			}
-            else if(selected.getPrevRunDirection().equals("SOUTH")) {
-                if(selected.getCurrentRunDirection().equals("SOUTHWEST")) {
-                    ball.addForce(new DVector3(-500,500,0));
-                }
-                else if(selected.getCurrentRunDirection().equals("SOUTHEAST")) {
-                    ball.addForce(new DVector3(500,500,0));
-                }
-            }
-            else if(selected.getPrevRunDirection().equals("WEST")) {
-                if(selected.getCurrentRunDirection().equals("NORTHWEST")) {
-                    ball.addForce(new DVector3(500,500,0));
-                }
-                else if(selected.getCurrentRunDirection().equals("SOUTHWEST")) {
-                    ball.addForce(new DVector3(500,-500,0));
-                }
-            }
-            else if(selected.getPrevRunDirection().equals("EAST")) {
-                if(selected.getCurrentRunDirection().equals("NORTHEAST")) {
-                    ball.addForce(new DVector3(-500,500,0));
-                }
-                else if(selected.getCurrentRunDirection().equals("SOUTHEAST")) {
-                    ball.addForce(new DVector3(-500,-500,0));
-                }
-            }
-            else if(selected.getPrevRunDirection().equals("NORTHEAST")) {
-                if(selected.getCurrentRunDirection().equals("NORTH")) {
-                    ball.addForce(new DVector3(-500,500,0));
-                }
-                else if(selected.getCurrentRunDirection().equals("EAST")) {
-                    ball.addForce(new DVector3(500,-500,0));
-                }
-            }
-			else if(selected.getPrevRunDirection().equals("NORTHWEST")) {
-				if(selected.getCurrentRunDirection().equals("NORTH")) {
-					ball.addForce(new DVector3(500,500,0));
-				}
-				else if(selected.getCurrentRunDirection().equals("WEST")) {
-					ball.addForce(new DVector3(-500,-500,0));
-				}
-			}
-			else if(selected.getPrevRunDirection().equals("SOUTHWEST")) {
-				if(selected.getCurrentRunDirection().equals("SOUTH")) {
-					ball.addForce(new DVector3(500,-500,0));
-				}
-				else if(selected.getCurrentRunDirection().equals("WEST")) {
-					ball.addForce(new DVector3(-500,500,0));
-				}
-			}
-			else if(selected.getPrevRunDirection().equals("SOUTHEAST")) {
-				if(selected.getCurrentRunDirection().equals("SOUTH")) {
-					ball.addForce(new DVector3(500,500,0));
-				}
-				else if(selected.getCurrentRunDirection().equals("EAST")) {
-					ball.addForce(new DVector3(-500,-500,0));
-				}
-			}
-            else
-                System.out.println("Prev:" + selected.getPrevRunDirection() + "\nCurrent:" + selected.getCurrentRunDirection());
-        }
-	}
-
 	@Override
 	protected void beforeStep() {
 		debugNaNs();
@@ -285,10 +209,12 @@ public class GamePhysics extends Physics {
 			if (p == selected)
 				continue;
 			Position target = bp;
-			if (p instanceof Goalkeeper) {
-				goalkeeperController.autoPilot((Goalkeeper) p, ball);
+
+			if (p instanceof Opponent) {
+				opponentController.autoPilot((Opponent) p);
 				continue;
 			}
+
 			double near = Math.min(10, bp.distance(selected.getPosition()));
 			if (bp.distance(p.getPosition()) > near) {
 				Team team = p.getTeam();
