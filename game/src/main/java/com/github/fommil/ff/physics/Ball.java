@@ -52,6 +52,8 @@ public class Ball {
 
 	private volatile boolean aftertouch;
 
+	private Player owner = null;
+
 	Ball(DWorld world, DSpace space) {
 		Preconditions.checkNotNull(world);
 		Preconditions.checkNotNull(space);
@@ -182,6 +184,24 @@ public class Ball {
 
 	DGeom getGeom() {
 		return sphere;
+	}
+
+	Player getOwner() {
+		return owner;
+	}
+
+	boolean isOwned() {
+		if(owner == null) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	void setOwner(Player p) {
+		owner = p;
+		if(p != null)
+			addHingeJoint(p.body);
 	}
 
     private void addHingeJoint(DBody body) {

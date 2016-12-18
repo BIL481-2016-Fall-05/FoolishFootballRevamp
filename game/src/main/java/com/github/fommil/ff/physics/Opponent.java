@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 /**
- * The model (M) for a opponent.
+ * Threaded AI module for a opponent player.
  *
  * @author Doga Can Yanikoglu
  */
@@ -27,7 +27,6 @@ public class Opponent extends Player {
 
 	boolean assignmentInProgress;
 
-	boolean isControlled;
 	boolean isSelected = false;
 	boolean clearShoot = false;
 	boolean isGoingForScore;
@@ -36,6 +35,7 @@ public class Opponent extends Player {
 	boolean inIdleState;
 	boolean isPursuingPlayer;
 	boolean isDefending;
+	boolean pause = false;
 
     boolean ballIsStolenRecently;
     boolean isKickedRecently;
@@ -59,20 +59,31 @@ public class Opponent extends Player {
 		assignAgent.start();
 	}
 
+	public void select() {
+	    for(Opponent o: game.getOpponentPlayers()) {
+            o.isSelected = false;
+        }
+        this.isSelected = true;
+    }
+
 	private class JobAssignerAgent extends Thread {
 		public void run() {
 			while (true) {
+			    if(pause) {
+			        break;
+                }
                 try {
                     sleep(25);
                 } catch (InterruptedException e) {
 
                 }
+
                 if(isSelected) {
                     if(clearShoot) {
                         Opponent.this.kick(game.getBall());
                         clearShoot = false;
                     }
-                    if(isBallOwner) {
+                    if(isBallOwner()) {
                         assignments.add(new Position(Opponent.this.getPosition().toDVector().add(-2,-2,0)));
                         assignments.add(new Position(Opponent.this.getPosition().toDVector().add(-4,-2,0)));
                         assignments.add(new Position(Opponent.this.getPosition().toDVector().add(-6,0,0)));
@@ -83,11 +94,17 @@ public class Opponent extends Player {
                         } catch (InterruptedException e) {
                         }
                     } else {
+                        if(game.getBall().getPosition().distance(Opponent.this.getPosition()) < 1.5) {
+                            Opponent.this.steal(game.getBall());
+                        }
                         assignments.add(game.getBall().getPosition());
+                        isPursuingPlayer = true;
                         try {
                             s1.acquire();
                         } catch (InterruptedException e) {
                         }
+                        isPursuingPlayer = false;
+
                     }
                 }
             }
@@ -102,6 +119,14 @@ public class Opponent extends Player {
                 } catch (InterruptedException e) {
 
                 }
+                if(pause) {
+                    break;
+                }
+
+                if(game.getScore() != 0) {
+                    pause = true;
+                }
+
                 if(isSelected) {
                     DVector3 distVector = Opponent.this.getPosition().toDVector().sub(game.getSelected().getPosition().toDVector());
                     DVector3 relativeDirVector = distVector.scale(game.getSelected().getFacing().scale(-1, 1, 1));
@@ -121,9 +146,15 @@ public class Opponent extends Player {
                         atFrontOfPlayer = true;
                     }
 
-                    if(isBallOwner && Opponent.this.getPosition().distance(game.getPitch().getGoalTop()) < 13) {
+                    if(isBallOwner() && Opponent.this.getPosition().distance(game.getPitch().getGoalTop()) < 13) { // Close to goal, just kick the ball
                         clearShoot = true;
                         s1.release();
+                    }
+
+                    if(assignments.size() > 0) { // There are still some assignments
+                        if (isPursuingPlayer && game.getBall().getPosition().distance(assignments.get(0)) > 2) { // Still pursuing player, release job assigner
+                            s1.release();
+                        }
                     }
                 }
             }
@@ -133,6 +164,10 @@ public class Opponent extends Player {
     private class AssignmentHandlerAgent extends Thread {
         public void run() {
             while (true) {
+                if(pause) {
+                    break;
+                }
+
                 try {
                     sleep(25);
                 } catch (InterruptedException e) {
@@ -149,6 +184,10 @@ public class Opponent extends Player {
     private class StatusUpdaterAgent extends Thread {
         public void run() {
             while (true) {
+                if(pause) {
+                    break;
+                }
+
                 try {
                     sleep(25);
                 } catch (InterruptedException e) {

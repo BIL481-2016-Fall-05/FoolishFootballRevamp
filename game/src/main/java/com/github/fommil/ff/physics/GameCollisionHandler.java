@@ -34,6 +34,11 @@ class GameCollisionHandler implements CollisionHandler {
 
 	@Override
 	public boolean collide(Ball ball, Player player, DSurfaceParameters surface) {
+		if(!ball.isOwned() && ball.getVelocity().speed() < 1) {
+			ball.setOwner(player);
+			player.setBallOwner(true);
+		}
+
 		enableSoftBounce(surface);
 		ball.setDamping(0.1); // ?? can be overridden
 		surface.bounce = player.getBounce();

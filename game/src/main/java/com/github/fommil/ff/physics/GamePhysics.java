@@ -39,11 +39,14 @@ import com.github.fommil.ff.physics.Player.PlayerState;
 import com.github.fommil.ff.swos.SoundParser;
 import com.github.fommil.ff.swos.SoundParser.Fx;
 
+import static com.github.fommil.ff.physics.Action.STEAL;
+
 /**
  * The model (M) and controller (C) for game play.
  * The coordinate system is a left-handed system with X = East, Y = North, Z = Sky.
  *
  * @author Samuel Halliday
+ * @author Doga Can Yanikoglu
  */
 public class GamePhysics extends Physics {
 
@@ -97,7 +100,7 @@ public class GamePhysics extends Physics {
 
 	private final List<Player> as = Lists.newArrayListWithCapacity(11);
 
-	public final List<Player> bs = Lists.newArrayListWithCapacity(11);
+	private final List<Opponent> bs = Lists.newArrayListWithCapacity(11);
 
 	private final Pitch pitch;
 
@@ -110,6 +113,8 @@ public class GamePhysics extends Physics {
 	private final Map<Player, Double> grounded = Maps.newHashMap();
 
 	private final Collection<Goalpost> goals = Lists.newArrayList();
+
+	private int score;
 
 	GeneralAgent gameAgent;
 
@@ -135,22 +140,21 @@ public class GamePhysics extends Physics {
 
 		BallZone bz = ball.getZone(pitch);
 
-		List<PlayerStats> aPlayers = a.getPlayers();
-		Tactics tactics = a.getCurrentTactics();
-		//Goalkeeper goalkeeper = new Goalkeeper(1, a, aPlayers.get(0), world, space);
-		//goalkeeper.setPosition(pitch.getGoalBottom());
-		//goalkeeper.setOpponent(Direction.NORTH);
-		//as.add(goalkeeper);
-		for (int i = 9; i <= 9; i++) {
-			Position p = tactics.getZone(bz, i, Direction.NORTH).getCentre(pitch);
-			Player pma = new Player(i, a, aPlayers.get(i - 1), world, space);
-			pma.setPosition(p);
-			pma.setOpponent(Direction.NORTH);
-			as.add(pma);
-		}
-		selected = as.get(0);
+        List<PlayerStats> aPlayers = a.getPlayers();
+        Tactics tactics = a.getCurrentTactics();
+//        Goalkeeper goalkeeper = new Goalkeeper(1, a, aPlayers.get(0), world, space);
+//        goalkeeper.setPosition(pitch.getGoalBottom());
+//        goalkeeper.setOpponent(Direction.NORTH);
+//        as.add(goalkeeper);
+        for (int i = 2; i <= 11; i++) {
+            Position p = tactics.getZone(bz, i, Direction.NORTH).getCentre(pitch);
+            Player pma = new Player(i, a, aPlayers.get(i - 1), world, space);
+            pma.setPosition(p);
+            pma.setOpponent(Direction.NORTH);
+            as.add(pma);
+        }
+        selected = as.get(9);
 
-		// TODO: remove duplication
 		List<PlayerStats> bPlayers = b.getPlayers();
 		tactics = b.getCurrentTactics();
 		//goalkeeper = new Goalkeeper(1, b, bPlayers.get(0), world, space);
@@ -166,6 +170,7 @@ public class GamePhysics extends Physics {
 			bs.add(pma);
 		}
 
+        score = 0;
 		gameAgent = new GeneralAgent(this);
 	}
 
@@ -194,6 +199,7 @@ public class GamePhysics extends Physics {
 
 		for (Goalpost goal : goals) {
 			if (goal.isInside(ball)) {
+                score++;
 				log.info("GOAL TO " + goal.getFacing());
 				SoundParser.play(Fx.CROWD_CHEER);
 			}
@@ -253,7 +259,9 @@ public class GamePhysics extends Physics {
 				break;
 			case THROWING:
 				selected.throwIn(ball);
-		}
+            case STEAL:
+                selected.steal(ball);
+        }
 	}
 
 	private void updateSelected() {
@@ -318,13 +326,30 @@ public class GamePhysics extends Physics {
 		return Iterables.concat(as, bs);
 	}
 
-	public List<Player> opponents() {
+	public List<Opponent> getOpponentPlayers() {
 		return bs;
+	}
+
+	public List<Player> getOwningPlayers() {
+		return as;
 	}
 
 	public Player getSelected() {
 		return selected;
 	}
+
+	public Opponent getControlledOpponent() {
+	    for(Opponent o: bs) {
+	        if(o.isSelected) {
+	            return o;
+            }
+        }
+        return null;
+    }
+
+    public int getScore() {
+	    return score;
+    }
 
 	public double getTimestamp() {
 		return time;

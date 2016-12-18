@@ -59,6 +59,9 @@ public class KeyboardController extends KeyAdapter {
 				actions.add(Action.DOWN);
 				aftertouches.add(Aftertouch.DOWN);
 				break;
+			case KeyEvent.VK_CONTROL:
+				actions.add(Action.STEAL);
+				break;
 			case KeyEvent.VK_SPACE:
 				actions.add(Action.KICK);
 				actions.add(Action.CHANGE);
@@ -93,6 +96,9 @@ public class KeyboardController extends KeyAdapter {
 			case KeyEvent.VK_DOWN:
 				actions.remove(Action.DOWN);
 				aftertouches.remove(Aftertouch.DOWN);
+				break;
+			case KeyEvent.VK_CONTROL:
+				actions.remove(Action.STEAL);
 				break;
 			case KeyEvent.VK_SPACE:
 				actions.remove(Action.KICK);

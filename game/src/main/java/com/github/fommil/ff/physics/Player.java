@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
+
 import org.ode4j.math.DMatrix3;
 import org.ode4j.math.DMatrix3C;
 import org.ode4j.math.DVector3;
@@ -81,7 +82,7 @@ public class Player {
 		// diving goalkeepers)
 
 		RUN, KICK, TACKLE, HEAD_START, HEAD_MID, HEAD_END, GROUND, INJURED,
-		THROW, THROWING, PENALTY, CELEBRATE, PUNISH, OUT_OF_CONTROL
+		THROW, THROWING, PENALTY, CELEBRATE, PUNISH, OUT_OF_CONTROL, STEAL
 
 	}
 
@@ -97,7 +98,7 @@ public class Player {
 
 	private volatile PlayerState forcedState;
 
-	boolean isBallOwner = false;
+	private boolean isBallOwner = false;
 
 	Player(int i, Team team, PlayerStats stats, DWorld world, DSpace space) {
 		Preconditions.checkArgument(i >= 1 && i <= 11, i);
@@ -117,27 +118,45 @@ public class Player {
 		body.setData(this);
 	}
 
+	boolean steal(Ball ball) {
+		if(ball.getOwner() != null && ball.getPosition().distance(this.getPosition()) < 1) {
+			ball.getOwner().setBallOwner(false);
+			for (int i = 0; i < ball.getOwner().body.getNumJoints(); i++) {
+				ball.getOwner().body.getJoint(i).disable();
+			}
+			ball.setOwner(this);
+			this.setBallOwner(true);
+			return true;
+		}
+		return false;
+	}
+
 	void kick(Ball ball) {
+		if(isBallOwner()) {
+			ball.setOwner(null);
+			this.setBallOwner(false);
+			for (int i = 0; i < this.body.getNumJoints(); i++) {
+				this.body.getJoint(i).disable();
+			}
+			//assert actions.contains(Action.KICK);
+			if (distanceTo(ball) > 1.1)
+				return;
 
+			// avoid multiple kicks by ignoring kick when the ball is going in the same direction
+			// this is facing (but allowing for running speed)
+			DVector3 ballVelocity = ball.getVelocity().toDVector();
+			DVector3 facing = getFacing();
+			double dot = facing.dot(ballVelocity);
+			if (dot > getVelocity().speed() * DOUBLE_KICK_RATIO)
+				return;
 
-		//assert actions.contains(Action.KICK);
-		if (distanceTo(ball) > 1.1)
-			return;
+			hit(ball, 16, 5);
 
-		// avoid multiple kicks by ignoring kick when the ball is going in the same direction
-		// this is facing (but allowing for running speed)
-		DVector3 ballVelocity = ball.getVelocity().toDVector();
-		DVector3 facing = getFacing();
-		double dot = facing.dot(ballVelocity);
-		if (dot > getVelocity().speed() * DOUBLE_KICK_RATIO)
-			return;
-
-		hit(ball, 20, 5);
-
-		try {
-			SoundParser.play(SoundParser.Fx.BALL_KICK);
-		} catch (Exception ex) {
-			log.warning(ex.getMessage());
+			try {
+				SoundParser.play(SoundParser.Fx.BALL_KICK);
+			} catch (Exception ex) {
+				log.warning(ex.getMessage());
+			}
 		}
 	}
 
@@ -174,6 +193,7 @@ public class Player {
 			case THROW:
 			case RUN:
 			case KICK:
+			case STEAL:
 				break;
 			default:
 				return;
@@ -319,6 +339,8 @@ public class Player {
 			return PlayerState.HEAD_END;
 		if (actions.contains(Action.KICK))
 			return PlayerState.KICK;
+		if(actions.contains(Action.STEAL))
+			return PlayerState.STEAL;
 		return PlayerState.RUN;
 	}
 
@@ -385,6 +407,14 @@ public class Player {
 
 	public Team getTeam() {
 		return team;
+	}
+
+	public boolean isBallOwner() {
+		return isBallOwner;
+	}
+
+	public void setBallOwner(Boolean b) {
+		isBallOwner = b;
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="BOILERPLATE GETTERS/SETTERS">

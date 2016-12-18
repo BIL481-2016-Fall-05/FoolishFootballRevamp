@@ -22,7 +22,7 @@ import org.ode4j.math.DVector3;
  */
 public enum Action {
 
-	UP, DOWN, LEFT, RIGHT, KICK, TACKLE, HEAD, DIVE, CHANGE;
+	UP, DOWN, LEFT, RIGHT, KICK, TACKLE, HEAD, DIVE, CHANGE, STEAL;
 
 	static DVector3 asVector(Collection<Action> actions) {
 		DVector3 move = new DVector3();
