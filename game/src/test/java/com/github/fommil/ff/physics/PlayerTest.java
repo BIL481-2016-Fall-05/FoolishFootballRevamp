@@ -14,20 +14,10 @@
  */
 package com.github.fommil.ff.physics;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.List;
 import org.junit.Test;
-import org.ode4j.math.DVector3;
 
-import com.github.fommil.ff.Direction;
 import com.github.fommil.ff.Pitch;
 import com.github.fommil.ff.PlayerStats;
-import com.github.fommil.ff.Team;
-import com.github.fommil.ff.physics.Player.PlayerState;
 
 import static org.junit.Assert.*;
 
@@ -61,8 +51,9 @@ public class PlayerTest {
 		Player p = new DummyPhysics().createPlayer(5, new PlayerStats());
 		Ball ball = new DummyPhysics().createBall();
 		ball.setVelocity(new Velocity(0, 0, 0));
+		p.setBallOwner(true);
 		p.kick(ball);
-		assertEquals(ball.getVelocity(), new Velocity(0.0, 10.0, 5.0));
+		assertEquals(ball.getVelocity(), new Velocity(0.0, 16.0, 5.0));
 	}
 
 	@Test
