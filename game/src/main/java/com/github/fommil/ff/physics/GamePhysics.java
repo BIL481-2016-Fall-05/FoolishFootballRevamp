@@ -39,8 +39,6 @@ import com.github.fommil.ff.physics.Player.PlayerState;
 import com.github.fommil.ff.swos.SoundParser;
 import com.github.fommil.ff.swos.SoundParser.Fx;
 
-import static com.github.fommil.ff.physics.Action.STEAL;
-
 /**
  * The model (M) and controller (C) for game play.
  * The coordinate system is a left-handed system with X = East, Y = North, Z = Sky.
@@ -114,7 +112,7 @@ public class GamePhysics extends Physics {
 
 	private final Collection<Goalpost> goals = Lists.newArrayList();
 
-	private int score;
+	private boolean pauseGame;
 
 	GeneralAgent gameAgent;
 
@@ -128,6 +126,7 @@ public class GamePhysics extends Physics {
 		this.a = a;
 		this.b = b;
 		this.pitch = pitch;
+		pauseGame = false;
 
 		opponentController = new OpponentController(pitch);
 
@@ -170,7 +169,6 @@ public class GamePhysics extends Physics {
 			bs.add(pma);
 		}
 
-        score = 0;
 		gameAgent = new GeneralAgent(this);
 	}
 
@@ -199,7 +197,7 @@ public class GamePhysics extends Physics {
 
 		for (Goalpost goal : goals) {
 			if (goal.isInside(ball)) {
-                score++;
+                pauseGame = true;
 				log.info("GOAL TO " + goal.getFacing());
 				SoundParser.play(Fx.CROWD_CHEER);
 			}
@@ -214,7 +212,7 @@ public class GamePhysics extends Physics {
 			if (p == selected)
 				continue;
 
-			if (p instanceof Opponent && ((Opponent) p).isSelected) {
+			if (p instanceof Opponent && ((Opponent) p).isSelected()) {
 				opponentController.autoPilot((Opponent) p);
 				continue;
 			}
@@ -340,15 +338,15 @@ public class GamePhysics extends Physics {
 
 	public Opponent getControlledOpponent() {
 	    for(Opponent o: bs) {
-	        if(o.isSelected) {
+	        if(o.isSelected()) {
 	            return o;
             }
         }
         return null;
     }
 
-    public int getScore() {
-	    return score;
+    public boolean getPauseState() {
+	   return pauseGame;
     }
 
 	public double getTimestamp() {

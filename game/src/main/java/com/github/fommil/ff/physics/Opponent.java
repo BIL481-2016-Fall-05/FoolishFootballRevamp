@@ -20,35 +20,34 @@ public class Opponent extends Player {
 	private final ConditionCheckerAgent checkAgent;
 	private final StatusUpdaterAgent statusAgent;
 	private final AssignmentHandlerAgent handlerAgent;
-	public ArrayList<Position> assignments = new ArrayList<Position>();
-	Position targetPosition = null;
+    private ArrayList<Position> assignments;
+    private Position targetPosition;
 	private GamePhysics game;
-	Semaphore s1;
+    private Semaphore jobMonitor;
 
-	boolean assignmentInProgress;
-
-	boolean isSelected = false;
-	boolean clearShoot = false;
-	boolean isGoingForScore;
-	boolean isDribbling;
-	boolean isStoleTheBallRecently;
-	boolean inIdleState;
-	boolean isPursuingPlayer;
-	boolean isDefending;
-	boolean pause = false;
-
-    boolean ballIsStolenRecently;
-    boolean isKickedRecently;
-
-	boolean atBehindOfPlayer;
-	boolean atFrontOfPlayer;
-	boolean atLeftsideOfPlayer;
-	boolean atRightsideOfPlayer;
+    private boolean assignmentInProgress;
+    private boolean isSelected;
+    private boolean clearShoot;
+    private boolean isGoingForScore;
+    private boolean isStoleTheBallRecently;
+    private boolean inIdleState;
+    private boolean isPursuingPlayer;
+    private boolean isDefending;
+    private boolean ballIsStolenRecently;
+    private boolean isKickedRecently;
+	private boolean atBehindOfPlayer;
+    private boolean atFrontOfPlayer;
+    private boolean atLeftsideOfPlayer;
+    private boolean atRightsideOfPlayer;
 
 	public Opponent(int i, Team team, PlayerStats stats, DWorld world, DSpace space, GamePhysics game) {
 		super(i, team, stats, world, space);
 		this.game = game;
-        s1 = new Semaphore(0);
+		assignments = new ArrayList<Position>();
+        targetPosition = null;
+        isSelected = false;
+        clearShoot = false;
+        jobMonitor = new Semaphore(0);
         checkAgent = new ConditionCheckerAgent();
         checkAgent.start();
         statusAgent = new StatusUpdaterAgent();
@@ -66,10 +65,18 @@ public class Opponent extends Player {
         this.isSelected = true;
     }
 
+    public boolean isSelected() {
+	    return isSelected;
+    }
+
+    public Position getTargetPosition() {
+	    return targetPosition;
+    }
+
 	private class JobAssignerAgent extends Thread {
 		public void run() {
 			while (true) {
-			    if(pause) {
+			    if(game.getPauseState()) {
 			        break;
                 }
                 try {
@@ -80,27 +87,29 @@ public class Opponent extends Player {
 
                 if(isSelected) {
                     if(clearShoot) {
-                        Opponent.this.kick(game.getBall());
                         clearShoot = false;
+                        Opponent.this.kick(game.getBall());
                     }
                     if(isBallOwner()) {
+                        isGoingForScore = true;
                         assignments.add(new Position(Opponent.this.getPosition().toDVector().add(-2,-2,0)));
                         assignments.add(new Position(Opponent.this.getPosition().toDVector().add(-4,-2,0)));
                         assignments.add(new Position(Opponent.this.getPosition().toDVector().add(-6,0,0)));
                         assignments.add(new Position(Opponent.this.getPosition().toDVector().add(-6,2,0)));
                         assignments.add(game.getPitch().getGoalTop());
                         try {
-                            s1.acquire();
+                            jobMonitor.acquire();
                         } catch (InterruptedException e) {
                         }
+                        isGoingForScore = false;
                     } else {
-                        if(game.getBall().getPosition().distance(Opponent.this.getPosition()) < 1.5) {
+                        isPursuingPlayer = true;
+                        if(game.getBall().getPosition().distance(Opponent.this.getPosition()) < 1) {
                             Opponent.this.steal(game.getBall());
                         }
                         assignments.add(game.getBall().getPosition());
-                        isPursuingPlayer = true;
                         try {
-                            s1.acquire();
+                            jobMonitor.acquire();
                         } catch (InterruptedException e) {
                         }
                         isPursuingPlayer = false;
@@ -119,12 +128,8 @@ public class Opponent extends Player {
                 } catch (InterruptedException e) {
 
                 }
-                if(pause) {
+                if(game.getPauseState()) {
                     break;
-                }
-
-                if(game.getScore() != 0) {
-                    pause = true;
                 }
 
                 if(isSelected) {
@@ -148,13 +153,15 @@ public class Opponent extends Player {
 
                     if(isBallOwner() && Opponent.this.getPosition().distance(game.getPitch().getGoalTop()) < 13) { // Close to goal, just kick the ball
                         clearShoot = true;
-                        s1.release();
+                        jobMonitor.release();
                     }
 
-                    if(assignments.size() > 0) { // There are still some assignments
-                        if (isPursuingPlayer && game.getBall().getPosition().distance(assignments.get(0)) > 2) { // Still pursuing player, release job assigner
-                            s1.release();
-                        }
+                    if (isPursuingPlayer && assignments.size() > 0 && game.getBall().getPosition().distance(assignments.get(0)) > 1) { // Still pursuing player, release job assigner
+                        jobMonitor.release();
+                    }
+
+                    if(isGoingForScore && !isBallOwner()) {
+                        jobMonitor.release();
                     }
                 }
             }
@@ -164,7 +171,7 @@ public class Opponent extends Player {
     private class AssignmentHandlerAgent extends Thread {
         public void run() {
             while (true) {
-                if(pause) {
+                if(game.getPauseState()) {
                     break;
                 }
 
@@ -184,7 +191,7 @@ public class Opponent extends Player {
     private class StatusUpdaterAgent extends Thread {
         public void run() {
             while (true) {
-                if(pause) {
+                if(game.getPauseState()) {
                     break;
                 }
 
@@ -194,11 +201,10 @@ public class Opponent extends Player {
 
                 }
                 if(assignmentInProgress && Opponent.this.getPosition().distance(targetPosition) < 1) {
-                    //System.out.println("Job finished");
                     assignmentInProgress = false;
                     if(assignments.size() == 0) {
                         targetPosition = null;
-                        s1.release();
+                        jobMonitor.release();
                     }
                 }
             }

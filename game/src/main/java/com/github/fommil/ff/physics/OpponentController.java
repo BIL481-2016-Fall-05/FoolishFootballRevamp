@@ -29,8 +29,8 @@ class OpponentController {
 	}
 
 	public void autoPilot(Opponent p) {
-		if(p.isSelected && p.targetPosition != null) {
-			p.autoPilot(p.targetPosition);
+		if(p.isSelected() && p.getTargetPosition() != null) {
+			p.autoPilot(p.getTargetPosition());
 		}
 	}
 }
