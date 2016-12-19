@@ -133,11 +133,6 @@ public class Player {
 
 	void kick(Ball ball) {
 		if(isBallOwner()) {
-			ball.setOwner(null);
-			this.setBallOwner(false);
-			for (int i = 0; i < this.body.getNumJoints(); i++) {
-				this.body.getJoint(i).disable();
-			}
 			//assert actions.contains(Action.KICK);
 			if (distanceTo(ball) > 1.1)
 				return;
@@ -150,8 +145,17 @@ public class Player {
 			if (dot > getVelocity().speed() * DOUBLE_KICK_RATIO)
 				return;
 
-			hit(ball, 16, 5);
-
+			ball.setOwner(null);
+			this.setBallOwner(false);
+			for (int i = 0; i < this.body.getNumJoints(); i++) {
+				this.body.getJoint(i).disable();
+			}
+			ball.setKickStatus(true);
+			if(this.getVelocity().speed() > 1) {
+				hit(ball, 20, 5);
+			} else {
+				hit(ball, 15, 5);
+			}
 			try {
 				SoundParser.play(SoundParser.Fx.BALL_KICK);
 			} catch (Exception ex) {
@@ -360,6 +364,12 @@ public class Player {
 			rotated = new DVector3(rotation.get01(), rotation.get11(), rotation.get21());
 		rotated.normalize();
 		return rotated;
+	}
+
+	DMatrix3 createRotationMatrix(Position to) {
+		DMatrix3 rotation = new DMatrix3();
+		Rotation.dRFromAxisAndAngle(rotation, 0, 0, -1, GamePhysics.toAngle(to.toDVector().sub(this.getPosition().toDVector())));
+		return rotation;
 	}
 
 	// returns the angle (radians) off the vertical [0, PI]

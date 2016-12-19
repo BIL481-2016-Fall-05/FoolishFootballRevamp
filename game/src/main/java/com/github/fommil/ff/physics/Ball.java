@@ -52,7 +52,9 @@ public class Ball {
 
 	private volatile boolean aftertouch;
 
-	private Player owner = null;
+	private volatile Player owner = null;
+
+	private volatile boolean isKickedRecently;
 
 	Ball(DWorld world, DSpace space) {
 		Preconditions.checkNotNull(world);
@@ -66,6 +68,8 @@ public class Ball {
 		body.setMass(mass);
 		space.add(sphere);
 		body.setData(this);
+
+		this.isKickedRecently = false;
 
 		this.world = world;
 	}
@@ -186,11 +190,11 @@ public class Ball {
 		return sphere;
 	}
 
-	Player getOwner() {
+	synchronized Player getOwner() {
 		return owner;
 	}
 
-	boolean isOwned() {
+	synchronized boolean isOwned() {
 		if(owner == null) {
 			return false;
 		} else {
@@ -198,14 +202,22 @@ public class Ball {
 		}
 	}
 
-	void setOwner(Player p) {
+	synchronized void setOwner(Player p) {
 		owner = p;
 		if(p != null)
-			addHingeJoint(p.body);
+			addFixedJoint(p.body);
 	}
 
-    private void addHingeJoint(DBody body) {
-        DHingeJoint joint = OdeHelper.createHingeJoint(world);
+	synchronized boolean isKickedRecently() {
+		return isKickedRecently;
+	}
+
+	synchronized void setKickStatus(Boolean b) {
+		isKickedRecently = b;
+	}
+
+	synchronized private void addFixedJoint(DBody body) {
+        DFixedJoint joint = OdeHelper.createFixedJoint(world);
         joint.attach(body, this.getGeom().getBody());
     }
 }

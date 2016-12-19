@@ -160,7 +160,7 @@ public class ClassicView extends JPanel {
 
 		// draw the ball
 		// TODO: except when throw-in
-		drawBall(g);
+
 		//		// draw the zones
 		//		if (debugging) {
 		//			g.setColor(Color.GREEN);
@@ -194,6 +194,8 @@ public class ClassicView extends JPanel {
 			Point s = sprite.getCentre();
 			g.drawImage(sprite.getImage(), p.x, p.y - s.y / 2, null);
 		}
+
+		drawBall(g);
 	}
 
 	private void drawPlayer(Graphics2D g, Player pm) {
