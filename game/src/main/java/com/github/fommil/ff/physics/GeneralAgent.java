@@ -20,7 +20,6 @@ public class GeneralAgent extends Thread {
         try {
             while (true) {
                 sleep(1000);
-
                 if (game.getSelected().isBallOwner()) { // Ball is on player
                     double minDistance = 999999999;
                     Opponent closest = null;
@@ -31,11 +30,7 @@ public class GeneralAgent extends Thread {
                             closest = o;
                         }
                     }
-                    if (closest != null) {
-                        closest.select();
-                    } else {
-                        System.out.println("Error on finding closest opponent");
-                    }
+                    closest.select();
                 } else if (game.getBall().getOwner() == null) { // Ball is on pitch
                     double minDistance = 999999999;
                     Opponent closest = null;
@@ -46,11 +41,7 @@ public class GeneralAgent extends Thread {
                             closest = o;
                         }
                     }
-                    if (closest != null) {
-                        closest.select();
-                    } else {
-                        System.out.println("Error on finding closest opponent");
-                    }
+                    closest.select();
                 } else if (game.getBall().getOwner() != null) { // Ball is on opponent team
                     //
                 } else { // TODO Unhandled situations
@@ -67,7 +58,7 @@ public class GeneralAgent extends Thread {
             try {
                 while (true) {
                     if (game.getBall().isKickedRecently()) {
-                        sleep(1500);
+                        sleep(500);
                         game.getBall().setKickStatus(false);
                     }
                     sleep(25);

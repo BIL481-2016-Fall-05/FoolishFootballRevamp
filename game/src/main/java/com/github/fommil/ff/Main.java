@@ -49,9 +49,9 @@ public class Main {
 
 		Map<Integer, Sprite> sprites = SpriteParser.getSprites(SWOS);
 
-		Team a = new Team();
+		Team a = new Team("Player");
 		a.setCurrentTactics(swosTactics.get("442"));
-		Team b = new Team();
+		Team b = new Team("Opponent");
 		b.setCurrentTactics(swosTactics.get("433"));
 		b.setHomeKit(a.getAwayKit());
 		b.setAwayKit(a.getHomeKit());

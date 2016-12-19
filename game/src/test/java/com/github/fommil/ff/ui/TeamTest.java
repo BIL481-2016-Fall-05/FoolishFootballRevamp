@@ -25,7 +25,7 @@ public class TeamTest {
 
 	@Test
 	public void verifyModifiedHomeKit() {
-		Team team = new Team();
+		Team team = new Team("Test");
 		team.setHomeKit(new Colours(Color.RED, Color.RED, Color.BLUE, Color.RED));
 		assertEquals(team.getHomeKit().getPrimary(),
 				((new Colours(Color.RED, Color.RED, Color.BLUE, Color.RED).getPrimary())));
@@ -33,7 +33,7 @@ public class TeamTest {
 
 	@Test
 	public void verifyModifiedAwayKit() {
-		Team team = new Team();
+		Team team = new Team("Test");
 		team.setAwayKit(new Colours(Color.RED, Color.RED, Color.BLUE, Color.RED));
 		assertEquals(team.getAwayKit().getPrimary(),
 				((new Colours(Color.RED, Color.RED, Color.BLUE, Color.RED)).getPrimary()));
@@ -41,7 +41,7 @@ public class TeamTest {
 
 	@Test
 	public void verifyTactics() {
-		Team team = new Team();
+		Team team = new Team("Test");
 		Tactics tactices = new Tactics("One");
 		team.setCurrentTactics(tactices);
 		assertEquals(team.getCurrentTactics(), (tactices));

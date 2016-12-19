@@ -20,10 +20,10 @@ public class GamePhysicsTest {
 	@Test
 	public void testTeamSizeEqual() throws IOException {
 		Map<String, Tactics> swosTactics = TacticsParser.getSwosTactics(Main.SWOS);
-		Team a = new Team();
+		Team a = new Team("Test");
 
 		a.setCurrentTactics(swosTactics.get("442"));
-		Team b = new Team();
+		Team b = new Team("Test");
 
 		b.setCurrentTactics(swosTactics.get("433"));
 		GamePhysics gp = new GamePhysics(a, b, new Pitch());

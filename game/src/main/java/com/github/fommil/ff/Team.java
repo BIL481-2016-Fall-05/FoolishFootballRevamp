@@ -27,6 +27,7 @@ import java.util.List;
  * @author Samuel Halliday
  */
 public class Team {
+	private final String  name;
 
 	public static class Colours {
 
@@ -78,10 +79,11 @@ public class Team {
 	private Colours awayKit = new Colours(Color.BLUE, Color.BLUE, Color.WHITE, Color.BLUE);
 
 	/** */
-	public Team() {
+	public Team(String name) {
 		for (int i = 0; i < 20; i++) {
 			players.add(new PlayerStats());
 		}
+		this.name = name;
 	}
 
 	/**
@@ -100,6 +102,10 @@ public class Team {
 	 */
 	public List<PlayerStats> getPlayers() {
 		return Collections.unmodifiableList(players);
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="BOILERPLATE GETTERS/SETTERS">
