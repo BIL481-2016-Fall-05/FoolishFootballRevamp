@@ -34,7 +34,7 @@ class GameCollisionHandler implements CollisionHandler {
 
 	@Override
 	public boolean collide(Ball ball, Player player, DSurfaceParameters surface) {
-		if(!ball.isOwned()) {
+		if(!ball.isOwned() && !ball.isKickedRecently()) {
 			ball.setOwner(player);
 			player.setBallOwner(true);
 		}
