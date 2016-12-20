@@ -147,7 +147,7 @@ public class GamePhysics extends Physics {
 //        as.add(goalkeeper);
         for (int i = 2; i <= 11; i++) {
             Position p = tactics.getZone(bz, i, Direction.NORTH).getCentre(pitch);
-            Player pma = new Player(i, a, aPlayers.get(i - 1), world, space);
+            Player pma = new Player(i, a, aPlayers.get(i - 1), world, space, this);
             pma.setPosition(p);
             pma.setOpponent(Direction.NORTH);
             as.add(pma);
@@ -254,6 +254,9 @@ public class GamePhysics extends Physics {
 		switch (selected.getState()) {
 			case KICK:
 				selected.kick(ball);
+				break;
+			case PASS:
+				selected.pass(null, ball);
 				break;
 			case THROWING:
 				selected.throwIn(ball);

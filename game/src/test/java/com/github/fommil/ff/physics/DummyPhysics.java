@@ -43,12 +43,12 @@ public class DummyPhysics extends Physics {
 	}
 
 	public Player createPlayer(int shirt, PlayerStats stats) {
-		Player player = new Player(shirt, null, stats, world, space);
+		Player player = new Player(shirt, null, stats, world, space, null);
 		return player;
 	}
 
 	public Goalkeeper createGoalkeeper(int shirt, PlayerStats stats) {
-		Goalkeeper goalkeeper = new Goalkeeper(shirt, null, stats, world, space);
+		Goalkeeper goalkeeper = new Goalkeeper(shirt, null, stats, world, space, null);
 		return goalkeeper;
 	}
 

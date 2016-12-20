@@ -50,13 +50,13 @@ public class Goalkeeper extends Player {
 	 * @param world
 	 * @param space
 	 */
-	public Goalkeeper(int i, Team team, PlayerStats stats, DWorld world, DSpace space) {
+	public Goalkeeper(int i, Team team, PlayerStats stats, DWorld world, DSpace space, GamePhysics game) {
 		// TODO: consider rolling Goalkeeper functionality into Player
-		super(i, team, stats, world, space);
+		super(i, team, stats, world, space, game);
 	}
 
 	@Override
-	void setActions(Collection<Action> actions) {
+	public void setActions(Collection<Action> actions) {
 		if (getGkState() != null)
 			return;
 
@@ -137,7 +137,7 @@ public class Goalkeeper extends Player {
 	}
 
 	@Override
-	double getAutoPilotTolerance() {
+	public double getAutoPilotTolerance() {
 		return 0.1;
 	}
 }

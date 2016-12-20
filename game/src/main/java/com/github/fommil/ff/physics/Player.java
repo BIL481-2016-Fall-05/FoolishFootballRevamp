@@ -73,6 +73,8 @@ public class Player {
 
 	private final Team team;
 
+	protected final GamePhysics game;
+
 	private Direction opponent;
 
 	public enum PlayerState {
@@ -81,7 +83,7 @@ public class Player {
 		// with additional physics information to make a call on the state (e.g. headers and
 		// diving goalkeepers)
 
-		RUN, KICK, TACKLE, HEAD_START, HEAD_MID, HEAD_END, GROUND, INJURED,
+		RUN, KICK, PASS, TACKLE, HEAD_START, HEAD_MID, HEAD_END, GROUND, INJURED,
 		THROW, THROWING, PENALTY, CELEBRATE, PUNISH, OUT_OF_CONTROL, STEAL
 
 	}
@@ -100,13 +102,14 @@ public class Player {
 
 	private boolean isBallOwner = false;
 
-	Player(int i, Team team, PlayerStats stats, DWorld world, DSpace space) {
+	public Player(int i, Team team, PlayerStats stats, DWorld world, DSpace space, GamePhysics game) {
 		Preconditions.checkArgument(i >= 1 && i <= 11, i);
 		Preconditions.checkNotNull(stats);
 		this.shirt = i;
 		this.team = team;
 		this.stats = stats;
 		this.body = OdeHelper.createBody(world);
+		this.game = game;
 		box = OdeHelper.createBox(space, WIDTH, DEPTH, HEIGHT);
 		box.setBody(body);
 
@@ -118,7 +121,7 @@ public class Player {
 		body.setData(this);
 	}
 
-	boolean steal(Ball ball) {
+	public boolean steal(Ball ball) {
 		if(ball.getOwner() != null && ball.getPosition().distance(this.getPosition()) < 1) {
 			ball.getOwner().setBallOwner(false);
 			for (int i = 0; i < ball.getOwner().body.getNumJoints(); i++) {
@@ -131,9 +134,8 @@ public class Player {
 		return false;
 	}
 
-	void kick(Ball ball) {
+	public void kick(Ball ball) {
 		if(isBallOwner()) {
-			//assert actions.contains(Action.KICK);
 			if (distanceTo(ball) > 1.1)
 				return;
 
@@ -164,7 +166,42 @@ public class Player {
 		}
 	}
 
-	void throwIn(Ball ball) {
+	public void pass(Player player, Ball ball) {
+		if(isBallOwner()) {
+			if (distanceTo(ball) > 1.1)
+				return;
+
+			// avoid multiple kicks by ignoring kick when the ball is going in the same direction
+			// this is facing (but allowing for running speed)
+			DVector3 ballVelocity = ball.getVelocity().toDVector();
+			DVector3 facing = getFacing();
+			double dot = facing.dot(ballVelocity);
+			if (dot > getVelocity().speed() * DOUBLE_KICK_RATIO)
+				return;
+
+			ball.setOwner(null);
+			this.setBallOwner(false);
+			for (int i = 0; i < this.body.getNumJoints(); i++) {
+				this.body.getJoint(i).disable();
+			}
+			ball.setKickStatus(true);
+            if(player != null) {
+                this.setFacing(player.getPosition());
+            }
+			if(this.getVelocity().speed() > 1) {
+				hit(ball, 21, 0);
+			} else {
+				hit(ball, 16, 0);
+			}
+			try {
+				SoundParser.play(SoundParser.Fx.BALL_KICK);
+			} catch (Exception ex) {
+				log.warning(ex.getMessage());
+			}
+		}
+	}
+
+	public void throwIn(Ball ball) {
 		assert getState() == PlayerState.THROWING;
 		assert actions.contains(Action.KICK);
 		if (distanceTo(ball) > 1)
@@ -190,13 +227,14 @@ public class Player {
 	 * 
 	 * @param actions
 	 */
-	void setActions(Collection<Action> actions) {
+	public void setActions(Collection<Action> actions) {
 		Preconditions.checkNotNull(actions);
 		PlayerState state = getState();
 		switch (state) {
 			case THROW:
 			case RUN:
 			case KICK:
+            case PASS:
 			case STEAL:
 				break;
 			default:
@@ -247,7 +285,7 @@ public class Player {
 	 *
 	 * @param attractor
 	 */
-	void autoPilot(Position attractor) {
+	public void autoPilot(Position attractor) {
 		Preconditions.checkNotNull(attractor);
 		List<Action> auto = Lists.newArrayList();
 		double dx = body.getPosition().get0() - attractor.x;
@@ -265,13 +303,13 @@ public class Player {
 		setActions(auto);
 	}
 
-	double getAutoPilotTolerance() {
+	public double getAutoPilotTolerance() {
 		return AUTOPILOT_TOLERANCE;
 	}
 
 	// only works for some states
 	@SuppressWarnings("fallthrough")
-	void setState(PlayerState state) {
+	public void setState(PlayerState state) {
 		switch (state) {
 			case RUN:
 			case THROW:
@@ -343,6 +381,8 @@ public class Player {
 			return PlayerState.HEAD_END;
 		if (actions.contains(Action.KICK))
 			return PlayerState.KICK;
+		if(actions.contains(Action.PASS))
+		    return PlayerState.PASS;
 		if(actions.contains(Action.STEAL))
 			return PlayerState.STEAL;
 		return PlayerState.RUN;
@@ -366,6 +406,10 @@ public class Player {
 		return rotated;
 	}
 
+	public void setFacing(Position p) {
+		this.body.setRotation(createRotationMatrix(p));
+	}
+
 	DMatrix3 createRotationMatrix(Position to) {
 		DMatrix3 rotation = new DMatrix3();
 		Rotation.dRFromAxisAndAngle(rotation, 0, 0, -1, GamePhysics.toAngle(to.toDVector().sub(this.getPosition().toDVector())));
@@ -373,7 +417,7 @@ public class Player {
 	}
 
 	// returns the angle (radians) off the vertical [0, PI]
-	double getTilt() {
+	public double getTilt() {
 		// TODO: a [-PI, PI] version for head over feet
 		DMatrix3C rotation = body.getRotation();
 		DVector3 rotated = new DVector3(rotation.get02(), rotation.get12(), rotation.get22());
@@ -389,18 +433,18 @@ public class Player {
 		return new Position(body.getPosition());
 	}
 
-	void setPosition(Position p) {
+	public void setPosition(Position p) {
 		setPosition(p.toDVector());
 	}
 
-	void setPosition(DVector3C p) {
+	public void setPosition(DVector3C p) {
 		DVector3 position = new DVector3(p);
 		position.set(2, HEIGHT / 2);
 		body.setPosition(position);
 	}
 
 	// [0, 1] bounciness when contacting the ball
-	double getBounce() {
+	public double getBounce() {
 		switch (getState()) {
 			case HEAD_START:
 			case HEAD_MID:

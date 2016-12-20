@@ -16,11 +16,12 @@ public class Assignment extends Thread implements Comparable {
     private volatile int priority;
     private volatile boolean canFeint;
     private volatile boolean canShoot;
+    private volatile boolean canPass;
     private final Stack<Position> targets = new Stack<Position>();
     private volatile Opponent assignee;
     private volatile GamePhysics game;
     public volatile Semaphore jobMonitor;
-    public ThreadLocalRandom probabilityGenerator;
+    private volatile ThreadLocalRandom probabilityGenerator;
 
     public Assignment(Opponent assignee, DO action, GamePhysics game) {
         this.game = game;
@@ -67,6 +68,8 @@ public class Assignment extends Thread implements Comparable {
                 break;
             case PASS:
                 System.out.println("PASS");
+                canPass = true;
+                canFeint = false;
                 break;
         }
         this.start();
@@ -99,7 +102,6 @@ public class Assignment extends Thread implements Comparable {
                     case GO_TO_OPPONENT_GOAL:
                         if (game.getSelected().isBallOwner()) {
                             dismissAssignment(true);
-                            break;
                         }
                         break;
                     case FEINT:
@@ -112,10 +114,23 @@ public class Assignment extends Thread implements Comparable {
                         break;
                 }
 
+                if(!flag)
+                    break;
+
                 if(canShoot && assignee.getPosition().distance(game.getPitch().getGoalBottom()) < 13) {
-                    assignee.body.setRotation(assignee.createRotationMatrix(game.getPitch().getGoalBottom()));
+                    assignee.setFacing(game.getPitch().getGoalBottom());
                     assignee.kick(game.getBall());
                     dismissAssignment(true);
+                    break;
+                }
+
+                if(canPass) {
+                    Opponent o = checkTeammatesToPass();
+                    if(o != null) {
+                        assignee.pass(o,game.getBall());
+                        dismissAssignment(false);
+                        break;
+                    }
                 }
 
                 if(canFeint) {
@@ -123,6 +138,7 @@ public class Assignment extends Thread implements Comparable {
                     if(p != null) {
                         assignee.assignJob(DO.FEINT);
                         dismissAssignment(true);
+                        break;
                     }
                 }
             }
@@ -149,7 +165,31 @@ public class Assignment extends Thread implements Comparable {
         return null;
     }
 
-    public Stack<Position> getTargets() {
+    private Opponent checkTeammatesToPass() {
+        for(Opponent o: game.getOpponentPlayers()) {
+            double angleToTeammate = GamePhysics.toAngle(o.getPosition().toDVector().sub(assignee.getPosition().toDVector()));
+            double angleToClosestOpponent = GamePhysics.toAngle(o.getPosition().toDVector().sub(getClosestPlayer().getPosition().toDVector()));
+            if(o.getPosition().distance(assignee.getPosition()) < 20) {
+                return o;
+            }
+        }
+        return null;
+    }
+
+    private Player getClosestPlayer() {
+        double min = 999999;
+        Player closest = null;
+        for(Player p: game.getOwningPlayers()) {
+            double dist = assignee.getPosition().distance(p.getPosition());
+            if(dist < min) {
+                min = dist;
+                closest = p;
+            }
+        }
+        return closest;
+    }
+
+    Stack<Position> getTargets() {
         return targets;
     }
 

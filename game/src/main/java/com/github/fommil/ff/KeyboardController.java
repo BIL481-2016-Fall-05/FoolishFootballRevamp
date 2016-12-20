@@ -63,8 +63,13 @@ public class KeyboardController extends KeyAdapter {
 				actions.add(Action.STEAL);
 				break;
 			case KeyEvent.VK_SPACE:
-				actions.add(Action.KICK);
 				actions.add(Action.CHANGE);
+				break;
+			case KeyEvent.VK_D:
+				actions.add(Action.KICK);
+				break;
+			case KeyEvent.VK_S:
+				actions.add(Action.PASS);
 				break;
 			case KeyEvent.VK_ENTER:
 				actions.add(Action.TACKLE);
@@ -101,8 +106,13 @@ public class KeyboardController extends KeyAdapter {
 				actions.remove(Action.STEAL);
 				break;
 			case KeyEvent.VK_SPACE:
-				actions.remove(Action.KICK);
 				actions.remove(Action.CHANGE);
+				break;
+			case KeyEvent.VK_D:
+				actions.remove(Action.KICK);
+				break;
+			case KeyEvent.VK_S:
+				actions.remove(Action.PASS);
 				break;
 			case KeyEvent.VK_ENTER:
 				actions.remove(Action.TACKLE);

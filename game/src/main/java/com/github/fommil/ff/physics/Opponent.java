@@ -13,9 +13,8 @@ import java.util.Queue;
  *
  * @author Doga Can Yanikoglu
  */
-public class Opponent extends Player {
+class Opponent extends Player {
 
-    private final GamePhysics game;
 	private final JobAssignerAgent assignAgent;
 	private final ConditionCheckerAgent checkAgent;
     public Queue<Assignment> assignments = new PriorityQueue<Assignment>();
@@ -24,10 +23,9 @@ public class Opponent extends Player {
     private volatile boolean isSelected;
     private volatile int feintMass;
 
-	public Opponent(int i, Team team, PlayerStats stats, DWorld world, DSpace space, GamePhysics game) {
-		super(i, team, stats, world, space);
+    public Opponent(int i, Team team, PlayerStats stats, DWorld world, DSpace space, GamePhysics game) {
+		super(i, team, stats, world, space, game);
 
-		this.game = game;
         feintMass = 0;
         isSelected = false;
         checkAgent = new ConditionCheckerAgent();
@@ -36,7 +34,7 @@ public class Opponent extends Player {
 		assignAgent.start();
 	}
 
-	public void select() {
+    public void select() {
 	    for(Opponent o: game.getOpponentPlayers()) {
 	        if(this != o) {
                 o.flush();
@@ -45,7 +43,7 @@ public class Opponent extends Player {
         this.isSelected = true;
     }
 
-    public void flush() {
+    private void flush() {
 	    assignmentInProgress = false;
 	    isSelected = false;
         assignments.clear();
