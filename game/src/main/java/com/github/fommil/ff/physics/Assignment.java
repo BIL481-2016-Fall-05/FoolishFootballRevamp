@@ -2,36 +2,43 @@ package com.github.fommil.ff.physics;
 
 import java.util.Stack;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * Created by dyani on 12/19/2016.
+ * Threaded Assignment module for a opponent player.
+ *
+ * @author Doga Can Yanikoglu
  */
-public class Assignment extends Thread implements Comparable{
-    public enum DO { BLOCK_PLAYER, PURSUIT_PLAYER, GET_BALL, GO_TO_MID, GO_TO_OPPONENT_GOAL, GO_TO_HOME_GOAL};
-    volatile boolean flag = true;
-    volatile DO action;
-    volatile int priority;
-    volatile boolean canFeint;
-    volatile boolean canShoot;
-    final Stack<Position> targets = new Stack<Position>();
-    volatile Opponent assignee;
-    volatile GamePhysics game;
+public class Assignment extends Thread implements Comparable {
+    public enum DO { BLOCK_PLAYER, PURSUIT_PLAYER, GET_BALL, GO_TO_MID, GO_TO_OPPONENT_GOAL, GO_TO_HOME_GOAL, FEINT, PASS}
+    private volatile boolean flag = true;
+    private volatile DO action;
+    private volatile int priority;
+    private volatile boolean canFeint;
+    private volatile boolean canShoot;
+    private final Stack<Position> targets = new Stack<Position>();
+    private volatile Opponent assignee;
+    private volatile GamePhysics game;
     public volatile Semaphore jobMonitor;
+    public ThreadLocalRandom probabilityGenerator;
 
     public Assignment(Opponent assignee, DO action, GamePhysics game) {
         this.game = game;
         this.assignee = assignee;
         this.action = action;
         this.jobMonitor = new Semaphore(0);
+        probabilityGenerator = ThreadLocalRandom.current();
         switch (action) {
             case BLOCK_PLAYER:
                 break;
             case PURSUIT_PLAYER:
+                System.out.println("PURSUIT PLAYER");
                 targets.push(game.getSelected().getPosition());
                 canShoot = false;
                 canFeint = false;
                 break;
             case GET_BALL:
+                System.out.println("GET BALL");
                 targets.push(game.getBall().getPosition());
                 canShoot = false;
                 canFeint = false;
@@ -39,17 +46,31 @@ public class Assignment extends Thread implements Comparable{
             case GO_TO_MID:
                 break;
             case GO_TO_OPPONENT_GOAL:
-                targets.push(new Position(game.getPitch().getGoalBottom().toDVector().add(5,0,0)));
+                System.out.println("GO TO OPPONENT GOAL");
+                targets.push(new Position(game.getPitch().getGoalBottom().toDVector().add(-5,0,0)));
                 canShoot = true;
                 canFeint = true;
                 break;
             case GO_TO_HOME_GOAL:
                 break;
+            case FEINT:
+                System.out.println("FEINT");
+                Player p = checkPlayersToFeint();
+                if(probabilityGenerator.nextBoolean()) {
+                    targets.push(new Position(p.getPosition().toDVector().add(2.2,0,0)));
+                }
+                else {
+                    targets.push(new Position(p.getPosition().toDVector().add(-2.2,0,0)));
+                }
+                canFeint = false;
+                canShoot = true;
+                break;
+            case PASS:
+                System.out.println("PASS");
+                break;
         }
         this.start();
     }
-
-
 
     public void run() {
         try {
@@ -57,57 +78,52 @@ public class Assignment extends Thread implements Comparable{
                 sleep(25);
                 switch (action) {
                     case GET_BALL:
-                        if(assignee.isBallOwner()) {
-                            assignee.assignments.remove(this);
-                            jobMonitor.release();
-                            flag = false;
-                            break;
-                        }
-                        if(game.getSelected().isBallOwner()) {
-                            assignee.assignments.remove(this);
-                            jobMonitor.release();
-                            flag = false;
+                        if(assignee.isBallOwner() || game.getSelected().isBallOwner()) {
+                            dismissAssignment(true);
                             break;
                         }
                         targets.pop();
                         targets.push(game.getBall().getPosition());
                         break;
                     case PURSUIT_PLAYER:
-                        if (!game.getSelected().isBallOwner()) {
-                            assignee.assignments.remove(this);
-                            jobMonitor.release();
-                            flag = false;
-                            break;
-                        }
                         if (game.getSelected().getPosition().distance(assignee.getPosition()) < 1) {
                             assignee.steal(game.getBall());
+                        }
+                        if (!game.getSelected().isBallOwner()) {
+                            dismissAssignment(true);
+                            break;
                         }
                         targets.pop();
                         targets.push(game.getSelected().getPosition());
                         break;
                     case GO_TO_OPPONENT_GOAL:
-//                        if(canFeint) {
-//                            Player p = checkPlayersInRange();
-//                            if(p != null) {
-//                                targets.push(new Position(p.getPosition().toDVector().add(10,0,0)));
-//                                canFeint = false;
-//                            }
-//                        }
-                        if(canShoot && assignee.getPosition().distance(game.getPitch().getGoalBottom()) < 13) {
-                            assignee.body.setRotation(assignee.createRotationMatrix(game.getPitch().getGoalBottom()));
-                            assignee.kick(game.getBall());
-                            assignee.assignments.remove(this);
-                            jobMonitor.release();
-                            flag = false;
-                            break;
-                        }
                         if (game.getSelected().isBallOwner()) {
-                            assignee.assignments.remove(this);
-                            jobMonitor.release();
-                            flag = false;
+                            dismissAssignment(true);
                             break;
                         }
                         break;
+                    case FEINT:
+                        if(assignee.getPosition().distance(targets.peek()) < 0.5) {
+                            targets.pop();
+                        }
+                        if(targets.isEmpty()) {
+                            dismissAssignment(false);
+                        }
+                        break;
+                }
+
+                if(canShoot && assignee.getPosition().distance(game.getPitch().getGoalBottom()) < 13) {
+                    assignee.body.setRotation(assignee.createRotationMatrix(game.getPitch().getGoalBottom()));
+                    assignee.kick(game.getBall());
+                    dismissAssignment(true);
+                }
+
+                if(canFeint) {
+                    Player p = checkPlayersToFeint();
+                    if(p != null) {
+                        assignee.assignJob(DO.FEINT);
+                        dismissAssignment(true);
+                    }
                 }
             }
         }
@@ -116,14 +132,25 @@ public class Assignment extends Thread implements Comparable{
         }
     }
 
-    private Player checkPlayersInRange() {
+    private void dismissAssignment(Boolean isSemaphoreUsed) {
+        assignee.assignments.remove(this);
+        if(isSemaphoreUsed)
+            jobMonitor.release();
+        flag = false;
+    }
+
+    private Player checkPlayersToFeint() {
         for(Player p: game.getOwningPlayers()) {
             double rangeTangent = GamePhysics.toAngle(p.getPosition().toDVector().sub(assignee.getPosition().toDVector()));
-            if(p.getPosition().distance(assignee.getPosition()) < 7 && ( (rangeTangent < 3 && rangeTangent > 2) || (rangeTangent > -3 && rangeTangent < -2) )) {
+            if(p.getPosition().distance(assignee.getPosition()) < 3 && ( (rangeTangent < 3 && rangeTangent > 2) || (rangeTangent > -3 && rangeTangent < -2) )) {
                 return p;
             }
         }
         return null;
+    }
+
+    public Stack<Position> getTargets() {
+        return targets;
     }
 
     @Override

@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Represents a football team, including the list of available {@link Player}s and
+ * Represents a football team, including the list of available {@link com.github.fommil.ff.physics.Player}s and
  * {@link Tactics}.
  *
  * @author Samuel Halliday

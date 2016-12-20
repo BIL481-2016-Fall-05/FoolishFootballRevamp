@@ -22,12 +22,13 @@ public class Opponent extends Player {
 
     private volatile boolean assignmentInProgress;
     private volatile boolean isSelected;
+    private volatile int feintMass;
 
 	public Opponent(int i, Team team, PlayerStats stats, DWorld world, DSpace space, GamePhysics game) {
 		super(i, team, stats, world, space);
 
 		this.game = game;
-
+        feintMass = 0;
         isSelected = false;
         checkAgent = new ConditionCheckerAgent();
         //checkAgent.start();
@@ -63,23 +64,22 @@ public class Opponent extends Player {
                     }
                     sleep(25);
 
-                    if (isSelected) {
+                    if (isSelected && assignments.isEmpty()) {
                         if (isBallOwner()) {
-                            Assignment tempAssignment = new Assignment(Opponent.this, Assignment.DO.GO_TO_OPPONENT_GOAL, game);
-                            assignmentInProgress = true;
-                            assignments.add(tempAssignment);
-                            tempAssignment.jobMonitor.acquire();
+                            assignJob(Assignment.DO.GO_TO_OPPONENT_GOAL)
+                                    .jobMonitor.acquire();
                             assignmentInProgress = false;
                         }
                         else {
                             if (game.getSelected().isBallOwner()) {
-                                Assignment tempAssignment = new Assignment(Opponent.this, Assignment.DO.PURSUIT_PLAYER, game);
-                                assignments.add(tempAssignment);
-                                tempAssignment.jobMonitor.acquire();
-                            } else {
-                                Assignment tempAssignment = new Assignment(Opponent.this, Assignment.DO.GET_BALL, game);
-                                assignments.add(tempAssignment);
-                                tempAssignment.jobMonitor.acquire();
+                                assignJob(Assignment.DO.PURSUIT_PLAYER)
+                                        .jobMonitor.acquire();
+                                assignmentInProgress = false;
+                            }
+                            else {
+                                assignJob(Assignment.DO.GET_BALL)
+                                        .jobMonitor.acquire();
+                                assignmentInProgress = false;
                             }
                         }
                     }
@@ -90,13 +90,25 @@ public class Opponent extends Player {
         }
     }
 
+    public Assignment assignJob(Assignment.DO action) {
+        Assignment tempAssignment;
+	    if(action.equals(Assignment.DO.FEINT) && ++feintMass > 3) { // Feint limit is reached, pass to another teammate
+            feintMass = 0;
+            tempAssignment = new Assignment(Opponent.this, Assignment.DO.PASS, game);
+        } else {
+            tempAssignment = new Assignment(Opponent.this, action, game);
+        }
+        assignmentInProgress = true;
+        assignments.add(tempAssignment);
+        return tempAssignment;
+    }
+
 	private class ConditionCheckerAgent extends Thread {
 		public void run() {
 			while (true) {
                 if (game.getPauseState()) {
                     break;
                 }
-
             }
 		}
 	}
