@@ -47,10 +47,10 @@ public class GamePhysicsGL extends dsFunctions {
 	public static final void main(String[] args) throws Exception {
 		final int width = 600;
 		final int height = 400;
-		Team a = new Team();
+		Team a = new Team("Player");
 		a.setCurrentTactics(TacticsParser.getSwosTactics(Main.SWOS).get("442"));
 		Pitch pitch = new Pitch();
-		Team b = new Team();
+		Team b = new Team("Opponent");
 		b.setCurrentTactics(TacticsParser.getSwosTactics(Main.SWOS).get("433"));
 		b.setHomeKit(a.getAwayKit());
 		b.setAwayKit(a.getHomeKit());
