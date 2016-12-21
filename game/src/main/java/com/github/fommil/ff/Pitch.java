@@ -17,8 +17,6 @@ package com.github.fommil.ff;
 import java.awt.Point;
 import java.awt.Rectangle;
 import com.github.fommil.ff.physics.Position;
-import com.sun.org.apache.regexp.internal.RE;
-import javafx.geometry.Pos;
 
 /**
  * This is a container that is tied to the pixel values of features from the SWOS pitch graphics. A
