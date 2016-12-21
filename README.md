@@ -35,12 +35,19 @@ mvn clean verify
 Control Layout
 ==========
 Up,Down,Left,Right Arrows => Movement
+
 CTRL => Steal Ball
+
 A => Head
+
 S => Pass
+
 D => Shoot
+
 Enter => Tackle
+
 Space => Change Player
+
 ESC => Exit
 
 Licence
