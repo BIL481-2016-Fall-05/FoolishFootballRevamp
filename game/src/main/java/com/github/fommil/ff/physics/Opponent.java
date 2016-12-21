@@ -17,7 +17,6 @@ import java.util.Queue;
 class Opponent extends Player {
     private final Queue<Assignment> assignments = new PriorityQueue<Assignment>(); // Queue of all jobs assigned to this player
     private volatile Pitch.Area currentArea;
-    private volatile boolean assignmentInProgress;
     private volatile boolean isSelected; // Controlled-State of this player
     private volatile int feintMass; // Count of total feints made before pass
 
@@ -51,7 +50,6 @@ class Opponent extends Player {
      * Sets all of critical variables to their initial states.
      */
     private synchronized void flush() {
-	    assignmentInProgress = false;
 	    isSelected = false;
 	    currentArea = null;
 	    feintMass = 0;
@@ -78,7 +76,6 @@ class Opponent extends Player {
     public synchronized Assignment assignJob(Assignment.DO action) {
         Assignment tempAssignment;
         tempAssignment = new Assignment(Opponent.this, action, game);
-        assignmentInProgress = true;
         assignments.add(tempAssignment);
         return tempAssignment;
     }
@@ -104,7 +101,7 @@ class Opponent extends Player {
                     sleep(25);
 
                     // If this player is selected, and there are no more assignments to handle, start assigning new jobs
-                    if (isSelected && !assignmentInProgress) {
+                    if (isSelected && assignments.isEmpty()) {
                         if (isBallOwner()) { // Ball is on this player
                             if(game.getPitch().leftBack == currentArea) {
                                 assignJob(Assignment.DO.GO_TO_LWB)
@@ -157,7 +154,6 @@ class Opponent extends Player {
                                         .getJobMonitor().acquire();
                             }
                         }
-                        assignmentInProgress = false;
                     }
                 }
             } catch (InterruptedException e) {

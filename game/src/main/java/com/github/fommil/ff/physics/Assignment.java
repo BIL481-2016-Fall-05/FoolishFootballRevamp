@@ -104,12 +104,13 @@ public class Assignment extends Thread implements Comparable {
                 break;
             case GO_TO_LOWER_LW: // Lower-side of Left Wing
                 targets.push(new Position(game.getPitch().leftWing.bottomPos().toDVector()));
+                canPass = false;
                 canShoot = false;
                 canFeint = true;
                 break;
             case GO_TO_LOWER_RW: // Lower-side of Right Wing
                 targets.push(new Position(game.getPitch().rightWing.bottomPos().toDVector()));
-                System.out.println(targets.peek());
+                canPass = false;
                 canShoot = false;
                 canFeint = true;
                 break;
@@ -121,6 +122,7 @@ public class Assignment extends Thread implements Comparable {
                 else {
                     targets.push(new Position(p.getPosition().toDVector().add(-2.2,0,0)));
                 }
+                canPass = false;
                 canFeint = false;
                 canShoot = true;
                 break;
@@ -204,6 +206,10 @@ public class Assignment extends Thread implements Comparable {
                     case GO_TO_RWB:
                     case GO_TO_DM:
                         if(assignee.getPosition().distance(targets.peek()) < 1) {
+                            targets.pop();
+                            dismissAssignment(true);
+                        }
+                        if(!assignee.isBallOwner()) {
                             targets.pop();
                             dismissAssignment(true);
                         }
