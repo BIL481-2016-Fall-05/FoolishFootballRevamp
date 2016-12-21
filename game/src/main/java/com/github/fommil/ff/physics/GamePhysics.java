@@ -19,11 +19,8 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+
+import java.util.*;
 import java.util.logging.Logger;
 
 import org.ode4j.math.DVector3;
@@ -141,10 +138,6 @@ public class GamePhysics extends Physics {
 
         List<PlayerStats> aPlayers = a.getPlayers();
         Tactics tactics = a.getCurrentTactics();
-//        Goalkeeper goalkeeper = new Goalkeeper(1, a, aPlayers.get(0), world, space);
-//        goalkeeper.setPosition(pitch.getGoalBottom());
-//        goalkeeper.setOpponent(Direction.NORTH);
-//        as.add(goalkeeper);
         for (int i = 2; i <= 11; i++) {
             Position p = tactics.getZone(bz, i, Direction.NORTH).getCentre(pitch);
             Player pma = new Player(i, a, aPlayers.get(i - 1), world, space, this);
@@ -156,10 +149,6 @@ public class GamePhysics extends Physics {
 
 		List<PlayerStats> bPlayers = b.getPlayers();
 		tactics = b.getCurrentTactics();
-		//goalkeeper = new Goalkeeper(1, b, bPlayers.get(0), world, space);
-		//goalkeeper.setPosition(pitch.getGoalTop());
-		//goalkeeper.setOpponent(Direction.SOUTH);
-		//bs.add(goalkeeper);
 
 		for (int i = 2; i <= 11; i++) {
 			Position p = tactics.getZone(bz, i, Direction.SOUTH).getCentre(pitch);
@@ -194,8 +183,7 @@ public class GamePhysics extends Physics {
 	@Override
 	protected void beforeStep() {
 		debugNaNs();
-
-		for (Goalpost goal : goals) {
+        for (Goalpost goal : goals) {
 			if (goal.isInside(ball)) {
                 pauseGame = true;
 				log.info("GOAL TO " + goal.getFacing());
@@ -238,18 +226,18 @@ public class GamePhysics extends Physics {
 	@Override
 	protected void afterStep() {
 		double ballSpeed = ball.getVelocity().speed();
-//		if (Double.isNaN(ballSpeed)) {
-//			log.warning("ball had NaN speed");
-//			ball.setVelocity(new DVector3());
-//		}
+		if (Double.isNaN(ballSpeed)) {
+			log.warning("ball had NaN speed");
+			ball.setVelocity(new DVector3());
+		}
 		if (ballSpeed < MIN_SPEED)// stops small movements
 			ball.setVelocity(new DVector3());
-//		if (ballSpeed > MAX_SPEED) { // stops really weird rounding errors
-//			log.warning("ball was going " + ballSpeed);
-//			DVector3 ballVelocity = ball.getVelocity().toDVector();
-//			ballVelocity.normalize();
-//			ballVelocity.scale(MAX_SPEED);
-//		}
+		if (ballSpeed > MAX_SPEED) { // stops really weird rounding errors
+			log.warning("ball was going " + ballSpeed);
+			DVector3 ballVelocity = ball.getVelocity().toDVector();
+			ballVelocity.normalize();
+			ballVelocity.scale(MAX_SPEED);
+		}
 
 		switch (selected.getState()) {
 			case KICK:
@@ -367,5 +355,14 @@ public class GamePhysics extends Physics {
 	public Pitch getPitch() {
 		return pitch;
 	}
+
+	public ArrayList<Opponent> getOpponentsIn(Pitch.Area area) {
+        ArrayList<Opponent> temp = new ArrayList<Opponent>();
+	    for(Opponent o: bs) {
+	        if(o.getArea() == area)
+	            temp.add(o);
+        }
+        return temp;
+    }
 	// </editor-fold>
 }

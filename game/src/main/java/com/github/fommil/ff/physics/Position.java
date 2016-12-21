@@ -29,7 +29,6 @@ import static java.lang.Math.sqrt;
  * @author Samuel Halliday
  */
 public final class Position {
-
 	public final double x, y, z;
 
 	/**

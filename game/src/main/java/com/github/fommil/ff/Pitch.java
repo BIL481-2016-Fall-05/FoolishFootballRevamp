@@ -17,6 +17,8 @@ package com.github.fommil.ff;
 import java.awt.Point;
 import java.awt.Rectangle;
 import com.github.fommil.ff.physics.Position;
+import com.sun.org.apache.regexp.internal.RE;
+import javafx.geometry.Pos;
 
 /**
  * This is a container that is tied to the pixel values of features from the SWOS pitch graphics. A
@@ -44,11 +46,51 @@ import com.github.fommil.ff.physics.Position;
  * @author Samuel Halliday
  */
 public class Pitch {
+	public class Area {
+		private double leftBound, rightBound, upperBound, lowerBound;
+        Area(double leftBound, double rightBound, double upperBound, double lowerBound) {
+			this.leftBound = leftBound;
+			this.rightBound = rightBound;
+			this.upperBound = upperBound;
+			this.lowerBound = lowerBound;
+		}
+		public boolean isInside(Position p) {
+			if(p.x <= rightBound && p.x >= leftBound && p.y <= upperBound && p.y >= lowerBound)
+				return true;
+			else
+				return false;
+		}
+        public Position topPos() {
+            return new Position((leftBound + rightBound) / 2,upperBound - 3,0);
+        }
+		public Position bottomPos() {
+            return new Position((leftBound + rightBound) / 2,lowerBound + 3,0);
+        }
+        public Position leftPos() {
+            return new Position(leftBound + 2,(lowerBound + upperBound) / 2,0);
+        }
+        public Position rightPos() {
+            return new Position(rightBound - 2,(lowerBound + upperBound) / 2,0);
+        }
+        public Position leftBottomPos() {
+            return new Position(leftBound + 2,lowerBound + 2,0);
+        }
+        public Position rightBottomPos() {
+            return new Position(rightBound - 2,lowerBound + 2,0);
+        }
+        public Position leftTopPos() {
+            return new Position(leftBound + 2,upperBound - 2,0);
+        }
+        public Position rightTopPos() {
+            return new Position(rightBound - 2,upperBound - 2,0);
+        }
+        public Position centerPos() {
+            return new Position((rightBound+leftBound)/2,(upperBound+lowerBound)/2,0);
+        }
+	}
 
 	public enum Facing {
-
 		NORTH, SOUTH;
-
 	}
 
 	private static final double SCALE = 0.1;
@@ -58,6 +100,23 @@ public class Pitch {
 	private static final Rectangle pitch = new Rectangle(81, 129, 509, 640);
 
 	private static final Point centreSpot = new Point(336, 449);
+
+	public final Area leftBack = new Area(8,19,75,54);
+    public final Area rightBack = new Area(48,59,75,54);
+    public final Area centralBack = new Area(19,48,75,54);
+
+    public final Area leftWingBack = new Area(8,19,54,43);
+    public final Area rightWingBack = new Area(48,59,54,43);
+    public final Area defensiveMid = new Area(19,48,54,43);
+
+    public final Area leftWing = new Area(8,19,43,11);
+    public final Area rightWing = new Area(48,59,43,11);
+
+    public final Area attackerMid = new Area(19,48,43,31);
+    public final Area forward = new Area(19,48,31,11);
+
+    public final Area centre = new Area(27,40,48,38);
+
 
 //	private final Rectangle penaltyBoxTop = new Rectangle(193, 129, 285, 87);
 //
