@@ -74,7 +74,7 @@ public class Main {
 
 			@Override
 			public synchronized void run() {
-				game.step(period / 900.0);
+				game.step(period / 1000.0);
 				long count = counter.incrementAndGet();
 				if (count % redraw == 0)
 					gv.repaint();
