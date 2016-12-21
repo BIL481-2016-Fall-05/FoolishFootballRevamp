@@ -194,39 +194,9 @@ public class Assignment extends Thread implements Comparable {
                         }
                         break;
 
-                    /**
-                     * Go to forward area.
-                     */
                     case GO_TO_F:
-                        if(assignee.getPosition().distance(targets.peek()) < 1) {
-                            targets.pop();
-                            dismissAssignment(true);
-                        }
-                        break;
-
-                    /**
-                     * Go to left wing back area.
-                     */
                     case GO_TO_LWB:
-                        if(assignee.getPosition().distance(targets.peek()) < 1) {
-                            targets.pop();
-                            dismissAssignment(true);
-                        }
-                        break;
-
-                    /**
-                     * Go to right wing back area.
-                     */
                     case GO_TO_RWB:
-                        if(assignee.getPosition().distance(targets.peek()) < 1) {
-                            targets.pop();
-                            dismissAssignment(true);
-                        }
-                        break;
-
-                    /**
-                     * Go to defensive mid area.
-                     */
                     case GO_TO_DM:
                         if(assignee.getPosition().distance(targets.peek()) < 1) {
                             targets.pop();
@@ -245,6 +215,8 @@ public class Assignment extends Thread implements Comparable {
                         if(targets.isEmpty()) {
                             dismissAssignment(true);
                         }
+                        break;
+                    default:
                         break;
                 }
 
@@ -321,7 +293,9 @@ public class Assignment extends Thread implements Comparable {
      */
     private Opponent findTeammateToPass() {
         if(assignee.getArea() == game.getPitch().attackerMid) {
-            double LWDist, RWDist, FDist;
+            double LWDist;
+            double RWDist;
+            double FDist;
             Opponent leftWingPassable = getPassableTeammateInArea(game.getPitch().leftWing);
             Opponent rightWingPassable = getPassableTeammateInArea(game.getPitch().rightWing);
             Opponent forwardPassable = getPassableTeammateInArea(game.getPitch().forward);
@@ -358,7 +332,8 @@ public class Assignment extends Thread implements Comparable {
             return rightWingPassable;
         }
         else if(assignee.getArea() == game.getPitch().defensiveMid) {
-            double LWDist, RWDist;
+            double LWDist;
+            double RWDist;
             Opponent leftWingPassable = getPassableTeammateInArea(game.getPitch().leftWing);
             Opponent rightWingPassable = getPassableTeammateInArea(game.getPitch().rightWing);
             if(leftWingPassable != null) {
@@ -375,7 +350,8 @@ public class Assignment extends Thread implements Comparable {
             }
         }
         else if(assignee.getArea() == game.getPitch().centralBack) {
-            double LWBDist, RWBDist;
+            double LWBDist;
+            double RWBDist;
             Opponent leftWingBackPassable = getPassableTeammateInArea(game.getPitch().leftWing);
             Opponent rightWingBackPassable = getPassableTeammateInArea(game.getPitch().rightWing);
             if(leftWingBackPassable != null) {
@@ -414,7 +390,7 @@ public class Assignment extends Thread implements Comparable {
         return closest;
     }
 
-    Stack<Position> getTargets() {
+    public Stack<Position> getTargets() {
         return targets;
     }
 

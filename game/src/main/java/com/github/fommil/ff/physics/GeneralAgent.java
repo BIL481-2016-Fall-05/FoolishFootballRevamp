@@ -6,7 +6,7 @@ package com.github.fommil.ff.physics;
  * @author Doga Can Yanikoglu
  */
 public class GeneralAgent extends Thread {
-    GamePhysics game;
+    private GamePhysics game;
 
     public GeneralAgent(GamePhysics game) {
         this.game = game;

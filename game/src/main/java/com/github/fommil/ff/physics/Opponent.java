@@ -15,11 +15,7 @@ import java.util.Queue;
  * @author Doga Can Yanikoglu
  */
 class Opponent extends Player {
-
-	private final JobAssignerAgent assignAgent;
-	private final AreaDetectAgent areaAgent;
     private final Queue<Assignment> assignments = new PriorityQueue<Assignment>(); // Queue of all jobs assigned to this player
-
     private volatile Pitch.Area currentArea;
     private volatile boolean assignmentInProgress;
     private volatile boolean isSelected; // Controlled-State of this player
@@ -33,9 +29,9 @@ class Opponent extends Player {
         currentArea = null;
         feintMass = 0;
         isSelected = false;
-        areaAgent = new AreaDetectAgent();
+        AreaDetectAgent areaAgent = new AreaDetectAgent();
         areaAgent.start();
-		assignAgent = new JobAssignerAgent();
+        JobAssignerAgent assignAgent = new JobAssignerAgent();
 		assignAgent.start();
 	}
 
