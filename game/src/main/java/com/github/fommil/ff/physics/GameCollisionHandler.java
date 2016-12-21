@@ -34,10 +34,11 @@ class GameCollisionHandler implements CollisionHandler {
 
 	@Override
 	public boolean collide(Ball ball, Player player, DSurfaceParameters surface, GamePhysics game) {
+        // If ball is not owned and not kicked recently, change owner of the ball as collided player
 		if(!ball.isOwned() && !ball.isKickedRecently()) {
 			ball.setOwner(player);
 			player.setBallOwner(true);
-			if(!(player instanceof Opponent)) {
+			if(!(player instanceof Opponent)) { // If ball is collided with our player, change our selected player as this player
 				game.updateSelected();
 			}
 		}

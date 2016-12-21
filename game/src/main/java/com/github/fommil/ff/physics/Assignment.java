@@ -7,24 +7,27 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * Threaded Assignment module for a opponent player.
+ * Threaded Assignment module for a opponent players.
  *
  * @author Doga Can Yanikoglu
  */
 public class Assignment extends Thread implements Comparable {
+    /**
+     * Enum declaration for specifying action type to do.
+     */
     public enum DO { BLOCK_PLAYER, PURSUIT_PLAYER, GET_BALL, GO_TO_AM, GO_TO_F, GO_TO_LOWER_LW, GO_TO_LOWER_RW, GO_TO_DM, GO_TO_LWB,
-        GO_TO_RWB, GO_TO_LB, GO_TO_RB, GO_TO_CB, GO_FOR_GOAL, FEINT}
-    private volatile boolean flag = true;
-    private volatile DO action;
-    private volatile int priority;
-    private volatile boolean canFeint;
-    private volatile boolean canShoot;
-    private volatile boolean canPass;
-    private final Stack<Position> targets = new Stack<Position>();
-    private volatile Opponent assignee;
+        GO_TO_RWB, GO_TO_LB, GO_TO_RB, GO_TO_CB, GO_FOR_SCORE, FEINT}
+    private volatile boolean flag = true; // Ends thread if set to false
+    private volatile DO action; // Action to be done
+    private volatile int priority; // Priority of the assignment
+    private volatile boolean canFeint; // Decides if player can feint or not
+    private volatile boolean canShoot; // Decides if player can shoot to goal or not
+    private volatile boolean canPass; // Decides if player can pass or not
+    private final Stack<Position> targets = new Stack<Position>(); // Stack for storing target positions
+    private volatile Opponent assignee; // Related player with this assignment
     private volatile GamePhysics game;
-    public volatile Semaphore jobMonitor;
-    private volatile ThreadLocalRandom probabilityGenerator;
+    public volatile Semaphore jobMonitor; // Semaphore for organizing player's thread
+    private volatile ThreadLocalRandom probabilityGenerator; // Thread-safe random value generator
 
     public Assignment(Opponent assignee, DO action, GamePhysics game) {
         this.game = game;
@@ -47,13 +50,13 @@ public class Assignment extends Thread implements Comparable {
                 canPass = false;
                 canFeint = false;
                 break;
-            case GO_FOR_GOAL:
+            case GO_FOR_SCORE:
                 targets.push(new Position(game.getPitch().getGoalBottom().toDVector().add(-5,0,0)));
                 canShoot = true;
                 canPass = false;
                 canFeint = true;
                 break;
-            case GO_TO_DM:
+            case GO_TO_DM: // DefensiveMid
                 if(probabilityGenerator.nextBoolean()) {
                     targets.push(new Position(game.getPitch().defensiveMid.leftPos().toDVector()));
                 }
@@ -64,19 +67,19 @@ public class Assignment extends Thread implements Comparable {
                 canPass = true;
                 canFeint = true;
                 break;
-            case GO_TO_LWB:
+            case GO_TO_LWB: // Left Wing Back
                 targets.push(new Position(game.getPitch().leftWingBack.topPos().toDVector()));
                 canShoot = false;
                 canPass = false;
                 canFeint = true;
                 break;
-            case GO_TO_RWB:
+            case GO_TO_RWB: // Right Wing Back
                 targets.push(new Position(game.getPitch().rightWingBack.topPos().toDVector()));
                 canShoot = false;
                 canPass = false;
                 canFeint = true;
                 break;
-            case GO_TO_AM:
+            case GO_TO_AM: // Attacker Mid
                 if(assignee.getArea() == game.getPitch().leftWingBack) {
                     targets.push(new Position(game.getPitch().attackerMid.leftTopPos().toDVector()));
                 } else if(assignee.getArea() == game.getPitch().rightWingBack) {
@@ -88,7 +91,7 @@ public class Assignment extends Thread implements Comparable {
                 canPass = true;
                 canFeint = true;
                 break;
-            case GO_TO_F:
+            case GO_TO_F: // Forward
                 int probability = probabilityGenerator.nextInt(100);
                 if(probability < 33) {
                     targets.push(new Position(game.getPitch().forward.leftTopPos().toDVector()));
@@ -101,19 +104,18 @@ public class Assignment extends Thread implements Comparable {
                 canShoot = false;
                 canFeint = true;
                 break;
-            case GO_TO_LOWER_LW:
+            case GO_TO_LOWER_LW: // Lower-side of Left Wing
                 targets.push(new Position(game.getPitch().leftWing.bottomPos().toDVector()));
                 canShoot = false;
                 canFeint = true;
                 break;
-            case GO_TO_LOWER_RW:
+            case GO_TO_LOWER_RW: // Lower-side of Right Wing
                 targets.push(new Position(game.getPitch().rightWing.bottomPos().toDVector()));
                 System.out.println(targets.peek());
                 canShoot = false;
                 canFeint = true;
                 break;
             case FEINT:
-                System.out.println("FEINT");
                 Player p = checkPlayersToFeint();
                 if(probabilityGenerator.nextBoolean()) {
                     targets.push(new Position(p.getPosition().toDVector().add(2.2,0,0)));
@@ -133,6 +135,9 @@ public class Assignment extends Thread implements Comparable {
             while (flag) {
                 sleep(25);
                 switch (action) {
+                    /**
+                     * Try getting ball from pitch until the ball has an owner
+                     */
                     case GET_BALL:
                         if(assignee.isBallOwner() || game.getSelected().isBallOwner()) {
                             dismissAssignment(true);
@@ -141,6 +146,11 @@ public class Assignment extends Thread implements Comparable {
                         targets.pop();
                         targets.push(game.getBall().getPosition());
                         break;
+
+                    /**
+                     * Keep updated target with player's position until ball is stolen or player lost the ball.
+                     * If opponent gets close to ball he will try to steal it.
+                     */
                     case PURSUIT_PLAYER:
                         if (game.getSelected().getPosition().distance(assignee.getPosition()) < 1) {
                             assignee.steal(game.getBall());
@@ -152,11 +162,19 @@ public class Assignment extends Thread implements Comparable {
                         targets.pop();
                         targets.push(game.getSelected().getPosition());
                         break;
-                    case GO_FOR_GOAL:
+
+                    /**
+                     * Go for score until ball is lost
+                     */
+                    case GO_FOR_SCORE:
                         if (game.getBall().getOwner() == null) {
                             dismissAssignment(true);
                         }
                         break;
+
+                    /**
+                     * Go to lower-side of left wing. After arriving to target, cross-ball to penalty area.
+                     */
                     case GO_TO_LOWER_LW:
                         if(assignee.getPosition().distance(targets.peek()) < 1) {
                             targets.pop();
@@ -165,6 +183,10 @@ public class Assignment extends Thread implements Comparable {
                             dismissAssignment(true);
                         }
                         break;
+
+                    /**
+                     * Go to lower-side of right wing. After arriving to target, cross-ball to penalty area.
+                     */
                     case GO_TO_LOWER_RW:
                         if(assignee.getPosition().distance(targets.peek()) < 1) {
                             targets.pop();
@@ -173,30 +195,51 @@ public class Assignment extends Thread implements Comparable {
                             dismissAssignment(true);
                         }
                         break;
+
+                    /**
+                     * Go to forward area.
+                     */
                     case GO_TO_F:
                         if(assignee.getPosition().distance(targets.peek()) < 1) {
                             targets.pop();
                             dismissAssignment(true);
                         }
                         break;
+
+                    /**
+                     * Go to left wing back area.
+                     */
                     case GO_TO_LWB:
                         if(assignee.getPosition().distance(targets.peek()) < 1) {
                             targets.pop();
                             dismissAssignment(true);
                         }
                         break;
+
+                    /**
+                     * Go to right wing back area.
+                     */
                     case GO_TO_RWB:
                         if(assignee.getPosition().distance(targets.peek()) < 1) {
                             targets.pop();
                             dismissAssignment(true);
                         }
                         break;
+
+                    /**
+                     * Go to defensive mid area.
+                     */
                     case GO_TO_DM:
                         if(assignee.getPosition().distance(targets.peek()) < 1) {
                             targets.pop();
                             dismissAssignment(true);
                         }
                         break;
+
+                    /**
+                     * Control feint action's status. If player arrives to feint target locations, pop it from stack.
+                     * If feint action is complete, dismiss this feint assignment.
+                     */
                     case FEINT:
                         if(assignee.getPosition().distance(targets.peek()) < 0.5) {
                             targets.pop();
@@ -210,14 +253,16 @@ public class Assignment extends Thread implements Comparable {
                 if(!flag)
                     break;
 
-                if(canPass) {
+                if(canPass) { // If passing is allowed, try to pass. (Priority: High)
                     Opponent o = checkTeammatesToPass();
                     if(o != null) {
                         assignee.pass(o,game.getBall());
                         dismissAssignment(true);
+                        break;
                     }
                 }
 
+                // If shooting is allowed, try to shoot to goal. (Priority: Medium)
                 if(canShoot && assignee.getPosition().distance(game.getPitch().getGoalBottom()) < 13) {
                     assignee.setFacing(game.getPitch().getGoalBottom());
                     assignee.kick(game.getBall());
@@ -225,10 +270,11 @@ public class Assignment extends Thread implements Comparable {
                     break;
                 }
 
+                //If feinting is allowed, try to feint. (Priority: Low)
                 if(canFeint) {
                     Player p = checkPlayersToFeint();
                     if(p != null) {
-                        if(++assignee.feintMass > 3) {
+                        if(++assignee.feintMass > 3) { // If feint limit is reached, player can pass for escaping current situation
                             canPass = true;
                         }
                         else {
@@ -245,6 +291,10 @@ public class Assignment extends Thread implements Comparable {
         }
     }
 
+    /**
+     * Dismiss this assignment from assignee's assignments, stop thread, and release the semaphore.
+     * @param isSemaphoreUsed Specifies that if semaphore is used with this action or not
+     */
     private void dismissAssignment(Boolean isSemaphoreUsed) {
         assignee.assignments.remove(this);
         if(isSemaphoreUsed)
@@ -252,6 +302,10 @@ public class Assignment extends Thread implements Comparable {
         flag = false;
     }
 
+    /**
+     * Checks if there is a player need to be feinted
+     * @return Appropriate player to feint, null if no player is found
+     */
     private Player checkPlayersToFeint() { // TODO Fix range values
         for(Player p: game.getOwningPlayers()) {
             double rangeTangent = GamePhysics.toAngle(p.getPosition().toDVector().sub(assignee.getPosition().toDVector()));
@@ -262,6 +316,10 @@ public class Assignment extends Thread implements Comparable {
         return null;
     }
 
+    /**
+     * Checks specified conditions and decides an teammate to pass
+     * @return An appropriate teammate to pass, null if no teammates are found
+     */
     private Opponent checkTeammatesToPass() { // TODO Check if player is blocking the passing line
         if(assignee.getArea() == game.getPitch().attackerMid) {
             double LWDist, RWDist, FDist;
@@ -339,6 +397,11 @@ public class Assignment extends Thread implements Comparable {
         }
     }
 
+    /**
+     * Returns closest, passable teammate
+     * @param areaToPass Checks players just in this area
+     * @return A passable teammate in specified area
+     */
     private Opponent getPassableTeammateInArea(Pitch.Area areaToPass) {
         Opponent closest = null;
         double closestDist = 10;

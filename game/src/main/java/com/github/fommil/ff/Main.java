@@ -42,8 +42,6 @@ public class Main {
 	 * @throws IOException
 	 */
 	public static final void main(String[] args) throws IOException {
-
-
 		Map<String, Tactics> swosTactics = TacticsParser.getSwosTactics(SWOS);
 		BufferedImage pitchImage = PitchParser.getPitch(SWOS, 6);
 

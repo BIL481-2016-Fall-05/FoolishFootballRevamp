@@ -48,7 +48,7 @@ public class Ball {
 
 	private final DSphere sphere;
 
-	private DWorld world;
+	private final DWorld world;
 
 	private volatile boolean aftertouch;
 
@@ -160,15 +160,15 @@ public class Ball {
 		return new Position(p.get0(), p.get1(), p.get2() - sphere.getRadius());
 	}
 
-	void setVelocity(DVector3 v) {
+	public void setVelocity(DVector3 v) {
 		sphere.getBody().setLinearVel(v);
 	}
 
-	void setVelocity(Velocity v) {
+	public void setVelocity(Velocity v) {
 		setVelocity(v.toDVector());
 	}
 
-	void addForce(DVector3C force) {
+	private void addForce(DVector3C force) {
 		assert force != null;
 		assert !Double.isNaN(force.get0());
 		assert !Double.isNaN(force.get1());
@@ -178,23 +178,23 @@ public class Ball {
 		body.addForce(force);
 	}
 
-	void setDamping(double damping) {
+	public void setDamping(double damping) {
 		sphere.getBody().setLinearDamping(damping);
 	}
 
-	void setAftertouch(boolean enabled) {
+	public void setAftertouch(boolean enabled) {
 		this.aftertouch = enabled;
 	}
 
-	DGeom getGeom() {
+	public DGeom getGeom() {
 		return sphere;
 	}
 
-	synchronized Player getOwner() {
+	public synchronized Player getOwner() {
 		return owner;
 	}
 
-	synchronized boolean isOwned() {
+	public synchronized boolean isOwned() {
 		if(owner == null) {
 			return false;
 		} else {
@@ -202,21 +202,21 @@ public class Ball {
 		}
 	}
 
-	synchronized void setOwner(Player p) {
+	public synchronized void setOwner(Player p) {
 		owner = p;
 		if(p != null)
 			addFixedJoint(p.body);
 	}
 
-	synchronized boolean isKickedRecently() {
+	public synchronized boolean isKickedRecently() {
 		return isKickedRecently;
 	}
 
-	synchronized void setKickStatus(Boolean b) {
+	public synchronized void setKickStatus(Boolean b) {
 		isKickedRecently = b;
 	}
 
-	synchronized private void addFixedJoint(DBody body) {
+	private synchronized void addFixedJoint(DBody body) {
         DFixedJoint joint = OdeHelper.createFixedJoint(world);
         joint.attach(body, this.getGeom().getBody());
     }

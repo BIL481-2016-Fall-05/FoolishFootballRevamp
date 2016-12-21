@@ -99,7 +99,7 @@ public class GamePhysics extends Physics {
 
 	private final Pitch pitch;
 
-	private Player selected;
+	private volatile Player selected;
 
 	private volatile Collection<Action> actions = Collections.emptyList();
 
@@ -109,9 +109,7 @@ public class GamePhysics extends Physics {
 
 	private final Collection<Goalpost> goals = Lists.newArrayList();
 
-	private boolean pauseGame;
-
-	GeneralAgent gameAgent;
+	private volatile boolean pauseGame;
 
 	/**
 	 * @param a
@@ -158,7 +156,7 @@ public class GamePhysics extends Physics {
 			bs.add(pma);
 		}
 
-		gameAgent = new GeneralAgent(this);
+        GeneralAgent gameAgent = new GeneralAgent(this);
 	}
 
 	@Override

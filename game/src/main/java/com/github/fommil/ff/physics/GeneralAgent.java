@@ -1,12 +1,11 @@
 package com.github.fommil.ff.physics;
 
 /**
- *
- *
+ * A General Agent Model for Game
+ * It selects closest opponent player to ball, and executes a counter to set ball's kicked recently state.
  * @author Doga Can Yanikoglu
  */
 public class GeneralAgent extends Thread {
-
     GamePhysics game;
 
     public GeneralAgent(GamePhysics game) {
@@ -19,7 +18,7 @@ public class GeneralAgent extends Thread {
     public void run() {
         try {
             while (true) {
-                sleep(1000);
+                sleep(250);
                 if (game.getSelected().isBallOwner()) { // Ball is on player
                     double minDistance = 999999999;
                     Opponent closest = null;
@@ -48,8 +47,6 @@ public class GeneralAgent extends Thread {
                             o.select();
                         }
                     }
-                } else { // TODO Unhandled situations
-
                 }
             }
         } catch (InterruptedException e) {

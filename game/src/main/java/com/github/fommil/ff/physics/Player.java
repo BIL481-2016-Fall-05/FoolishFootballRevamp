@@ -100,7 +100,7 @@ public class Player {
 
 	private volatile PlayerState forcedState;
 
-	private boolean isBallOwner = false;
+	private volatile boolean isBallOwner = false;
 
 	public Player(int i, Team team, PlayerStats stats, DWorld world, DSpace space, GamePhysics game) {
 		Preconditions.checkArgument(i >= 1 && i <= 11, i);
@@ -121,6 +121,11 @@ public class Player {
 		body.setData(this);
 	}
 
+    /**
+     * Steals the ball from owner of ball.
+     * @param ball Ball to be stolen
+     * @return True of ball is stolen, false if ball cannot stolen
+     */
 	public boolean steal(Ball ball) {
 		if(ball.getOwner() != null && ball.getPosition().distance(this.getPosition()) < 1) {
 			ball.getOwner().setBallOwner(false);
@@ -166,6 +171,11 @@ public class Player {
 		}
 	}
 
+    /**
+     * Change the direction to parameter player immediately, and pass the ball
+     * @param player Player for pass
+     * @param ball Ball to be passed
+     */
 	public void pass(Player player, Ball ball) {
 		if(isBallOwner()) {
 			if (distanceTo(ball) > 1.1)
@@ -406,10 +416,19 @@ public class Player {
 		return rotated;
 	}
 
-	public void setFacing(Position p) {
+    /**
+     * Set facing direction of this player
+     * @param p Position to be faced
+     */
+	public synchronized void setFacing(Position p) {
 		this.body.setRotation(createRotationMatrix(p));
 	}
 
+    /**
+     * Creates a rotation matrix from this player to related position https://en.wikipedia.org/wiki/Rotation_matrix
+     * @param to Position to be faced
+     * @return 3x3 rotation matrix
+     */
 	DMatrix3 createRotationMatrix(Position to) {
 		DMatrix3 rotation = new DMatrix3();
 		Rotation.dRFromAxisAndAngle(rotation, 0, 0, -1, GamePhysics.toAngle(to.toDVector().sub(this.getPosition().toDVector())));
@@ -463,11 +482,11 @@ public class Player {
 		return team;
 	}
 
-	public boolean isBallOwner() {
+	public synchronized boolean isBallOwner() {
 		return isBallOwner;
 	}
 
-	public void setBallOwner(Boolean b) {
+	public synchronized void setBallOwner(Boolean b) {
 		isBallOwner = b;
 	}
 

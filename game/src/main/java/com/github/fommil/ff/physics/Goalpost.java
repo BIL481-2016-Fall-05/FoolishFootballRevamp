@@ -45,8 +45,10 @@ public class Goalpost {
 	private final Direction facing;
 
 	/**
-	 * @param bbox
-	 * @param posts the width of the posts, inset from the bounding box
+	 *
+	 * @param world
+	 * @param space
+	 * @param pitch
 	 * @param facing
 	 */
 	Goalpost(DWorld world, DSpace space, Pitch pitch, Direction facing) {

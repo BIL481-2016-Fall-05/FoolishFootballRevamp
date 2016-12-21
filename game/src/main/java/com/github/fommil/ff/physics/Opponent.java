@@ -18,13 +18,16 @@ class Opponent extends Player {
 
 	private final JobAssignerAgent assignAgent;
 	private final AreaDetectAgent areaAgent;
-    public Queue<Assignment> assignments = new PriorityQueue<Assignment>();
+    public Queue<Assignment> assignments = new PriorityQueue<Assignment>(); // Queue of all jobs assigned to this player
 
     private volatile Pitch.Area currentArea;
     private volatile boolean assignmentInProgress;
-    private volatile boolean isSelected;
-    public volatile int feintMass;
+    private volatile boolean isSelected; // Controlled-State of this player
+    public volatile int feintMass; // Count of total feints made before pass
 
+    /**
+     * Constructor for Opponent Class
+     */
     public Opponent(int i, Team team, PlayerStats stats, DWorld world, DSpace space, GamePhysics game) {
 		super(i, team, stats, world, space, game);
         currentArea = null;
@@ -36,7 +39,10 @@ class Opponent extends Player {
 		assignAgent.start();
 	}
 
-    public void select() {
+    /**
+     * Selects this opponent to be controlled. Other opponents are flushed to return them initial state.
+     */
+    public synchronized void select() {
 	    for(Opponent o: game.getOpponentPlayers()) {
 	        if(this != o) {
                 o.flush();
@@ -45,7 +51,10 @@ class Opponent extends Player {
         this.isSelected = true;
     }
 
-    private void flush() {
+    /**
+     * Sets all of critical variables to their initial states.
+     */
+    private synchronized void flush() {
 	    assignmentInProgress = false;
 	    isSelected = false;
 	    currentArea = null;
@@ -53,10 +62,34 @@ class Opponent extends Player {
         assignments.clear();
     }
 
-    public boolean isSelected() {
+    /**
+     * Returns if this opponent is controlled right now or not
+     */
+    public synchronized boolean isSelected() {
 	    return isSelected;
     }
 
+    /**
+     * Returns current area of this player
+     */
+    public synchronized Pitch.Area getArea() {
+        return currentArea;
+    }
+
+    /**
+     * Assigns a job to this player, and returns it
+     */
+    public synchronized Assignment assignJob(Assignment.DO action) {
+        Assignment tempAssignment;
+        tempAssignment = new Assignment(Opponent.this, action, game);
+        assignmentInProgress = true;
+        assignments.add(tempAssignment);
+        return tempAssignment;
+    }
+
+    /**
+     * Thread for assigning jobs to this player
+     */
 	private class JobAssignerAgent extends Thread {
 		public void run() {
             try {
@@ -66,80 +99,70 @@ class Opponent extends Player {
                     }
                     sleep(25);
 
+                    // If this player is selected, and there are no more assignments to handle, start assigning new jobs
                     if (isSelected && assignments.isEmpty()) {
-                        if (isBallOwner()) {
+                        if (isBallOwner()) { // Ball is on this player
                             if(game.getPitch().leftBack == currentArea) {
-                                System.out.println("leftback");
                                 assignJob(Assignment.DO.GO_TO_LWB)
                                         .jobMonitor.acquire();
                                 assignmentInProgress = false;
                             }
                             else if(game.getPitch().rightBack == currentArea) {
-                                System.out.println("rightBack");
                                 assignJob(Assignment.DO.GO_TO_RWB)
                                         .jobMonitor.acquire();
                                 assignmentInProgress = false;
                             }
                             else if(game.getPitch().leftWingBack == currentArea) {
-                                System.out.println("leftWingBack");
                                 assignJob(Assignment.DO.GO_TO_AM)
                                         .jobMonitor.acquire();
                                 assignmentInProgress = false;
                             }
                             else if(game.getPitch().rightWingBack == currentArea) {
-                                System.out.println("rightWingBack");
                                 assignJob(Assignment.DO.GO_TO_AM)
                                         .jobMonitor.acquire();
                                 assignmentInProgress = false;
                             }
                             else if(game.getPitch().defensiveMid == currentArea) {
-                                System.out.println("defensiveMid");
                                 assignJob(Assignment.DO.GO_TO_AM)
                                         .jobMonitor.acquire();
                                 assignmentInProgress = false;
                             }
                             else if(game.getPitch().centralBack == currentArea) {
-                                System.out.println("centralBack");
                                 assignJob(Assignment.DO.GO_TO_DM)
                                         .jobMonitor.acquire();
                                 assignmentInProgress = false;
                             }
                             else if(game.getPitch().attackerMid == currentArea) {
-                                System.out.println("attackerMid");
                                 assignJob(Assignment.DO.GO_TO_F)
                                         .jobMonitor.acquire();
                                 assignmentInProgress = false;
                             }
                             else if(game.getPitch().leftWing == currentArea) {
-                                System.out.println("leftWing");
                                 assignJob(Assignment.DO.GO_TO_LOWER_LW)
                                         .jobMonitor.acquire();
                                 assignmentInProgress = false;
                             }
                             else if(game.getPitch().rightWing == currentArea) {
-                                System.out.println("rightWing");
                                 assignJob(Assignment.DO.GO_TO_LOWER_RW)
                                         .jobMonitor.acquire();
                                 assignmentInProgress = false;
                             }
                             else if(game.getPitch().forward == currentArea) {
-                                System.out.println("forward");
-                                assignJob(Assignment.DO.GO_FOR_GOAL)
+                                assignJob(Assignment.DO.GO_FOR_SCORE)
                                         .jobMonitor.acquire();
                                 assignmentInProgress = false;
                             }
                             else {
-                                System.out.println("PLAYER IS IN OUT OF BOUNDS");
                                 assignmentInProgress = false;
                             }
                         }
                         else {
-                            if (game.getSelected().isBallOwner()) {
+                            if (game.getSelected().isBallOwner()) { // Ball is on opponent player
                                 assignJob(Assignment.DO.PURSUIT_PLAYER)
                                         .jobMonitor.acquire();
                                 assignmentInProgress = false;
                             }
-                            else {
+                            else { // Ball is on pitch
                                 assignJob(Assignment.DO.GET_BALL)
                                         .jobMonitor.acquire();
                                 assignmentInProgress = false;
@@ -153,6 +176,9 @@ class Opponent extends Player {
         }
     }
 
+    /**
+     * Thread for setting current are of this player
+     */
     private class AreaDetectAgent extends Thread {
         public void run() {
             try {
@@ -186,17 +212,5 @@ class Opponent extends Player {
                 e.printStackTrace();
             }
         }
-    }
-
-    public Pitch.Area getArea() {
-        return currentArea;
-    }
-
-    public Assignment assignJob(Assignment.DO action) {
-        Assignment tempAssignment;
-        tempAssignment = new Assignment(Opponent.this, action, game);
-        assignmentInProgress = true;
-        assignments.add(tempAssignment);
-        return tempAssignment;
     }
 }

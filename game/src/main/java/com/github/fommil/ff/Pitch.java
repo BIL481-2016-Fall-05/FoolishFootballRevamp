@@ -42,22 +42,40 @@ import com.github.fommil.ff.physics.Position;
  * The centre spot is (336, 449).
 
  * @author Samuel Halliday
+ * @author Doga Can Yanikoglu
  */
 public class Pitch {
 	public class Area {
 		private double leftBound, rightBound, upperBound, lowerBound;
+
+        /**
+         * Constructor for Area Class
+         * @param leftBound Leftmost coordinate of area
+         * @param rightBound Rightmost coordinate of area
+         * @param upperBound Top coordinate of area
+         * @param lowerBound Bottom coordinate of area
+         */
         Area(double leftBound, double rightBound, double upperBound, double lowerBound) {
 			this.leftBound = leftBound;
 			this.rightBound = rightBound;
 			this.upperBound = upperBound;
 			this.lowerBound = lowerBound;
 		}
+
+        /**
+         * Checks if given position is inside of this area
+         * @param p Position to be checked
+         */
 		public boolean isInside(Position p) {
 			if(p.x <= rightBound && p.x >= leftBound && p.y <= upperBound && p.y >= lowerBound)
 				return true;
 			else
 				return false;
 		}
+
+		/**
+		 * Returns specified position in this area
+		 */
         public Position topPos() {
             return new Position((leftBound + rightBound) / 2,upperBound - 3,0);
         }
@@ -87,10 +105,6 @@ public class Pitch {
         }
 	}
 
-	public enum Facing {
-		NORTH, SOUTH;
-	}
-
 	private static final double SCALE = 0.1;
 
 	private static final Point bounds = new Point(672, 880);
@@ -115,21 +129,6 @@ public class Pitch {
 
     public final Area centre = new Area(27,40,48,38);
 
-
-//	private final Rectangle penaltyBoxTop = new Rectangle(193, 129, 285, 87);
-//
-//	private final Rectangle penaltyBoxBottom = new Rectangle(193, 682, 285, 87);
-//
-//	private final Rectangle goalBoxTop = new Rectangle(273, 129, 125, 29);
-//
-//	private final Rectangle goalBoxBottom = new Rectangle(273, 740, 125, 29);
-//
-//	private final Rectangle goalLineTop = new Rectangle(300, 129, 71, 1);
-//
-//	private final Rectangle goalLineBottom = new Rectangle(300, 769, 71, 1);
-//	private final Rectangle goalNetTop = new Rectangle(300, 117, 71, 12);
-//
-//	private final Rectangle goalNetBottom = new Rectangle(300, 769, 71, 12);
 	private final Point penaltySpotTop = new Point(336, 187);
 
 	private final Point penaltySpotBottom = new Point(336, 711);
