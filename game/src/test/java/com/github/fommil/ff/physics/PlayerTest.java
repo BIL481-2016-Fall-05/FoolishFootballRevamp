@@ -53,7 +53,7 @@ public class PlayerTest {
 		ball.setVelocity(new Velocity(0, 0, 0));
 		p.setBallOwner(true);
 		p.kick(ball);
-		assertEquals(ball.getVelocity(), new Velocity(0.0, 15, 5.0));
+		assertEquals(ball.getVelocity(), new Velocity(0.0, 15, 4.0));
 	}
 
 	@Test
