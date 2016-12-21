@@ -36,6 +36,16 @@ import org.ode4j.ode.OdeHelper;
  */
 class CollisionCallback implements DNearCallback {
 
+	private static final int MAX_CONTACTS = 8;
+
+	private final DWorld world;
+
+	private final DJointGroup joints;
+
+	private final CollisionHandler handler;
+
+	private final GamePhysics game;
+
 	interface CollisionHandler {
 
 		boolean collide(Ball ball, Player player, DSurfaceParameters surface, GamePhysics game);
@@ -48,16 +58,6 @@ class CollisionCallback implements DNearCallback {
 
 		boolean collide(Goalpost post, DSurfaceParameters surface, GamePhysics game);
 	}
-
-	private static final int MAX_CONTACTS = 8;
-
-	private final DWorld world;
-
-	private final DJointGroup joints;
-
-	private final CollisionHandler handler;
-
-	private final GamePhysics game;
 
 	public CollisionCallback(DWorld world, DJointGroup joints, CollisionHandler handler, GamePhysics game) {
 		Preconditions.checkNotNull(world);

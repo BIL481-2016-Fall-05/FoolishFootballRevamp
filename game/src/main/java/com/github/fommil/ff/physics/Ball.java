@@ -195,11 +195,7 @@ public class Ball {
 	}
 
 	public synchronized boolean isOwned() {
-		if(owner == null) {
-			return false;
-		} else {
-			return true;
-		}
+		return owner != null;
 	}
 
 	public synchronized void setOwner(Player p) {

@@ -67,8 +67,6 @@ public class Pitch {
     public final Area attackerMid = new Area(19,48,43,31);
     public final Area forward = new Area(19,48,31,11);
 
-    public final Area centre = new Area(27,40,48,38);
-
     private final Point penaltySpotTop = new Point(336, 187);
 
     private final Point penaltySpotBottom = new Point(336, 711);
@@ -95,10 +93,7 @@ public class Pitch {
          * @param p Position to be checked
          */
 		public boolean isInside(Position p) {
-			if(p.x <= rightBound && p.x >= leftBound && p.y <= upperBound && p.y >= lowerBound)
-				return true;
-			else
-				return false;
+			return p.x <= rightBound && p.x >= leftBound && p.y <= upperBound && p.y >= lowerBound;
 		}
 
 		/**

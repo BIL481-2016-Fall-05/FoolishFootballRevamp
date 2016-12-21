@@ -53,6 +53,28 @@ public class GamePhysics extends Physics {
 
 	private final OpponentController opponentController;
 
+    private final Team a, b;
+
+    private final Ball ball;
+
+    private final List<Player> as = Lists.newArrayListWithCapacity(11);
+
+    private final List<Opponent> bs = Lists.newArrayListWithCapacity(11);
+
+    private final Pitch pitch;
+
+    private volatile Player selected;
+
+    private volatile Collection<Action> actions = Collections.emptyList();
+
+    private volatile Collection<Aftertouch> aftertouches = Collections.emptyList();
+
+    private final Map<Player, Double> grounded = Maps.newHashMap();
+
+    private final Collection<Goalpost> goals = Lists.newArrayList();
+
+    private volatile boolean pauseGame;
+
 	@Deprecated // DEBUGGING
 	private void debugNaNs() {
 		ball.getPosition();
@@ -88,28 +110,6 @@ public class GamePhysics extends Physics {
 			return dePhase(d + 2 * Math.PI);
 		return d;
 	}
-
-	private final Team a, b;
-
-	private final Ball ball;
-
-	private final List<Player> as = Lists.newArrayListWithCapacity(11);
-
-	private final List<Opponent> bs = Lists.newArrayListWithCapacity(11);
-
-	private final Pitch pitch;
-
-	private volatile Player selected;
-
-	private volatile Collection<Action> actions = Collections.emptyList();
-
-	private volatile Collection<Aftertouch> aftertouches = Collections.emptyList();
-
-	private final Map<Player, Double> grounded = Maps.newHashMap();
-
-	private final Collection<Goalpost> goals = Lists.newArrayList();
-
-	private volatile boolean pauseGame;
 
 	/**
 	 * @param a
@@ -156,7 +156,7 @@ public class GamePhysics extends Physics {
 			bs.add(pma);
 		}
 
-        GeneralAgent gameAgent = new GeneralAgent(this);
+        new GeneralAgent(this);
 	}
 
 	@Override

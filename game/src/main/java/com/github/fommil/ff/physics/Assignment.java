@@ -124,6 +124,11 @@ public class Assignment extends Thread implements Comparable {
                 canFeint = false;
                 canShoot = true;
                 break;
+            default:
+                canPass = false;
+                canShoot = false;
+                canFeint = false;
+                break;
         }
         this.start();
     }

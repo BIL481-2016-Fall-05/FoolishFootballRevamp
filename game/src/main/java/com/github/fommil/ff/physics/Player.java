@@ -159,9 +159,9 @@ public class Player {
 			}
 			ball.setKickStatus(true);
 			if(this.getVelocity().speed() > 1) {
-				hit(ball, 20, 5);
+				hit(ball, 20, 4);
 			} else {
-				hit(ball, 15, 5);
+				hit(ball, 15, 4);
 			}
 			try {
 				SoundParser.play(SoundParser.Fx.BALL_KICK);
