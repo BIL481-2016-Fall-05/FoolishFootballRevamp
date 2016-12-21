@@ -203,6 +203,10 @@ public class GamePhysics extends Physics {
 				continue;
 			}
 
+			if(getBall().isKickedRecently()) { // If ball is kicked recently, stop all of players for a short time
+			    continue;
+            }
+
 			Team team = p.getTeam();
 			Tactics tactics = team.getCurrentTactics();
 			PlayerZone pz;

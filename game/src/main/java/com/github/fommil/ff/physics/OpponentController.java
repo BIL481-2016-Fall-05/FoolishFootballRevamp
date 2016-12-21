@@ -29,8 +29,8 @@ class OpponentController {
 	}
 
 	public void autoPilot(Opponent p) {
-		if(p.isSelected() && !p.assignments.isEmpty() && !p.assignments.peek().getTargets().isEmpty()) {
-			p.autoPilot(p.assignments.peek().getTargets().peek());
+		if(p.isSelected() && !p.getAssignments().isEmpty() && !p.getAssignments().peek().getTargets().isEmpty()) {
+			p.autoPilot(p.getAssignments().peek().getTargets().peek());
 		}
 	}
 }

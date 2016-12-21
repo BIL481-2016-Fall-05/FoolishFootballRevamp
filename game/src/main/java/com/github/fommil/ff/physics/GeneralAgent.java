@@ -59,7 +59,7 @@ public class GeneralAgent extends Thread {
             try {
                 while (true) {
                     if (game.getBall().isKickedRecently()) {
-                        sleep(500);
+                        sleep(350);
                         game.getBall().setKickStatus(false);
                     }
                     sleep(25);

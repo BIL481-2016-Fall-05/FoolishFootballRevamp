@@ -18,12 +18,12 @@ class Opponent extends Player {
 
 	private final JobAssignerAgent assignAgent;
 	private final AreaDetectAgent areaAgent;
-    public Queue<Assignment> assignments = new PriorityQueue<Assignment>(); // Queue of all jobs assigned to this player
+    private final Queue<Assignment> assignments = new PriorityQueue<Assignment>(); // Queue of all jobs assigned to this player
 
     private volatile Pitch.Area currentArea;
     private volatile boolean assignmentInProgress;
     private volatile boolean isSelected; // Controlled-State of this player
-    public volatile int feintMass; // Count of total feints made before pass
+    private volatile int feintMass; // Count of total feints made before pass
 
     /**
      * Constructor for Opponent Class
@@ -87,6 +87,14 @@ class Opponent extends Player {
         return tempAssignment;
     }
 
+    public synchronized Queue<Assignment> getAssignments() {
+        return assignments;
+    }
+
+    public synchronized int incrementFeintMass() {
+        return ++feintMass;
+    }
+
     /**
      * Thread for assigning jobs to this player
      */
@@ -100,74 +108,60 @@ class Opponent extends Player {
                     sleep(25);
 
                     // If this player is selected, and there are no more assignments to handle, start assigning new jobs
-                    if (isSelected && assignments.isEmpty()) {
+                    if (isSelected && !assignmentInProgress) {
                         if (isBallOwner()) { // Ball is on this player
                             if(game.getPitch().leftBack == currentArea) {
                                 assignJob(Assignment.DO.GO_TO_LWB)
-                                        .jobMonitor.acquire();
-                                assignmentInProgress = false;
+                                        .getJobMonitor().acquire();
                             }
                             else if(game.getPitch().rightBack == currentArea) {
                                 assignJob(Assignment.DO.GO_TO_RWB)
-                                        .jobMonitor.acquire();
-                                assignmentInProgress = false;
+                                        .getJobMonitor().acquire();
                             }
                             else if(game.getPitch().leftWingBack == currentArea) {
                                 assignJob(Assignment.DO.GO_TO_AM)
-                                        .jobMonitor.acquire();
-                                assignmentInProgress = false;
+                                        .getJobMonitor().acquire();
                             }
                             else if(game.getPitch().rightWingBack == currentArea) {
                                 assignJob(Assignment.DO.GO_TO_AM)
-                                        .jobMonitor.acquire();
-                                assignmentInProgress = false;
+                                        .getJobMonitor().acquire();
                             }
                             else if(game.getPitch().defensiveMid == currentArea) {
                                 assignJob(Assignment.DO.GO_TO_AM)
-                                        .jobMonitor.acquire();
-                                assignmentInProgress = false;
+                                        .getJobMonitor().acquire();
                             }
                             else if(game.getPitch().centralBack == currentArea) {
                                 assignJob(Assignment.DO.GO_TO_DM)
-                                        .jobMonitor.acquire();
-                                assignmentInProgress = false;
+                                        .getJobMonitor().acquire();
                             }
                             else if(game.getPitch().attackerMid == currentArea) {
                                 assignJob(Assignment.DO.GO_TO_F)
-                                        .jobMonitor.acquire();
-                                assignmentInProgress = false;
+                                        .getJobMonitor().acquire();
                             }
                             else if(game.getPitch().leftWing == currentArea) {
                                 assignJob(Assignment.DO.GO_TO_LOWER_LW)
-                                        .jobMonitor.acquire();
-                                assignmentInProgress = false;
+                                        .getJobMonitor().acquire();
                             }
                             else if(game.getPitch().rightWing == currentArea) {
                                 assignJob(Assignment.DO.GO_TO_LOWER_RW)
-                                        .jobMonitor.acquire();
-                                assignmentInProgress = false;
+                                        .getJobMonitor().acquire();
                             }
                             else if(game.getPitch().forward == currentArea) {
                                 assignJob(Assignment.DO.GO_FOR_SCORE)
-                                        .jobMonitor.acquire();
-                                assignmentInProgress = false;
-                            }
-                            else {
-                                assignmentInProgress = false;
+                                        .getJobMonitor().acquire();
                             }
                         }
                         else {
                             if (game.getSelected().isBallOwner()) { // Ball is on opponent player
                                 assignJob(Assignment.DO.PURSUIT_PLAYER)
-                                        .jobMonitor.acquire();
-                                assignmentInProgress = false;
+                                        .getJobMonitor().acquire();
                             }
                             else { // Ball is on pitch
                                 assignJob(Assignment.DO.GET_BALL)
-                                        .jobMonitor.acquire();
-                                assignmentInProgress = false;
+                                        .getJobMonitor().acquire();
                             }
                         }
+                        assignmentInProgress = false;
                     }
                 }
             } catch (InterruptedException e) {
@@ -205,7 +199,7 @@ class Opponent extends Player {
                     } else if (game.getPitch().forward.isInside(getPosition())) {
                         currentArea = game.getPitch().forward;
                     } else {
-                        currentArea = null;
+                        currentArea = null; // Nowhere to go, stop movement
                     }
                 }
             } catch (InterruptedException e) {

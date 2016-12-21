@@ -15,8 +15,8 @@ public class Assignment extends Thread implements Comparable {
     /**
      * Enum declaration for specifying action type to do.
      */
-    public enum DO { BLOCK_PLAYER, PURSUIT_PLAYER, GET_BALL, GO_TO_AM, GO_TO_F, GO_TO_LOWER_LW, GO_TO_LOWER_RW, GO_TO_DM, GO_TO_LWB,
-        GO_TO_RWB, GO_TO_LB, GO_TO_RB, GO_TO_CB, GO_FOR_SCORE, FEINT}
+    public enum DO { PURSUIT_PLAYER, GET_BALL, GO_TO_AM, GO_TO_F, GO_TO_LOWER_LW, GO_TO_LOWER_RW, GO_TO_DM, GO_TO_LWB,
+        GO_TO_RWB, GO_FOR_SCORE, FEINT}
     private volatile boolean flag = true; // Ends thread if set to false
     private volatile DO action; // Action to be done
     private volatile int priority; // Priority of the assignment
@@ -26,7 +26,7 @@ public class Assignment extends Thread implements Comparable {
     private final Stack<Position> targets = new Stack<Position>(); // Stack for storing target positions
     private volatile Opponent assignee; // Related player with this assignment
     private volatile GamePhysics game;
-    public volatile Semaphore jobMonitor; // Semaphore for organizing player's thread
+    private volatile Semaphore jobMonitor; // Semaphore for organizing player's thread
     private volatile ThreadLocalRandom probabilityGenerator; // Thread-safe random value generator
 
     public Assignment(Opponent assignee, DO action, GamePhysics game) {
@@ -36,8 +36,6 @@ public class Assignment extends Thread implements Comparable {
         this.jobMonitor = new Semaphore(0);
         probabilityGenerator = ThreadLocalRandom.current();
         switch (action) {
-            case BLOCK_PLAYER:
-                break;
             case PURSUIT_PLAYER:
                 targets.push(game.getSelected().getPosition());
                 canShoot = false;
@@ -254,7 +252,7 @@ public class Assignment extends Thread implements Comparable {
                     break;
 
                 if(canPass) { // If passing is allowed, try to pass. (Priority: High)
-                    Opponent o = checkTeammatesToPass();
+                    Opponent o = findTeammateToPass();
                     if(o != null) {
                         assignee.pass(o,game.getBall());
                         dismissAssignment(true);
@@ -274,7 +272,7 @@ public class Assignment extends Thread implements Comparable {
                 if(canFeint) {
                     Player p = checkPlayersToFeint();
                     if(p != null) {
-                        if(++assignee.feintMass > 3) { // If feint limit is reached, player can pass for escaping current situation
+                        if(assignee.incrementFeintMass() > 3) { // If feint limit is reached, player can pass for escaping current situation
                             canPass = true;
                         }
                         else {
@@ -296,7 +294,7 @@ public class Assignment extends Thread implements Comparable {
      * @param isSemaphoreUsed Specifies that if semaphore is used with this action or not
      */
     private void dismissAssignment(Boolean isSemaphoreUsed) {
-        assignee.assignments.remove(this);
+        assignee.getAssignments().remove(this);
         if(isSemaphoreUsed)
             jobMonitor.release();
         flag = false;
@@ -306,21 +304,22 @@ public class Assignment extends Thread implements Comparable {
      * Checks if there is a player need to be feinted
      * @return Appropriate player to feint, null if no player is found
      */
-    private Player checkPlayersToFeint() { // TODO Fix range values
+    private Player checkPlayersToFeint() {
         for(Player p: game.getOwningPlayers()) {
-            double rangeTangent = GamePhysics.toAngle(p.getPosition().toDVector().sub(assignee.getPosition().toDVector()));
-            if(p.getPosition().distance(assignee.getPosition()) < 3 && ( (rangeTangent < 3 && rangeTangent > 2) || (rangeTangent > -3 && rangeTangent < -2) )) {
+            if(Math.abs(p.getPosition().x - assignee.getPosition().x) < 2
+                    && assignee.getPosition().y - p.getPosition().y  < 2
+                    && assignee.getPosition().y - p.getPosition().y  > 0) {
                 return p;
             }
         }
-        return null;
+        return null; // Don't feint
     }
 
     /**
      * Checks specified conditions and decides an teammate to pass
      * @return An appropriate teammate to pass, null if no teammates are found
      */
-    private Opponent checkTeammatesToPass() { // TODO Check if player is blocking the passing line
+    private Opponent findTeammateToPass() {
         if(assignee.getArea() == game.getPitch().attackerMid) {
             double LWDist, RWDist, FDist;
             Opponent leftWingPassable = getPassableTeammateInArea(game.getPitch().leftWing);
@@ -393,7 +392,7 @@ public class Assignment extends Thread implements Comparable {
             }
         }
         else {
-            return null;
+            return null; // Don't pass
         }
     }
 
@@ -417,6 +416,10 @@ public class Assignment extends Thread implements Comparable {
 
     Stack<Position> getTargets() {
         return targets;
+    }
+
+    public Semaphore getJobMonitor() {
+        return jobMonitor;
     }
 
     @Override
