@@ -43,7 +43,11 @@ public class GeneralAgent extends Thread {
                     }
                     closest.select();
                 } else if (game.getBall().getOwner() != null) { // Ball is on opponent team
-                    //
+                    for(Opponent o: game.getOpponentPlayers()){
+                        if(o.isBallOwner()) {
+                            o.select();
+                        }
+                    }
                 } else { // TODO Unhandled situations
 
                 }

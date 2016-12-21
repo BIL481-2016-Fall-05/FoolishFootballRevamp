@@ -68,8 +68,11 @@ public class Assignment extends Thread implements Comparable {
                 break;
             case PASS:
                 System.out.println("PASS");
-                canPass = true;
-                canFeint = false;
+                Opponent o = checkTeammatesToPass();
+                if(o != null) {
+                    assignee.pass(o,game.getBall());
+                }
+                dismissAssignment(true);
                 break;
         }
         this.start();
@@ -100,7 +103,7 @@ public class Assignment extends Thread implements Comparable {
                         targets.push(game.getSelected().getPosition());
                         break;
                     case GO_TO_OPPONENT_GOAL:
-                        if (game.getSelected().isBallOwner()) {
+                        if (game.getBall().getOwner() == null) {
                             dismissAssignment(true);
                         }
                         break;
@@ -109,8 +112,10 @@ public class Assignment extends Thread implements Comparable {
                             targets.pop();
                         }
                         if(targets.isEmpty()) {
-                            dismissAssignment(false);
+                            dismissAssignment(true);
                         }
+                        break;
+                    case PASS:
                         break;
                 }
 
@@ -122,15 +127,6 @@ public class Assignment extends Thread implements Comparable {
                     assignee.kick(game.getBall());
                     dismissAssignment(true);
                     break;
-                }
-
-                if(canPass) {
-                    Opponent o = checkTeammatesToPass();
-                    if(o != null) {
-                        assignee.pass(o,game.getBall());
-                        dismissAssignment(false);
-                        break;
-                    }
                 }
 
                 if(canFeint) {
@@ -169,7 +165,7 @@ public class Assignment extends Thread implements Comparable {
         for(Opponent o: game.getOpponentPlayers()) {
             double angleToTeammate = GamePhysics.toAngle(o.getPosition().toDVector().sub(assignee.getPosition().toDVector()));
             double angleToClosestOpponent = GamePhysics.toAngle(o.getPosition().toDVector().sub(getClosestPlayer().getPosition().toDVector()));
-            if(o.getPosition().distance(assignee.getPosition()) < 20) {
+            if(o.getPosition().distance(assignee.getPosition()) < 15) {
                 return o;
             }
         }

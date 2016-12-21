@@ -46,6 +46,7 @@ class Opponent extends Player {
     private void flush() {
 	    assignmentInProgress = false;
 	    isSelected = false;
+	    feintMass = 0;
         assignments.clear();
     }
 
