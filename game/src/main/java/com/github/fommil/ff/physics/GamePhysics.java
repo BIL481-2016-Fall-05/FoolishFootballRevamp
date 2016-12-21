@@ -175,7 +175,7 @@ public class GamePhysics extends Physics {
 	@Override
 	protected DNearCallback getCollisionCallback() {
 		GameCollisionHandler handler = new GameCollisionHandler();
-		return new CollisionCallback(world, joints, handler);
+		return new CollisionCallback(world, joints, handler, this);
 	}
 
 	/**
@@ -265,7 +265,7 @@ public class GamePhysics extends Physics {
         }
 	}
 
-	private void updateSelected() {
+	public void updateSelected() {
 		assert selected != null;
 		Player closest = selected;
 		double distance = Double.MAX_VALUE;

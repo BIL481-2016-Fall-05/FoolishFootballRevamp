@@ -38,15 +38,15 @@ class CollisionCallback implements DNearCallback {
 
 	interface CollisionHandler {
 
-		boolean collide(Ball ball, Player player, DSurfaceParameters surface);
+		boolean collide(Ball ball, Player player, DSurfaceParameters surface, GamePhysics game);
 
-		boolean collide(Player player1, Player player2, DSurfaceParameters surface);
+		boolean collide(Player player1, Player player2, DSurfaceParameters surface, GamePhysics game);
 
-		boolean collide(Ball ball, DSurfaceParameters surface);
+		boolean collide(Ball ball, DSurfaceParameters surface, GamePhysics game);
 
-		boolean collide(Player player, DSurfaceParameters surface);
+		boolean collide(Player player, DSurfaceParameters surface, GamePhysics game);
 
-		boolean collide(Goalpost post, DSurfaceParameters surface);
+		boolean collide(Goalpost post, DSurfaceParameters surface, GamePhysics game);
 	}
 
 	private static final int MAX_CONTACTS = 8;
@@ -57,13 +57,16 @@ class CollisionCallback implements DNearCallback {
 
 	private final CollisionHandler handler;
 
-	public CollisionCallback(DWorld world, DJointGroup joints, CollisionHandler handler) {
+	private final GamePhysics game;
+
+	public CollisionCallback(DWorld world, DJointGroup joints, CollisionHandler handler, GamePhysics game) {
 		Preconditions.checkNotNull(world);
 		Preconditions.checkNotNull(joints);
 		Preconditions.checkNotNull(handler);
 		this.world = world;
 		this.joints = joints;
 		this.handler = handler;
+		this.game = game;
 	}
 
 	@Override
@@ -94,11 +97,11 @@ class CollisionCallback implements DNearCallback {
 				Ball ball = (Ball) (obj1 instanceof Ball ? obj1 : obj2);
 				if (playerInvolved) {
 					Player player = (Player) (obj1 instanceof Player ? obj1 : obj2);
-					if (!handler.collide(ball, player, surface))
+					if (!handler.collide(ball, player, surface, game))
 						continue;
 				} else if (groundInvolved || goalPostInvolved) {
 					// TODO: treat ground and goalposts differently
-					if (!handler.collide(ball, surface))
+					if (!handler.collide(ball, surface, game))
 						continue;
 				} else {
 					throw new UnsupportedOperationException(o1 + " " + o2);
@@ -107,10 +110,10 @@ class CollisionCallback implements DNearCallback {
 				Player player = (Player) (obj1 instanceof Player ? obj1 : obj2);
 				if (obj1 instanceof Player && obj2 instanceof Player) {
 					Player player2 = (Player) obj2;
-					if (!handler.collide(player, player2, surface))
+					if (!handler.collide(player, player2, surface, game))
 						continue;
 				} else if (groundInvolved || goalPostInvolved) {
-					if (!handler.collide(player, surface))
+					if (!handler.collide(player, surface, game))
 						continue;
 				} else {
 					throw new UnsupportedOperationException(o1 + " " + o2);
@@ -118,7 +121,7 @@ class CollisionCallback implements DNearCallback {
 			} else if (goalPostInvolved) {
 				assert groundInvolved : obj1 + " " + obj2;
 				Goalpost post = (Goalpost) (obj1 instanceof Goalpost ? obj1 : obj2);
-				if (!handler.collide(post, surface))
+				if (!handler.collide(post, surface, game))
 					continue;
 			}
 

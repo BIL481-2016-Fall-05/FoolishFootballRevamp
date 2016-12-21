@@ -34,7 +34,7 @@ public class DummyPhysics extends Physics {
 	@Override
 	protected DNearCallback getCollisionCallback() {
 		GameCollisionHandler handler = new GameCollisionHandler();
-		return new CollisionCallback(world, joints, handler);
+		return new CollisionCallback(world, joints, handler, null);
 	}
 
 	public Ball createBall() {

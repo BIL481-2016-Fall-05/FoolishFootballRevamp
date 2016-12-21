@@ -165,7 +165,7 @@ public class Assignment extends Thread implements Comparable {
         for(Opponent o: game.getOpponentPlayers()) {
             double angleToTeammate = GamePhysics.toAngle(o.getPosition().toDVector().sub(assignee.getPosition().toDVector()));
             double angleToClosestOpponent = GamePhysics.toAngle(o.getPosition().toDVector().sub(getClosestPlayer().getPosition().toDVector()));
-            if(o.getPosition().distance(assignee.getPosition()) < 15) {
+            if(o.getPosition().distance(assignee.getPosition()) < 10) {
                 return o;
             }
         }

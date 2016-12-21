@@ -33,10 +33,13 @@ class GameCollisionHandler implements CollisionHandler {
 	private static final Logger log = Logger.getLogger(GameCollisionHandler.class.getName());
 
 	@Override
-	public boolean collide(Ball ball, Player player, DSurfaceParameters surface) {
+	public boolean collide(Ball ball, Player player, DSurfaceParameters surface, GamePhysics game) {
 		if(!ball.isOwned() && !ball.isKickedRecently()) {
 			ball.setOwner(player);
 			player.setBallOwner(true);
+			if(!(player instanceof Opponent)) {
+				game.updateSelected();
+			}
 		}
 
 		enableSoftBounce(surface);
@@ -47,7 +50,7 @@ class GameCollisionHandler implements CollisionHandler {
 	}
 
 	@Override
-	public boolean collide(Player player1, Player player2, DSurfaceParameters surface) {
+	public boolean collide(Player player1, Player player2, DSurfaceParameters surface, GamePhysics game) {
 		if (player1 instanceof Goalkeeper || player2 instanceof Goalkeeper)
 			return false; // classic graphics can't handle goalkeepers on the ground
 		if (player1.getTeam() == player2.getTeam())
@@ -63,7 +66,7 @@ class GameCollisionHandler implements CollisionHandler {
 	}
 
 	@Override
-	public boolean collide(Ball ball, DSurfaceParameters surface) {
+	public boolean collide(Ball ball, DSurfaceParameters surface, GamePhysics game) {
 		enableSoftBounce(surface);
 		surface.bounce = 0.5;
 		ball.setDamping(0.1); // ?? can be overridden
@@ -83,7 +86,7 @@ class GameCollisionHandler implements CollisionHandler {
 	}
 
 	@Override
-	public boolean collide(Player player, DSurfaceParameters surface) {
+	public boolean collide(Player player, DSurfaceParameters surface, GamePhysics game) {
 		enableSoftBounce(surface);
 		if (player.getTilt() > Math.PI / 8) // ?? exposing more than is needed?
 			surface.mu = 1000;
@@ -91,7 +94,7 @@ class GameCollisionHandler implements CollisionHandler {
 	}
 
 	@Override
-	public boolean collide(Goalpost post, DSurfaceParameters surface) {
+	public boolean collide(Goalpost post, DSurfaceParameters surface, GamePhysics game) {
 		enableSoftBounce(surface);
 		surface.bounce = 0;
 		surface.mu = Double.POSITIVE_INFINITY;
