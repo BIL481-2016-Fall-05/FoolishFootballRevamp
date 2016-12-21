@@ -45,6 +45,34 @@ import com.github.fommil.ff.physics.Position;
  * @author Doga Can Yanikoglu
  */
 public class Pitch {
+    private static final double SCALE = 0.1;
+
+    private static final Point bounds = new Point(672, 880);
+
+    private static final Rectangle pitch = new Rectangle(81, 129, 509, 640);
+
+    private static final Point centreSpot = new Point(336, 449);
+
+    public final Area leftBack = new Area(8,19,75,54);
+    public final Area rightBack = new Area(48,59,75,54);
+    public final Area centralBack = new Area(19,48,75,54);
+
+    public final Area leftWingBack = new Area(8,19,54,43);
+    public final Area rightWingBack = new Area(48,59,54,43);
+    public final Area defensiveMid = new Area(19,48,54,43);
+
+    public final Area leftWing = new Area(8,19,43,11);
+    public final Area rightWing = new Area(48,59,43,11);
+
+    public final Area attackerMid = new Area(19,48,43,31);
+    public final Area forward = new Area(19,48,31,11);
+
+    public final Area centre = new Area(27,40,48,38);
+
+    private final Point penaltySpotTop = new Point(336, 187);
+
+    private final Point penaltySpotBottom = new Point(336, 711);
+
 	public class Area {
 		private double leftBound, rightBound, upperBound, lowerBound;
 
@@ -104,34 +132,6 @@ public class Pitch {
             return new Position((rightBound+leftBound)/2,(upperBound+lowerBound)/2,0);
         }
 	}
-
-	private static final double SCALE = 0.1;
-
-	private static final Point bounds = new Point(672, 880);
-
-	private static final Rectangle pitch = new Rectangle(81, 129, 509, 640);
-
-	private static final Point centreSpot = new Point(336, 449);
-
-	public final Area leftBack = new Area(8,19,75,54);
-    public final Area rightBack = new Area(48,59,75,54);
-    public final Area centralBack = new Area(19,48,75,54);
-
-    public final Area leftWingBack = new Area(8,19,54,43);
-    public final Area rightWingBack = new Area(48,59,54,43);
-    public final Area defensiveMid = new Area(19,48,54,43);
-
-    public final Area leftWing = new Area(8,19,43,11);
-    public final Area rightWing = new Area(48,59,43,11);
-
-    public final Area attackerMid = new Area(19,48,43,31);
-    public final Area forward = new Area(19,48,31,11);
-
-    public final Area centre = new Area(27,40,48,38);
-
-	private final Point penaltySpotTop = new Point(336, 187);
-
-	private final Point penaltySpotBottom = new Point(336, 711);
 
 	public Position getPitchLowerLeft() {
 		return new Position(pitch.x * SCALE, (bounds.y - pitch.y - pitch.height) * SCALE, 0);

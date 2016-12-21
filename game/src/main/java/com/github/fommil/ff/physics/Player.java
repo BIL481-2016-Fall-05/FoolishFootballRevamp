@@ -405,7 +405,7 @@ public class Player {
 		return GamePhysics.toAngle(getFacing());
 	}
 
-	DVector3 getFacing() {
+	public DVector3 getFacing() {
 		DMatrix3C rotation = body.getRotation();
 		DVector3 rotated;
 		if (getTilt() > Math.PI / 4)
@@ -429,7 +429,7 @@ public class Player {
      * @param to Position to be faced
      * @return 3x3 rotation matrix
      */
-	DMatrix3 createRotationMatrix(Position to) {
+	private DMatrix3 createRotationMatrix(Position to) {
 		DMatrix3 rotation = new DMatrix3();
 		Rotation.dRFromAxisAndAngle(rotation, 0, 0, -1, GamePhysics.toAngle(to.toDVector().sub(this.getPosition().toDVector())));
 		return rotation;

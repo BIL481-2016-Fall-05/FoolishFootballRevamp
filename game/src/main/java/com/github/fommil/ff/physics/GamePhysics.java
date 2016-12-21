@@ -123,7 +123,7 @@ public class GamePhysics extends Physics {
 		this.pitch = pitch;
 		pauseGame = false;
 
-		opponentController = new OpponentController(pitch);
+		opponentController = new OpponentController();
 
 		ball = new Ball(world, space);
 		Position centre = pitch.getCentre();

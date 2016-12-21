@@ -15,7 +15,6 @@
 package com.github.fommil.ff;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import java.awt.Color;
 import java.util.Collections;
 import java.util.List;
