@@ -45,7 +45,7 @@ class Opponent extends Player {
     /**
      * Selects this opponent to be controlled. Other opponents are flushed to return them initial state.
      */
-    public synchronized void select() {
+    public void select() {
 	    for(Opponent o: game.getOpponentPlayers()) {
 	        if(this != o) {
                 o.flush();
@@ -57,7 +57,7 @@ class Opponent extends Player {
     /**
      * Sets all of critical variables to their initial states.
      */
-    private synchronized void flush() {
+    private void flush() {
 	    isSelected = false;
 	    currentArea = null;
 	    feintMass = 0;
@@ -67,7 +67,7 @@ class Opponent extends Player {
     /**
      * Returns if this opponent is controlled right now or not
      */
-    public synchronized boolean isSelected() {
+    public boolean isSelected() {
 	    return isSelected;
     }
 
@@ -88,11 +88,11 @@ class Opponent extends Player {
         return tempAssignment;
     }
 
-    public synchronized Queue<Assignment> getAssignments() {
+    public Queue<Assignment> getAssignments() {
         return assignments;
     }
 
-    public synchronized int incrementFeintMass() {
+    public int incrementFeintMass() {
         return ++feintMass;
     }
 

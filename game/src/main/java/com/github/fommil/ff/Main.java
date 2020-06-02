@@ -72,7 +72,7 @@ public class Main {
 //			private final AtomicLong counter = new AtomicLong();
 //
 //			@Override
-//			public synchronized void run() {
+//			public void run() {
 //				game.step(period / 1000.0);
 //				long count = counter.incrementAndGet();
 //				if (count % redraw == 0) {

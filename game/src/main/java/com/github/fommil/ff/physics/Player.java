@@ -438,7 +438,7 @@ public class Player implements Tickable {
      * Set facing direction of this player
      * @param p Position to be faced
      */
-	public synchronized void setFacing(Position p) {
+	public void setFacing(Position p) {
 		this.body.setRotation(createRotationMatrix(p));
 	}
 
@@ -500,11 +500,11 @@ public class Player implements Tickable {
 		return team;
 	}
 
-	public synchronized boolean isBallOwner() {
+	public boolean isBallOwner() {
 		return isBallOwner;
 	}
 
-	public synchronized void setBallOwner(Boolean b) {
+	public void setBallOwner(Boolean b) {
 		isBallOwner = b;
 	}
 

@@ -204,30 +204,30 @@ public class Ball {
 		return sphere;
 	}
 
-	public synchronized Player getOwner() {
+	public Player getOwner() {
 		return owner;
 	}
 
-	public synchronized boolean isOwned() {
+	public boolean isOwned() {
 		return owner != null;
 	}
 
-	public synchronized void setOwner(Player p) {
+	public void setOwner(Player p) {
 		owner = p;
 		if(p != null) {
 			addFixedJoint(p.body);
 		}
 	}
 
-	public synchronized boolean isKickedRecently() {
+	public boolean isKickedRecently() {
 		return isKickedRecently;
 	}
 
-	public synchronized void setKickStatus(Boolean b) {
+	public void setKickStatus(Boolean b) {
 		isKickedRecently = b;
 	}
 
-	private synchronized void addFixedJoint(DBody body) {
+	private void addFixedJoint(DBody body) {
         DFixedJoint joint = OdeHelper.createFixedJoint(world);
         joint.attach(body, this.getGeom().getBody());
     }

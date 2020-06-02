@@ -42,7 +42,7 @@ public class KeyboardController extends KeyAdapter {
 	private final Collection<Aftertouch> aftertouches = Sets.newHashSet();
 
 	@Override
-	public synchronized void keyPressed(KeyEvent e) {
+	public void keyPressed(KeyEvent e) {
 		switch (e.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
 				actions.add(Action.LEFT);
@@ -85,7 +85,7 @@ public class KeyboardController extends KeyAdapter {
 	}
 
 	@Override
-	public synchronized void keyReleased(KeyEvent e) {
+	public void keyReleased(KeyEvent e) {
 		switch (e.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
                 actions.remove(Action.LEFT);
