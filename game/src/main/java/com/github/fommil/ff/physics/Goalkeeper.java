@@ -14,20 +14,23 @@
  */
 package com.github.fommil.ff.physics;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.List;
+
 import javax.annotation.Nullable;
+
 import org.ode4j.math.DMatrix3;
 import org.ode4j.math.DVector3;
 import org.ode4j.math.DVector3C;
 import org.ode4j.ode.DSpace;
 import org.ode4j.ode.DWorld;
 import org.ode4j.ode.internal.Rotation;
+
 import com.github.fommil.ff.Direction;
 import com.github.fommil.ff.PlayerStats;
 import com.github.fommil.ff.Team;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 
 /**
  * The model (M) for a goalkeeper.

@@ -1,30 +1,30 @@
 /*
  * Copyright Samuel Halliday 2009
- * 
+ *
  * This file is free software: you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This file is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this file.
  * If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.fommil.ff.physics;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.logging.Logger;
 
 import org.ode4j.math.DVector3;
 import org.ode4j.ode.DGeom.DNearCallback;
+
 import com.github.fommil.ff.Direction;
 import com.github.fommil.ff.Pitch;
 import com.github.fommil.ff.PlayerStats;
@@ -35,6 +35,11 @@ import com.github.fommil.ff.Team;
 import com.github.fommil.ff.physics.Player.PlayerState;
 import com.github.fommil.ff.swos.SoundParser;
 import com.github.fommil.ff.swos.SoundParser.Fx;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 /**
  * The model (M) and controller (C) for game play.
@@ -42,6 +47,7 @@ import com.github.fommil.ff.swos.SoundParser.Fx;
  *
  * @author Samuel Halliday
  * @author Doga Can Yanikoglu
+ * @author eduyayo@gmail.com
  */
 public class GamePhysics extends Physics {
 
@@ -50,6 +56,10 @@ public class GamePhysics extends Physics {
 	static final double MIN_SPEED = 0.1;
 
 	static final double MAX_SPEED = 50;
+
+	private static final long TWO_SECONDS = 2000L;
+
+	private static final long FIVE_SECONDS = 50000L;
 
 	private final OpponentController opponentController;
 
@@ -69,11 +79,13 @@ public class GamePhysics extends Physics {
 
     private volatile Collection<Aftertouch> aftertouches = Collections.emptyList();
 
-    private final Map<Player, Double> grounded = Maps.newHashMap();
+    private final Map<Player, Long> grounded = Maps.newHashMap();
 
     private final Collection<Goalpost> goals = Lists.newArrayList();
 
     private volatile boolean pauseGame;
+
+	private GeneralAgent generalAgent;
 
 	@Deprecated // DEBUGGING
 	private void debugNaNs() {
@@ -98,16 +110,19 @@ public class GamePhysics extends Physics {
 	 */
 	static double toAngle(DVector3 vector, double fallback) {
 		Preconditions.checkNotNull(vector);
-		if (vector.length() == 0)
+		if (vector.length() == 0) {
 			return fallback;
+		}
 		return toAngle(vector);
 	}
 
 	private static double dePhase(double d) {
-		if (d > Math.PI)
+		if (d > Math.PI) {
 			return dePhase(d - 2 * Math.PI);
-		if (d <= -Math.PI)
+		}
+		if (d <= -Math.PI) {
 			return dePhase(d + 2 * Math.PI);
+		}
 		return d;
 	}
 
@@ -156,7 +171,7 @@ public class GamePhysics extends Physics {
 			bs.add(pma);
 		}
 
-        new GeneralAgent(this);
+        this.generalAgent = new GeneralAgent(this);
 	}
 
 	@Override
@@ -189,14 +204,16 @@ public class GamePhysics extends Physics {
 			}
 		}
 
-		if (actions.contains(Action.CHANGE))
+		if (actions.contains(Action.CHANGE)) {
 			updateSelected();
+		}
 
 		BallZone bz = ball.getZone(pitch);
 		for (Player p : getPlayers()) {
 			transition(p);
-			if (p == selected)
+			if (p == selected) {
 				continue;
+			}
 
 			if (p instanceof Opponent && ((Opponent) p).isSelected()) {
 				opponentController.autoPilot((Opponent) p);
@@ -232,8 +249,9 @@ public class GamePhysics extends Physics {
 			log.warning("ball had NaN speed");
 			ball.setVelocity(new DVector3());
 		}
-		if (ballSpeed < MIN_SPEED)// stops small movements
+		if (ballSpeed < MIN_SPEED) {
 			ball.setVelocity(new DVector3());
+		}
 		if (ballSpeed > MAX_SPEED) { // stops really weird rounding errors
 			log.warning("ball was going " + ballSpeed);
 			DVector3 ballVelocity = ball.getVelocity().toDVector();
@@ -283,12 +301,13 @@ public class GamePhysics extends Physics {
 		// TODO: should be in the Player class
 		switch (p.getState()) {
 			case TACKLE:
-				if (p.getVelocity().speed() > MIN_SPEED)
+				if (p.getVelocity().speed() > MIN_SPEED) {
 					break;
+				}
 			case GROUND:
 				if (!grounded.containsKey(p)) {
-					grounded.put(p, time);
-				} else if ((time - grounded.get(p)) > 2) {
+					grounded.put(p, this.elapsedTimeInMillisSinceWorldStarted);
+				} else if ((elapsedTimeInMillisSinceWorldStarted - grounded.get(p)) > TWO_SECONDS) {
 					if (p.getState() == PlayerState.GROUND && new Random().nextBoolean()) {
 						p.setState(PlayerState.INJURED);
 						return;
@@ -300,8 +319,8 @@ public class GamePhysics extends Physics {
 			case INJURED:
 				if (!grounded.containsKey(p)) {
 					log.warning("WASN'T LISTED IN GROUNDED");
-					grounded.put(p, time);
-				} else if ((time - grounded.get(p)) > 5) {
+					grounded.put(p, elapsedTimeInMillisSinceWorldStarted);
+				} else if ((elapsedTimeInMillisSinceWorldStarted - grounded.get(p)) > FIVE_SECONDS) {
 					p.setState(PlayerState.RUN);
 					grounded.remove(p);
 				}
@@ -342,10 +361,6 @@ public class GamePhysics extends Physics {
 	   return pauseGame;
     }
 
-	public double getTimestamp() {
-		return time;
-	}
-
 	public Team getTeamA() {
 		return a;
 	}
@@ -361,10 +376,20 @@ public class GamePhysics extends Physics {
 	public ArrayList<Opponent> getOpponentsIn(Pitch.Area area) {
         ArrayList<Opponent> temp = new ArrayList<Opponent>();
 	    for(Opponent o: bs) {
-	        if(o.getArea() == area)
-	            temp.add(o);
+	        if(o.getArea() == area) {
+				temp.add(o);
+			}
         }
         return temp;
     }
 	// </editor-fold>
+
+	@Override
+	public void doTick(long elapsedTimeInMillis) {
+		as.stream().forEach(each -> each.doTick(elapsedTimeInMillis));
+		bs.stream().forEach(each -> each.doTick(elapsedTimeInMillis));
+		generalAgent.doTick(elapsedTimeInMillis);
+		super.doTick(elapsedTimeInMillis);
+	}
+
 }

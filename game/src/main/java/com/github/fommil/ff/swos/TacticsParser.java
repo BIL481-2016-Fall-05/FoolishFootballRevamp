@@ -14,18 +14,19 @@
  */
 package com.github.fommil.ff.swos;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Maps;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Map;
 import java.util.logging.Logger;
+
 import com.github.fommil.ff.Main;
 import com.github.fommil.ff.Tactics;
 import com.github.fommil.ff.Tactics.BallZone;
 import com.github.fommil.ff.Tactics.PlayerZone;
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
 
 /**
  * Import a SWOS TAC file, containing legacy tactics.

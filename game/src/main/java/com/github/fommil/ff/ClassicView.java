@@ -1,27 +1,24 @@
 /*
  * Copyright Samuel Halliday 2009
- * 
+ *
  * This file is free software: you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This file is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this file.
  * If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.fommil.ff;
 
-import com.github.fommil.ff.physics.*;
-import com.github.fommil.ff.physics.Goalkeeper.GoalkeeperState;
-import com.github.fommil.ff.swos.SwosUtils;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Ordering;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -29,6 +26,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
+
+import javax.swing.JPanel;
+
+import com.github.fommil.ff.physics.Ball;
+import com.github.fommil.ff.physics.GamePhysics;
+import com.github.fommil.ff.physics.Goalkeeper;
+import com.github.fommil.ff.physics.Goalkeeper.GoalkeeperState;
+import com.github.fommil.ff.physics.Player;
+import com.github.fommil.ff.physics.Position;
+import com.github.fommil.ff.physics.Velocity;
+import com.github.fommil.ff.swos.SwosUtils;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Ordering;
 
 /**
  * The view (V) for the game play.
@@ -230,7 +240,7 @@ public class ClassicView extends JPanel {
 				break;
 		}
 
-		long ts = (long) (1000L * game.getTimestamp());
+		long ts = game.getTimestamp();
 		long t = (ts + pm.getShirt() * 17) % 800L;
 		switch (pm.getState()) {
 			case TACKLE:			// left and right are swapped
@@ -267,8 +277,9 @@ public class ClassicView extends JPanel {
 				break;
 			case INJURED:
 				spriteIndex = 70;
-				if (direction == Direction.EAST)
+				if (direction == Direction.EAST) {
 					spriteIndex += 2;
+				}
 				spriteIndex += t < 400 ? 0 : 1;
 				break;
 			case THROW:
@@ -306,7 +317,7 @@ public class ClassicView extends JPanel {
 		int spriteIndex = 0;
 		Velocity v = ball.getVelocity();
 		if (v.speed() > 0.1) {
-			long t = (long) ((1000L * game.getTimestamp()) % 800L);
+			long t = (1000L * game.getTimestamp()) % 800L;
 			if (t < 200) {
 				spriteIndex += 1;
 			} else if (t < 400) {
@@ -377,7 +388,7 @@ public class ClassicView extends JPanel {
 		int spriteIndex = 0;
 		Direction direction = Direction.valueOf(gm.getDirection());
 
-		long ts = (long) (1000L * game.getTimestamp());
+		long ts = 1000L * game.getTimestamp();
 		long t = ts % 800L;
 
 		if (gm.getGkState() == null) {

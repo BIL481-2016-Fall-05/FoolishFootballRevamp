@@ -14,19 +14,18 @@
  */
 package com.github.fommil.ff;
 
-import com.github.fommil.ff.physics.GamePhysics;
-import com.github.fommil.ff.swos.PitchParser;
-import com.github.fommil.ff.swos.SpriteParser;
-import com.github.fommil.ff.swos.TacticsParser;
-
-import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.swing.JFrame;
+
+import com.github.fommil.ff.physics.GamePhysics;
+import com.github.fommil.ff.swos.PitchParser;
+import com.github.fommil.ff.swos.SpriteParser;
+import com.github.fommil.ff.swos.TacticsParser;
 
 /**
  * @author Samuel Halliday
@@ -69,18 +68,39 @@ public class Main {
 
 		final long period = 10L;
 		final int redraw = 5;
-		TimerTask ticker = new TimerTask() {
-			private final AtomicLong counter = new AtomicLong();
+//		TimerTask ticker = new TimerTask() {
+//			private final AtomicLong counter = new AtomicLong();
+//
+//			@Override
+//			public synchronized void run() {
+//				game.step(period / 1000.0);
+//				long count = counter.incrementAndGet();
+//				if (count % redraw == 0) {
+//					gv.repaint();
+//				}
+//			}
+//		};
+//		new Timer().schedule(ticker, 0L, period);
 
-			@Override
-			public synchronized void run() {
-				game.step(period / 1000.0);
-				long count = counter.incrementAndGet();
-				if (count % redraw == 0)
+		AtomicBoolean running = new AtomicBoolean(true);
+
+		//we've got only pixel animations... fixed step??
+		long timeToFrame = 16L; //round 60 fps
+		new Thread(() ->{
+			long startTime = System.currentTimeMillis();
+
+			while (running.get()) {
+				long currentTime = System.currentTimeMillis();
+				long elapsedTimeInMillis = currentTime - startTime;
+				if (elapsedTimeInMillis > timeToFrame) {
+					game.doTick(elapsedTimeInMillis);
 					gv.repaint();
+					startTime = currentTime;
+				} else {
+					Thread.yield();
+				}
 			}
-		};
-		new Timer().schedule(ticker, 0L, period);
+		}).start();
 
 		assert gv.getKeyListeners().length > 0;
 

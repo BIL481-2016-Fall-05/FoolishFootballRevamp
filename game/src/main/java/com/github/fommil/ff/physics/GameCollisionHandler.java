@@ -16,8 +16,10 @@ package com.github.fommil.ff.physics;
 
 import java.util.EnumSet;
 import java.util.logging.Logger;
+
 import org.ode4j.ode.DContact.DSurfaceParameters;
 import org.ode4j.ode.OdeConstants;
+
 import com.github.fommil.ff.physics.CollisionCallback.CollisionHandler;
 import com.github.fommil.ff.physics.Player.PlayerState;
 import com.github.fommil.ff.swos.SoundParser;

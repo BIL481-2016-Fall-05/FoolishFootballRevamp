@@ -1,12 +1,12 @@
 package com.github.fommil.ff.swos;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+
 import org.junit.Test;
 
-import com.github.fommil.ff.Main;
-import com.github.fommil.ff.swos.TacticsParser;;
+import com.github.fommil.ff.Main;;
 
 public class TacticsParserTest {
 

@@ -14,15 +14,17 @@
  */
 package com.github.fommil.ff.physics;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Collection;
+import java.util.HashSet;
+
 import org.junit.Test;
 import org.ode4j.math.DVector3;
 import org.ode4j.ode.DBody;
 
 import com.github.fommil.ff.Pitch;
-import static org.junit.Assert.*;
-
-import java.util.Collection;
-import java.util.HashSet;
 
 /**
  * @author Samuel Halliday

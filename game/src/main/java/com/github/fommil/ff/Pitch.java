@@ -16,6 +16,7 @@ package com.github.fommil.ff;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+
 import com.github.fommil.ff.physics.Position;
 
 /**

@@ -14,10 +14,11 @@
  */
 package com.github.fommil.ff.physics;
 
-import com.google.common.base.Preconditions;
 import org.ode4j.math.DVector3;
+
 import com.github.fommil.ff.Direction;
 import com.github.fommil.ff.Pitch;
+import com.google.common.base.Preconditions;
 
 /**
  * The logic for automatic controlling a {@link Goalkeeper} - users do not get to directly

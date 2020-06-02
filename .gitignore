@@ -9,3 +9,6 @@
 native
 target
 game/data/sprites
+/.project
+
+/.settings

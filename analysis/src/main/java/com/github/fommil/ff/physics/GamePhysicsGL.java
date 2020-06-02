@@ -1,36 +1,42 @@
 /*
  * Copyright Samuel Halliday 2010
- * 
+ *
  * This file is free software: you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This file is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this file.
  * If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.fommil.ff.physics;
 
-import com.github.fommil.ff.*;
-import com.github.fommil.ff.swos.PitchParser;
-import com.github.fommil.ff.swos.SpriteParser;
-import com.github.fommil.ff.swos.TacticsParser;
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.swing.JFrame;
+
 import org.ode4j.drawstuff.DrawStuff;
 import org.ode4j.drawstuff.DrawStuff.dsFunctions;
 import org.ode4j.ode.DBox;
 import org.ode4j.ode.DGeom;
 import org.ode4j.ode.DSphere;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.github.fommil.ff.ClassicView;
+import com.github.fommil.ff.Main;
+import com.github.fommil.ff.Pitch;
+import com.github.fommil.ff.Sprite;
+import com.github.fommil.ff.Team;
+import com.github.fommil.ff.swos.PitchParser;
+import com.github.fommil.ff.swos.SpriteParser;
+import com.github.fommil.ff.swos.TacticsParser;
 
 /**
  * A debugging version of the game using a 3D rendered view.
@@ -97,7 +103,7 @@ public class GamePhysicsGL extends dsFunctions {
 	public void step(boolean pause) {
 		controller.poll();
 
-		game.step(0.017); // ?? about 60Hz
+		game.doTick(17L); // ?? about 60Hz
 
 		Position c = game.getBall().getPosition();
 		float[] xyz = {(float) c.x, (float) c.y - 5, 15f};

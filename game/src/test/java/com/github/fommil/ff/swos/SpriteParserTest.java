@@ -1,12 +1,12 @@
 package com.github.fommil.ff.swos;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+
 import org.junit.Test;
-import com.github.fommil.ff.swos.SpriteParser;
 
 public class SpriteParserTest {
 

@@ -14,23 +14,15 @@
  */
 package com.github.fommil.ff.physics;
 
-import com.github.fommil.ff.Direction;
-import com.github.fommil.ff.Pitch;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.util.logging.Logger;
+
 import org.junit.Test;
-import org.ode4j.math.DVector3;
-import org.ode4j.ode.DBody;
-import org.ode4j.ode.DGeom;
-import org.ode4j.ode.DSphere;
 
-import java.util.Arrays;
-
+import com.github.fommil.ff.Direction;
 import com.github.fommil.ff.Pitch;
-import static org.junit.Assert.*;
-
-import java.util.Collection;
-import java.util.HashSet;
 
 public class GoalpostTest {
 

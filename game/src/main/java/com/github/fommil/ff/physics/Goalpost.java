@@ -14,9 +14,9 @@
  */
 package com.github.fommil.ff.physics;
 
-import com.google.common.base.Preconditions;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
+
 import org.ode4j.math.DVector3;
 import org.ode4j.ode.DBody;
 import org.ode4j.ode.DBox;
@@ -26,8 +26,10 @@ import org.ode4j.ode.DGeom.DNearCallback;
 import org.ode4j.ode.DSpace;
 import org.ode4j.ode.DWorld;
 import org.ode4j.ode.OdeHelper;
+
 import com.github.fommil.ff.Direction;
 import com.github.fommil.ff.Pitch;
+import com.google.common.base.Preconditions;
 
 /**
  * The model (M) and controller (C) for a goal during game play.

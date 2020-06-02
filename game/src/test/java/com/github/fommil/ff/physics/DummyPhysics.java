@@ -15,6 +15,7 @@
 package com.github.fommil.ff.physics;
 
 import org.ode4j.ode.DGeom.DNearCallback;
+
 import com.github.fommil.ff.Direction;
 import com.github.fommil.ff.Pitch;
 import com.github.fommil.ff.PlayerStats;

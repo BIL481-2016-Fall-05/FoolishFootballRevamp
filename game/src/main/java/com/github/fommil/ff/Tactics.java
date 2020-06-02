@@ -14,14 +14,15 @@
  */
 package com.github.fommil.ff;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Maps;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import com.github.fommil.ff.physics.Player;
 import com.github.fommil.ff.physics.Position;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
 
 /**
  * Represents the team tactics, which dictates where each {@link Player} should be

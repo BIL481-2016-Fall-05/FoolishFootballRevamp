@@ -1,31 +1,40 @@
 /*
  * Copyright Samuel Halliday 2009
- * 
+ *
  * This file is free software: you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This file is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this file.
  * If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.fommil.ff.physics;
 
-import com.google.common.base.Preconditions;
 import java.util.Collection;
 import java.util.logging.Logger;
+
 import org.ode4j.math.DVector3;
 import org.ode4j.math.DVector3C;
-import org.ode4j.ode.*;
+import org.ode4j.ode.DBody;
+import org.ode4j.ode.DFixedJoint;
+import org.ode4j.ode.DGeom;
+import org.ode4j.ode.DMass;
+import org.ode4j.ode.DSpace;
+import org.ode4j.ode.DSphere;
+import org.ode4j.ode.DWorld;
+import org.ode4j.ode.OdeHelper;
+
 import com.github.fommil.ff.Pitch;
 import com.github.fommil.ff.Tactics.BallZone;
+import com.google.common.base.Preconditions;
 
 /**
  * The model (M) and controller (C) for the ball during game play.
- * 
+ *
  * @author Samuel Halliday
  * @author Doga Can Yanikoglu
  * @see <a href="http://en.wikipedia.org/wiki/Football_(ball)#Dimensions">Dimension information</a>
@@ -81,19 +90,23 @@ public class Ball {
 	 */
 	public void setAftertouch(Collection<Aftertouch> aftertouches) {
 		Preconditions.checkNotNull(aftertouches);
-		if (!aftertouch || aftertouches.isEmpty())
+		if (!aftertouch || aftertouches.isEmpty()) {
 			return;
+		}
 		DVector3C velocity = sphere.getBody().getLinearVel();
-		if (velocity.length() < GamePhysics.MIN_SPEED)
+		if (velocity.length() < GamePhysics.MIN_SPEED) {
 			return;
+		}
 		DVector3 forward = new DVector3(velocity);
 		forward.set2(0);
-		if (forward.length() < GamePhysics.MIN_SPEED)
+		if (forward.length() < GamePhysics.MIN_SPEED) {
 			return;
+		}
 		forward.normalize();
 		double vz = velocity.get2();
-		if (vz < 0)
+		if (vz < 0) {
 			return;
+		}
 
 		DVector3 touch = Aftertouch.asVector(aftertouches);
 		DVector3 sideways = new DVector3(-forward.get1(), forward.get0(), 0);
@@ -106,8 +119,9 @@ public class Ball {
 		}
 
 		double z = sphere.getBody().getPosition().get2() - RADIUS;
-		if (z > MAX_HEIGHT)
+		if (z > MAX_HEIGHT) {
 			return;
+		}
 
 		double power = forward.dot(touch);
 		if (Math.abs(power) > 0.1) {
@@ -200,8 +214,9 @@ public class Ball {
 
 	public synchronized void setOwner(Player p) {
 		owner = p;
-		if(p != null)
+		if(p != null) {
 			addFixedJoint(p.body);
+		}
 	}
 
 	public synchronized boolean isKickedRecently() {

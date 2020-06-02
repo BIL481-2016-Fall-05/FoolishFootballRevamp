@@ -14,12 +14,13 @@
  */
 package com.github.fommil.ff.physics;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import org.junit.Test;
 
 import com.github.fommil.ff.Pitch;
 import com.github.fommil.ff.PlayerStats;
-
-import static org.junit.Assert.*;
 
 /**
  * @author Samuel Halliday

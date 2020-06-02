@@ -14,15 +14,16 @@
  */
 package com.github.fommil.ff;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
-import com.github.fommil.ff.physics.GamePhysics;
+
 import com.github.fommil.ff.physics.Action;
 import com.github.fommil.ff.physics.Aftertouch;
+import com.github.fommil.ff.physics.GamePhysics;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 
 /**
  *
