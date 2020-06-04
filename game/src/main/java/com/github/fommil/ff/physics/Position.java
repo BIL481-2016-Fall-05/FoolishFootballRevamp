@@ -1,26 +1,27 @@
 /*
  * Copyright Samuel Halliday 2010
- * 
+ *
  * This file is free software: you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This file is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this file.
  * If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.fommil.ff.physics;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Preconditions;
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
+
 import org.ode4j.math.DVector3;
 import org.ode4j.math.DVector3C;
 
-import static java.lang.Math.pow;
-import static java.lang.Math.sqrt;
+import com.google.common.base.Objects;
+import com.google.common.base.Preconditions;
 
 /**
  * Container class describing the (x, y, z) position of an object. Used so that the physics engine
@@ -67,10 +68,12 @@ public final class Position {
 	@Override
 	public boolean equals(Object obj) {
 		// <editor-fold defaultstate="collapsed" desc="boilerplate identity, instanceof and cast">
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (!(obj instanceof Position))
+		}
+		if (!(obj instanceof Position)) {
 			return false;
+		}
 		final Position other = (Position) obj;// </editor-fold>
 		return x == other.x && y == other.y && z == other.z;
 	}

@@ -14,10 +14,12 @@
  */
 package com.github.fommil.ff.physics;
 
-import com.google.common.base.Preconditions;
 import java.util.Collection;
+
 import org.ode4j.math.DVector3;
+
 import com.github.fommil.ff.Direction;
+import com.google.common.base.Preconditions;
 
 /**
  * The aftertouch that a ball may exhibit. Aftertouch depends on the direction of motion.

@@ -14,7 +14,6 @@
  */
 package com.github.fommil.ff.swos;
 
-import com.google.common.base.Preconditions;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -24,7 +23,10 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
 import javax.imageio.ImageIO;
+
+import com.google.common.base.Preconditions;
 
 /**
  * Convenience methods for dealing with SWOS data files.

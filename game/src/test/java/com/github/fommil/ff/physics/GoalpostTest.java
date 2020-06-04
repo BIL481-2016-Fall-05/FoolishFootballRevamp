@@ -1,36 +1,28 @@
 /*
  * Copyright Samuel Halliday 2010
- * 
+ *
  * This file is free software: you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This file is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this file.
  * If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.fommil.ff.physics;
 
-import com.github.fommil.ff.Direction;
-import com.github.fommil.ff.Pitch;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.util.logging.Logger;
+
 import org.junit.Test;
-import org.ode4j.math.DVector3;
-import org.ode4j.ode.DBody;
-import org.ode4j.ode.DGeom;
-import org.ode4j.ode.DSphere;
 
-import java.util.Arrays;
-
+import com.github.fommil.ff.Direction;
 import com.github.fommil.ff.Pitch;
-import static org.junit.Assert.*;
-
-import java.util.Collection;
-import java.util.HashSet;
 
 public class GoalpostTest {
 
@@ -38,7 +30,7 @@ public class GoalpostTest {
 
 	private final Pitch pitch = new Pitch();
 
-	private static final double dt = 0.01;
+	private static final long DT = 100L;
 
 	interface Tester {
 
@@ -53,7 +45,7 @@ public class GoalpostTest {
 		ball.setPosition(position);
 		ball.setVelocity(velocity);
 		for (int i = 0; i < 1000; i++) {
-			physics.step(dt);
+			physics.doTick(DT);
 			stepTest.test(ball.getPosition(), ball.getVelocity());
 		}
 		physics.clean();

@@ -14,11 +14,12 @@
  */
 package com.github.fommil.ff;
 
-import com.google.common.base.Preconditions;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.Map;
+
+import com.google.common.base.Preconditions;
 
 /**
  * Wrapper class for a {@link BufferedImage} with metadata, including convenience methods.

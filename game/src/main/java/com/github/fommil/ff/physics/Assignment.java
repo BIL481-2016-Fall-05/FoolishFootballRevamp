@@ -1,22 +1,24 @@
 package com.github.fommil.ff.physics;
 
-import com.github.fommil.ff.Pitch;
-
 import java.util.Stack;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadLocalRandom;
+
+import com.github.fommil.ff.Pitch;
+import com.pigdroid.fommil.util.StepTick;
 
 /**
  * Threaded Assignment module for a opponent players.
  *
  * @author Doga Can Yanikoglu
+ * @author eduyayo@gmail.com
  */
-public class Assignment extends Thread implements Comparable {
+public class Assignment extends StepTick implements Comparable<Assignment> {
     /**
      * Enum declaration for specifying action type to do.
      */
-    public enum DO { PURSUIT_PLAYER, GET_BALL, GO_TO_AM, GO_TO_F, GO_TO_LOWER_LW, GO_TO_LOWER_RW, GO_TO_DM, GO_TO_LWB,
-        GO_TO_RWB, GO_FOR_SCORE, FEINT}
+	public enum DO {
+		PURSUIT_PLAYER, GET_BALL, GO_TO_AM, GO_TO_F, GO_TO_LOWER_LW, GO_TO_LOWER_RW, GO_TO_DM, GO_TO_LWB, GO_TO_RWB,
+		GO_FOR_SCORE, FEINT}
     private volatile boolean flag = true; // Ends thread if set to false
     private volatile DO action; // Action to be done
     private volatile int priority; // Priority of the assignment
@@ -26,14 +28,13 @@ public class Assignment extends Thread implements Comparable {
     private final Stack<Position> targets = new Stack<Position>(); // Stack for storing target positions
     private volatile Opponent assignee; // Related player with this assignment
     private volatile GamePhysics game;
-    private volatile Semaphore jobMonitor; // Semaphore for organizing player's thread
     private volatile ThreadLocalRandom probabilityGenerator; // Thread-safe random value generator
 
     public Assignment(Opponent assignee, DO action, GamePhysics game) {
+    	super(25);
         this.game = game;
         this.assignee = assignee;
         this.action = action;
-        this.jobMonitor = new Semaphore(0);
         probabilityGenerator = ThreadLocalRandom.current();
         switch (action) {
             case PURSUIT_PLAYER:
@@ -132,20 +133,19 @@ public class Assignment extends Thread implements Comparable {
                 canFeint = false;
                 break;
         }
-        this.start();
     }
 
-    public void run() {
-        try {
-            while (flag) {
-                sleep(25);
+
+	@Override
+	protected void doStep(long elapsedTimeInMillis) {
+            if (flag) {
                 switch (action) {
                     /**
                      * Try getting ball from pitch until the ball has an owner
                      */
                     case GET_BALL:
                         if(assignee.isBallOwner() || game.getSelected().isBallOwner()) {
-                            dismissAssignment(true);
+                            dismissAssignment();
                             break;
                         }
                         targets.pop();
@@ -161,7 +161,7 @@ public class Assignment extends Thread implements Comparable {
                             assignee.steal(game.getBall());
                         }
                         if (!game.getSelected().isBallOwner()) {
-                            dismissAssignment(true);
+                            dismissAssignment();
                             break;
                         }
                         targets.pop();
@@ -173,7 +173,7 @@ public class Assignment extends Thread implements Comparable {
                      */
                     case GO_FOR_SCORE:
                         if (game.getBall().getOwner() == null) {
-                            dismissAssignment(true);
+                            dismissAssignment();
                         }
                         break;
 
@@ -185,7 +185,7 @@ public class Assignment extends Thread implements Comparable {
                             targets.pop();
                             assignee.setFacing(new Position(game.getPitch().getGoalBottom().toDVector().add(0,4,0)));
                             assignee.kick(game.getBall());
-                            dismissAssignment(true);
+                            dismissAssignment();
                         }
                         break;
 
@@ -197,7 +197,7 @@ public class Assignment extends Thread implements Comparable {
                             targets.pop();
                             assignee.setFacing(new Position(game.getPitch().getGoalBottom().toDVector().add(0,4,0)));
                             assignee.kick(game.getBall());
-                            dismissAssignment(true);
+                            dismissAssignment();
                         }
                         break;
 
@@ -207,11 +207,11 @@ public class Assignment extends Thread implements Comparable {
                     case GO_TO_DM:
                         if(assignee.getPosition().distance(targets.peek()) < 1) {
                             targets.pop();
-                            dismissAssignment(true);
+                            dismissAssignment();
                         }
                         if(!assignee.isBallOwner()) {
                             targets.pop();
-                            dismissAssignment(true);
+                            dismissAssignment();
                         }
                         break;
 
@@ -224,22 +224,23 @@ public class Assignment extends Thread implements Comparable {
                             targets.pop();
                         }
                         if(targets.isEmpty()) {
-                            dismissAssignment(true);
+                            dismissAssignment();
                         }
                         break;
                     default:
                         break;
                 }
 
-                if(!flag)
-                    break;
+                if(!flag) {
+                	return;
+				}
 
                 if(canPass) { // If passing is allowed, try to pass. (Priority: High)
                     Opponent o = findTeammateToPass();
                     if(o != null) {
                         assignee.pass(o,game.getBall());
-                        dismissAssignment(true);
-                        break;
+                        dismissAssignment();
+                        return;
                     }
                 }
 
@@ -247,8 +248,8 @@ public class Assignment extends Thread implements Comparable {
                 if(canShoot && assignee.getPosition().distance(game.getPitch().getGoalBottom()) < 13) {
                     assignee.setFacing(game.getPitch().getGoalBottom());
                     assignee.kick(game.getBall());
-                    dismissAssignment(true);
-                    break;
+                    dismissAssignment();
+                    return;
                 }
 
                 //If feinting is allowed, try to feint. (Priority: Low)
@@ -260,26 +261,19 @@ public class Assignment extends Thread implements Comparable {
                         }
                         else {
                             assignee.assignJob(DO.FEINT);
-                            dismissAssignment(true);
-                            break;
+                            dismissAssignment();
+                            return;
                         }
                     }
                 }
             }
         }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * Dismiss this assignment from assignee's assignments, stop thread, and release the semaphore.
-     * @param isSemaphoreUsed Specifies that if semaphore is used with this action or not
      */
-    private void dismissAssignment(Boolean isSemaphoreUsed) {
+    private void dismissAssignment() {
         assignee.getAssignments().remove(this);
-        if(isSemaphoreUsed)
-            jobMonitor.release();
         flag = false;
     }
 
@@ -405,21 +399,18 @@ public class Assignment extends Thread implements Comparable {
         return targets;
     }
 
-    public Semaphore getJobMonitor() {
-        return jobMonitor;
-    }
+	@Override
+	public int compareTo(Assignment o) {
+		if (o instanceof Assignment) {
+			if (this.priority == o.priority) {
+				return 0;
+			} else if (this.priority < o.priority) {
+				return -1;
+			} else {
+				return 1;
+			}
+		}
+		return 0;
+	}
 
-    @Override
-    public int compareTo(Object o) {
-        if(o instanceof Assignment) {
-            if(this.priority == ((Assignment) o).priority) {
-                return 0;
-            } else if(this.priority < ((Assignment) o).priority) {
-                return -1;
-            } else {
-                return 1;
-            }
-        }
-        return 0;
-    }
 }

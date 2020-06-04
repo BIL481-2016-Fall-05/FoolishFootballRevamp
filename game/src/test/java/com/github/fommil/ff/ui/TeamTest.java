@@ -1,11 +1,9 @@
 package com.github.fommil.ff.ui;
 
+import static org.junit.Assert.assertEquals;
+
 import java.awt.Color;
 
-import static org.junit.Assert.*;
-
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.github.fommil.ff.Tactics;

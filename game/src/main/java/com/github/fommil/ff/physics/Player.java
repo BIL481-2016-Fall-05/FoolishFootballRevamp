@@ -1,21 +1,19 @@
 /*
  * Copyright Samuel Halliday 2009
- * 
+ *
  * This file is free software: you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This file is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this file.
  * If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.fommil.ff.physics;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -32,18 +30,23 @@ import org.ode4j.ode.DSpace;
 import org.ode4j.ode.DWorld;
 import org.ode4j.ode.OdeHelper;
 import org.ode4j.ode.internal.Rotation;
+
 import com.github.fommil.ff.Direction;
 import com.github.fommil.ff.PlayerStats;
 import com.github.fommil.ff.Team;
 import com.github.fommil.ff.swos.SoundParser;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
+import com.pigdroid.fommil.util.Tickable;
 
 /**
  * The model (M) and controller (C) for a {@link Player} during game play.
  *
  * @author Samuel Halliday
  * @author Doga Can Yanikoglu
+ * @author eduyayo@gmail.com
  */
-public class Player {
+public class Player implements Tickable {
 
 	private static final Logger log = Logger.getLogger(Player.class.getName());
 
@@ -141,16 +144,18 @@ public class Player {
 
 	public void kick(Ball ball) {
 		if(isBallOwner()) {
-			if (distanceTo(ball) > 1.1)
+			if (distanceTo(ball) > 1.1) {
 				return;
+			}
 
 			// avoid multiple kicks by ignoring kick when the ball is going in the same direction
 			// this is facing (but allowing for running speed)
 			DVector3 ballVelocity = ball.getVelocity().toDVector();
 			DVector3 facing = getFacing();
 			double dot = facing.dot(ballVelocity);
-			if (dot > getVelocity().speed() * DOUBLE_KICK_RATIO)
+			if (dot > getVelocity().speed() * DOUBLE_KICK_RATIO) {
 				return;
+			}
 
 			ball.setOwner(null);
 			this.setBallOwner(false);
@@ -178,16 +183,18 @@ public class Player {
      */
 	public void pass(Player player, Ball ball) {
 		if(isBallOwner()) {
-			if (distanceTo(ball) > 1.1)
+			if (distanceTo(ball) > 1.1) {
 				return;
+			}
 
 			// avoid multiple kicks by ignoring kick when the ball is going in the same direction
 			// this is facing (but allowing for running speed)
 			DVector3 ballVelocity = ball.getVelocity().toDVector();
 			DVector3 facing = getFacing();
 			double dot = facing.dot(ballVelocity);
-			if (dot > getVelocity().speed() * DOUBLE_KICK_RATIO)
+			if (dot > getVelocity().speed() * DOUBLE_KICK_RATIO) {
 				return;
+			}
 
 			ball.setOwner(null);
 			this.setBallOwner(false);
@@ -214,8 +221,9 @@ public class Player {
 	public void throwIn(Ball ball) {
 		assert getState() == PlayerState.THROWING;
 		assert actions.contains(Action.KICK);
-		if (distanceTo(ball) > 1)
+		if (distanceTo(ball) > 1) {
 			return;
+		}
 		hit(ball, 5, 0);
 		setState(PlayerState.RUN);
 	}
@@ -234,7 +242,7 @@ public class Player {
 
 	/**
 	 * Controller, must be called for each time step.
-	 * 
+	 *
 	 * @param actions
 	 */
 	public void setActions(Collection<Action> actions) {
@@ -276,8 +284,9 @@ public class Player {
 			}
 		}
 
-		if (state != PlayerState.THROW)
+		if (state != PlayerState.THROW) {
 			body.setLinearVel(move);
+		}
 		body.setRotation(rotation);
 	}
 
@@ -351,8 +360,9 @@ public class Player {
 		if (forcedState != null) {
 			switch (forcedState) {
 				case THROW:
-					if (actions.contains(Action.KICK))
+					if (actions.contains(Action.KICK)) {
 						return PlayerState.THROWING;
+					}
 				case CELEBRATE:
 				case PUNISH:
 				case INJURED:
@@ -376,25 +386,32 @@ public class Player {
 		double vz = velocity.get2();
 
 		if (tilt > Math.PI / 8) {
-			if (actions.contains(Action.TACKLE))
+			if (actions.contains(Action.TACKLE)) {
 				return PlayerState.TACKLE;
+			}
 			return PlayerState.GROUND;
 		}
 		if (vz > 0) {
-			if (z < 0.2)
+			if (z < 0.2) {
 				return PlayerState.HEAD_START;
-			if (z < 0.4)
+			}
+			if (z < 0.4) {
 				return PlayerState.HEAD_MID;
+			}
 			return PlayerState.HEAD_END;
 		}
-		if (z > 0.1)
+		if (z > 0.1) {
 			return PlayerState.HEAD_END;
-		if (actions.contains(Action.KICK))
+		}
+		if (actions.contains(Action.KICK)) {
 			return PlayerState.KICK;
-		if(actions.contains(Action.PASS))
-		    return PlayerState.PASS;
-		if(actions.contains(Action.STEAL))
+		}
+		if(actions.contains(Action.PASS)) {
+			return PlayerState.PASS;
+		}
+		if(actions.contains(Action.STEAL)) {
 			return PlayerState.STEAL;
+		}
 		return PlayerState.RUN;
 	}
 
@@ -408,10 +425,11 @@ public class Player {
 	public DVector3 getFacing() {
 		DMatrix3C rotation = body.getRotation();
 		DVector3 rotated;
-		if (getTilt() > Math.PI / 4)
+		if (getTilt() > Math.PI / 4) {
 			rotated = new DVector3(rotation.get02(), rotation.get12(), rotation.get22());
-		else
+		} else {
 			rotated = new DVector3(rotation.get01(), rotation.get11(), rotation.get21());
+		}
 		rotated.normalize();
 		return rotated;
 	}
@@ -420,7 +438,7 @@ public class Player {
      * Set facing direction of this player
      * @param p Position to be faced
      */
-	public synchronized void setFacing(Position p) {
+	public void setFacing(Position p) {
 		this.body.setRotation(createRotationMatrix(p));
 	}
 
@@ -482,11 +500,11 @@ public class Player {
 		return team;
 	}
 
-	public synchronized boolean isBallOwner() {
+	public boolean isBallOwner() {
 		return isBallOwner;
 	}
 
-	public synchronized void setBallOwner(Boolean b) {
+	public void setBallOwner(Boolean b) {
 		isBallOwner = b;
 	}
 
@@ -499,4 +517,9 @@ public class Player {
 		this.opponent = opponent;
 	}
 	// </editor-fold>
+
+	@Override
+	public void doTick(long elapsedTimeInMillis) {
+
+	}
 }

@@ -14,9 +14,6 @@
  */
 package com.github.fommil.ff.swos;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -30,9 +27,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
+
 import javax.imageio.ImageIO;
+
 import com.github.fommil.ff.Main;
 import com.github.fommil.ff.Sprite;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 /**
  * There are 1,334 sprites in SWOS contained across

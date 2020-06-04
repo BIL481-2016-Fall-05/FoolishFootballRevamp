@@ -1,13 +1,11 @@
 package com.github.fommil.ff.swos;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.FilenameFilter;
 
 import org.junit.Test;
-
-import com.github.fommil.ff.swos.PitchParser;
 
 public class PitchParserTest {
 

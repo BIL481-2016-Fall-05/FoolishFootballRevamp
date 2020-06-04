@@ -40,8 +40,9 @@ public enum Direction {
 	 * @return
 	 */
 	public static Direction valueOf(double angle) {
-		if (Double.isNaN(angle))
+		if (Double.isNaN(angle)) {
 			return null;
+		}
 		Preconditions.checkArgument(angle <= Math.PI && angle >= -Math.PI, angle);
 		angle = angle - Math.PI / 8; // tolerance
 		if (angle <= -Math.PI) {

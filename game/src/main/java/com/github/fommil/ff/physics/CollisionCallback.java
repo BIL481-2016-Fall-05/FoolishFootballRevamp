@@ -14,7 +14,6 @@
  */
 package com.github.fommil.ff.physics;
 
-import com.google.common.base.Preconditions;
 import org.ode4j.ode.DBody;
 import org.ode4j.ode.DContact;
 import org.ode4j.ode.DContact.DSurfaceParameters;
@@ -26,6 +25,8 @@ import org.ode4j.ode.DJointGroup;
 import org.ode4j.ode.DPlane;
 import org.ode4j.ode.DWorld;
 import org.ode4j.ode.OdeHelper;
+
+import com.google.common.base.Preconditions;
 
 /**
  * Wrapper class that greatly simplifies the collision detection behaviour for this package.

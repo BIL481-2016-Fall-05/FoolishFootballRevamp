@@ -14,15 +14,16 @@
  */
 package com.github.fommil.ff;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
-import com.github.fommil.ff.physics.GamePhysics;
+
 import com.github.fommil.ff.physics.Action;
 import com.github.fommil.ff.physics.Aftertouch;
+import com.github.fommil.ff.physics.GamePhysics;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 
 /**
  *
@@ -41,7 +42,7 @@ public class KeyboardController extends KeyAdapter {
 	private final Collection<Aftertouch> aftertouches = Sets.newHashSet();
 
 	@Override
-	public synchronized void keyPressed(KeyEvent e) {
+	public void keyPressed(KeyEvent e) {
 		switch (e.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
 				actions.add(Action.LEFT);
@@ -84,7 +85,7 @@ public class KeyboardController extends KeyAdapter {
 	}
 
 	@Override
-	public synchronized void keyReleased(KeyEvent e) {
+	public void keyReleased(KeyEvent e) {
 		switch (e.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
                 actions.remove(Action.LEFT);

@@ -1,21 +1,21 @@
 /*
  * Copyright Samuel Halliday 2010
- * 
+ *
  * This file is free software: you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This file is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this file.
  * If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.fommil.ff.physics;
 
-import com.google.common.collect.Lists;
 import java.util.Collection;
+
 import org.ode4j.ode.DGeom;
 import org.ode4j.ode.DGeom.DNearCallback;
 import org.ode4j.ode.DJointGroup;
@@ -24,6 +24,9 @@ import org.ode4j.ode.DWorld;
 import org.ode4j.ode.OdeHelper;
 import org.ode4j.ode.internal.OdeInit;
 
+import com.google.common.collect.Lists;
+import com.pigdroid.fommil.util.Tickable;
+
 /**
  * Reduces the boilerplate when constructing an Open Dynamics Engine Physics World.
  * Only one instance can be alive at a time, due to the single-threaded nature of ODE construction.
@@ -31,7 +34,7 @@ import org.ode4j.ode.internal.OdeInit;
  *
  * @author Samuel Halliday
  */
-public abstract class Physics {
+public abstract class Physics implements Tickable {
 
 	static {
 		try {
@@ -49,7 +52,7 @@ public abstract class Physics {
 
 	final DNearCallback collision;
 
-	volatile double time;
+	protected long elapsedTimeInMillisSinceWorldStarted;
 
 	Physics(double gravity) {
 		world = OdeHelper.createWorld();
@@ -61,6 +64,10 @@ public abstract class Physics {
 		OdeHelper.createPlane(space, 0, 0, 1, 0);
 
 		collision = getCollisionCallback();
+	}
+
+	public long getTimestamp() {
+		return elapsedTimeInMillisSinceWorldStarted;
 	}
 
 	protected void clean() {
@@ -87,22 +94,6 @@ public abstract class Physics {
 		return geoms;
 	}
 
-	/**
-	 * @param dt in seconds
-	 */
-	public void step(double dt) {
-		time += dt;
-
-		beforeStep();
-
-		space.collide(null, collision);
-
-		world.step(dt);
-		joints.empty();
-
-		afterStep();
-	}
-
 	protected abstract DNearCallback getCollisionCallback();
 
 	protected void beforeStep() {
@@ -110,4 +101,18 @@ public abstract class Physics {
 
 	protected void afterStep() {
 	}
+
+	@Override
+	public void doTick(long elapsedTimeInMillis) {
+		this.elapsedTimeInMillisSinceWorldStarted += elapsedTimeInMillis;
+
+		beforeStep();
+
+		space.collide(null, collision);
+		world.step(elapsedTimeInMillis / 1000.0D);
+		joints.empty();
+
+		afterStep();
+	}
+
 }

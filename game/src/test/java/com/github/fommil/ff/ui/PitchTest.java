@@ -1,8 +1,7 @@
 package com.github.fommil.ff.ui;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.github.fommil.ff.Pitch;

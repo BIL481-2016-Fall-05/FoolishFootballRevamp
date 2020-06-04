@@ -20,7 +20,7 @@ public class mainTest {
 		robot = new Robot();
 	}
 
-	@Test
+	@Test(timeout = 20000L)
 	public void playerWinSmoke() throws IOException, InterruptedException {
 		// initiate game
 		Main.main(null);

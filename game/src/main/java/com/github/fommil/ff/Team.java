@@ -14,10 +14,11 @@
  */
 package com.github.fommil.ff;
 
-import com.google.common.collect.Lists;
 import java.awt.Color;
 import java.util.Collections;
 import java.util.List;
+
+import com.google.common.collect.Lists;
 
 /**
  * Represents a football team, including the list of available {@link com.github.fommil.ff.physics.Player}s and

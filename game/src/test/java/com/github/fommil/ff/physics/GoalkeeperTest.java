@@ -1,11 +1,8 @@
 package com.github.fommil.ff.physics;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import java.util.Collection;
-import java.util.HashSet;
-
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.github.fommil.ff.Direction;
